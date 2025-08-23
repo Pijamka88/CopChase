@@ -103,12 +103,12 @@
             background: var(--tg-theme-button-color, linear-gradient(135deg, #4a90e2 0%, #357abd 25%, #2868a8 50%, #1e5f99 75%, #15508a 100%));
             color: var(--tg-theme-button-text-color, white);
             border: none;
-            padding: 15px 30px;
-            font-size: 1.1em;
-            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 10px;
+            margin: 5px;
             box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
             position: relative;
             overflow: hidden;
@@ -155,51 +155,59 @@
             height: 100vh;
         }
 
-        .top-panel {
+        .bottom-panel {
             background: rgba(0,0,0,0.3);
-            padding: 15px;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
         .stats {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: wrap;
         }
 
         .stat {
             background: rgba(255,255,255,0.1);
-            padding: 8px 16px;
-            border-radius: 15px;
-            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
         }
 
         .controls {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .dice-container {
             text-align: center;
-            margin: 10px;
+            margin: 5px;
         }
 
         .dice {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             background: white;
             color: #333;
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
-            margin: 0 auto 10px;
+            margin: 0 auto 8px;
             border: 2px solid #333;
         }
 
@@ -218,6 +226,7 @@
         .game-board {
             flex: 1;
             padding: 10px;
+            padding-bottom: 100px; /* Space for bottom panel */
             overflow: auto;
             display: flex;
             justify-content: center;
@@ -418,22 +427,31 @@
         .direction-controls {
             display: none;
             text-align: center;
-            padding: 20px;
-            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            background: rgba(0,0,0,0.8);
+            position: fixed;
+            bottom: 90px; /* Above bottom panel */
+            left: 0;
+            right: 0;
+            z-index: 150;
             /* Mobile optimization */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .direction-controls h3 {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: #ffd700;
+            font-size: 16px;
         }
 
         .direction-btn {
             background: linear-gradient(135deg, #4a90e2 0%, #357abd 25%, #2868a8 50%, #1e5f99 75%, #15508a 100%);
-            margin: 5px;
-            padding: 10px 20px;
+            margin: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
             box-shadow: 0 3px 12px rgba(74, 144, 226, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
             position: relative;
             overflow: hidden;
@@ -474,17 +492,25 @@
 
         /* Mobile Responsive */
         @media (max-width: 480px) {
-            .top-panel {
+            .bottom-panel {
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
+                padding: 8px 10px;
             }
 
             .stats {
                 justify-content: center;
+                gap: 10px;
             }
             
             .game-board {
                 padding: 5px;
+                padding-bottom: 110px; /* Extra space for mobile bottom panel */
+            }
+            
+            .direction-controls {
+                bottom: 100px; /* Adjust for mobile bottom panel */
+                padding: 12px;
             }
             
             /* Show rotation overlay in portrait mode */
@@ -500,54 +526,57 @@
             }
             
             .container {
-                padding: 5px;
+                padding: 2px;
             }
             
-            .top-panel {
-                padding: 8px 15px;
+            .bottom-panel {
+                padding: 6px 10px;
                 flex-direction: row;
                 justify-content: space-between;
             }
             
             .stats {
-                gap: 15px;
+                gap: 10px;
             }
             
             .stat {
-                padding: 6px 12px;
-                font-size: 13px;
+                padding: 4px 8px;
+                font-size: 11px;
             }
             
             .game-board {
                 padding: 5px;
+                padding-bottom: 80px;
                 overflow-x: auto;
                 overflow-y: hidden;
             }
             
             .city-grid {
-                padding: 8px;
-                max-height: calc(100vh - 140px);
+                padding: 6px;
+                max-height: calc(100vh - 100px);
             }
             
             .dice {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
             }
             
             .btn {
-                padding: 8px 16px;
-                font-size: 14px;
-                margin: 5px;
+                padding: 6px 12px;
+                font-size: 12px;
+                margin: 3px;
             }
             
             .direction-controls {
-                padding: 10px;
+                padding: 8px;
+                bottom: 75px;
             }
             
             .direction-btn {
-                padding: 8px 16px;
-                margin: 3px;
+                padding: 6px 12px;
+                margin: 2px;
+                font-size: 12px;
             }
         }
         
@@ -565,7 +594,30 @@
         /* Telegram Web App specific styles */
         @media (max-width: 480px) and (display-mode: standalone) {
             .container {
-                padding-top: max(10px, env(safe-area-inset-top));
+                padding-top: max(5px, env(safe-area-inset-top));
+            }
+            
+            .bottom-panel {
+                padding-bottom: max(8px, env(safe-area-inset-bottom));
+            }
+        }
+        
+        /* Additional optimizations for very small screens */
+        @media (max-width: 360px) {
+            .city-grid {
+                transform-origin: top left;
+                transform: scale(0.9);
+            }
+            
+            .stat {
+                padding: 3px 6px;
+                font-size: 10px;
+            }
+            
+            .dice {
+                width: 30px;
+                height: 30px;
+                font-size: 16px;
             }
         }
     </style>
@@ -593,20 +645,6 @@
 
         <!-- Game Interface -->
         <div id="gameUI" class="game-ui">
-            <div class="top-panel">
-                <div class="stats">
-                    <div class="stat">🎲 Moves: <span id="moveCount">0</span></div>
-                    <div class="stat">🏃 Status: <span id="gameStatus">Running</span></div>
-                </div>
-                <div class="controls">
-                    <div class="dice-container">
-                        <div id="dice" class="dice">?</div>
-                        <button id="rollBtn" class="btn" onclick="rollDice()">Roll Dice</button>
-                    </div>
-                    <button class="btn" onclick="returnToMenu()">Menu</button>
-                </div>
-            </div>
-
             <div class="game-board">
                 <div id="cityGrid" class="city-grid"></div>
             </div>
@@ -616,6 +654,20 @@
                 <button class="btn direction-btn" onclick="chooseDirection('straight')">⬆️ Straight</button>
                 <button class="btn direction-btn" onclick="chooseDirection('left')">⬅️ Left</button>
                 <button class="btn direction-btn" onclick="chooseDirection('right')">➡️ Right</button>
+            </div>
+
+            <div class="bottom-panel">
+                <div class="stats">
+                    <div class="stat">🎲 Moves: <span id="moveCount">0</span></div>
+                    <div class="stat">🏃 Status: <span id="gameStatus">Running</span></div>
+                </div>
+                <div class="controls">
+                    <div class="dice-container">
+                        <div id="dice" class="dice">?</div>
+                        <button id="rollBtn" class="btn" onclick="rollDice()">Roll</button>
+                    </div>
+                    <button class="btn" onclick="returnToMenu()">Menu</button>
+                </div>
             </div>
         </div>
 
@@ -631,19 +683,33 @@
     <script>
         class CityChaseGame {
             constructor() {
-                // Optimize grid size for mobile landscape
+                // 16:9 aspect ratio optimization for mobile and Telegram
                 const isMobile = window.innerWidth < 480 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
                 const isLandscape = window.innerWidth > window.innerHeight;
                 
+                // Calculate optimal grid size for 16:9 ratio
+                const aspectRatio = 16 / 9;
+                const availableHeight = window.innerHeight - 180; // Account for UI elements
+                const availableWidth = window.innerWidth - 40; // Account for padding
+                
                 if (isMobile && isLandscape) {
-                    this.gridSize = window.innerWidth < 700 ? 12 : 15;
-                    this.cellSize = Math.min(25, Math.floor((window.innerHeight - 140) / this.gridSize));
+                    // Mobile landscape: prioritize horizontal space (16:9)
+                    this.gridWidth = Math.min(32, Math.floor(availableWidth / 20));
+                    this.gridHeight = Math.floor(this.gridWidth / aspectRatio);
+                    this.cellSize = Math.min(20, Math.floor(availableHeight / this.gridHeight));
                 } else {
-                    this.gridSize = window.innerWidth < 480 ? 15 : 21;
-                    this.cellSize = window.innerWidth < 480 ? 25 : 30;
+                    // Mobile portrait or desktop: adjust for available space
+                    this.gridWidth = isMobile ? 24 : 32;
+                    this.gridHeight = Math.floor(this.gridWidth / aspectRatio);
+                    this.cellSize = isMobile ? 18 : 25;
                 }
                 
-                this.playerPos = { x: Math.floor(this.gridSize / 2), y: Math.floor(this.gridSize / 2) };
+                // Ensure minimum viable grid
+                this.gridWidth = Math.max(16, this.gridWidth);
+                this.gridHeight = Math.max(9, this.gridHeight);
+                this.cellSize = Math.max(15, this.cellSize);
+                
+                this.playerPos = { x: Math.floor(this.gridWidth / 2), y: Math.floor(this.gridHeight / 2) };
                 this.policePos = [];
                 this.moveCount = 0;
                 this.gameActive = false;
@@ -658,8 +724,8 @@
             initializeGame() {
                 this.createCityGrid();
                 // Ensure player starts on a road (every 3 cells now)
-                const centerX = Math.floor(this.gridSize / 2);
-                const centerY = Math.floor(this.gridSize / 2);
+                const centerX = Math.floor(this.gridWidth / 2);
+                const centerY = Math.floor(this.gridHeight / 2);
                 
                 // Find nearest road intersection to center
                 let nearestRoadX = Math.floor(centerX / 3) * 3;
@@ -675,18 +741,18 @@
             createCityGrid() {
                 const grid = document.getElementById('cityGrid');
                 grid.innerHTML = '';
-                grid.style.gridTemplateColumns = `repeat(${this.gridSize}, ${this.cellSize}px)`;
-                grid.style.gridTemplateRows = `repeat(${this.gridSize}, ${this.cellSize}px)`;
+                grid.style.gridTemplateColumns = `repeat(${this.gridWidth}, ${this.cellSize}px)`;
+                grid.style.gridTemplateRows = `repeat(${this.gridHeight}, ${this.cellSize}px)`;
 
                 // Create terrain map first
-                this.terrainMap = new Array(this.gridSize).fill(null).map(() => new Array(this.gridSize).fill('road'));
+                this.terrainMap = new Array(this.gridHeight).fill(null).map(() => new Array(this.gridWidth).fill('road'));
                 
                 // Generate terrain blocks of varied sizes
                 this.generateVariedTerrainBlocks();
 
                 // Create realistic city grid with perimeter roads and internal road network
-                for (let y = 0; y < this.gridSize; y++) {
-                    for (let x = 0; x < this.gridSize; x++) {
+                for (let y = 0; y < this.gridHeight; y++) {
+                    for (let x = 0; x < this.gridWidth; x++) {
                         const cell = document.createElement('div');
                         cell.className = 'cell';
                         cell.dataset.x = x;
@@ -695,7 +761,7 @@
                         cell.style.height = `${this.cellSize}px`;
 
                         // Check if this is perimeter (city border) - must be road
-                        const isPerimeter = (x === 0 || x === this.gridSize - 1 || y === 0 || y === this.gridSize - 1);
+                        const isPerimeter = (x === 0 || x === this.gridWidth - 1 || y === 0 || y === this.gridHeight - 1);
                         
                         // Check if this should be a road based on grid pattern
                         const isRoadX = x % 3 === 0;
@@ -703,9 +769,9 @@
                         
                         // Force corners to be intersections
                         const isCorner = (x === 0 && y === 0) || 
-                                        (x === this.gridSize - 1 && y === 0) || 
-                                        (x === 0 && y === this.gridSize - 1) || 
-                                        (x === this.gridSize - 1 && y === this.gridSize - 1);
+                                        (x === this.gridWidth - 1 && y === 0) || 
+                                        (x === 0 && y === this.gridHeight - 1) || 
+                                        (x === this.gridWidth - 1 && y === this.gridHeight - 1);
                         
                         const terrainType = this.terrainMap[y][x];
                         
@@ -733,7 +799,7 @@
                             } else if (isPerimeter) {
                                 // Perimeter road - display as empty road
                                 cell.classList.add('road');
-                                if (y === 0 || y === this.gridSize - 1) {
+                                if (y === 0 || y === this.gridHeight - 1) {
                                     cell.classList.add('road-horizontal');
                                 } else {
                                     cell.classList.add('road-vertical');
@@ -741,7 +807,7 @@
                             } else {
                                 // Road segment
                                 cell.classList.add('road');
-                                if (isRoadX || (isPerimeter && (y === 0 || y === this.gridSize - 1))) {
+                                if (isRoadX || (isPerimeter && (y === 0 || y === this.gridHeight - 1))) {
                                     cell.classList.add('road-vertical');
                                 } else {
                                     cell.classList.add('road-horizontal');
@@ -787,14 +853,14 @@
                 const terrainTypes = ['land', 'land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass'];
                 
                 // Start with all cells as roads
-                for (let y = 0; y < this.gridSize; y++) {
-                    for (let x = 0; x < this.gridSize; x++) {
+                for (let y = 0; y < this.gridHeight; y++) {
+                    for (let x = 0; x < this.gridWidth; x++) {
                         this.terrainMap[y][x] = 'road';
                     }
                 }
                 
                 // Generate varied terrain blocks with different sizes
-                const attempts = 60; // Increased attempts for better coverage
+                const attempts = Math.min(60, this.gridWidth * this.gridHeight / 10); // Scale attempts with grid size
                 for (let i = 0; i < attempts; i++) {
                     // Random block dimensions (width and height can be different)
                     const blockWidth = Math.floor(Math.random() * 4) + 2; // 2-5 cells wide
@@ -802,8 +868,8 @@
                     const terrainType = terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
                     
                     // Find a suitable position (not on perimeter or road grid lines)
-                    const maxX = this.gridSize - blockWidth - 1; // -1 to avoid perimeter
-                    const maxY = this.gridSize - blockHeight - 1; // -1 to avoid perimeter
+                    const maxX = this.gridWidth - blockWidth - 1; // -1 to avoid perimeter
+                    const maxY = this.gridHeight - blockHeight - 1; // -1 to avoid perimeter
                     
                     if (maxX > 1 && maxY > 1) { // Ensure we have space inside perimeter
                         let startX, startY;
@@ -823,7 +889,7 @@
                                     for (let dx = 0; dx < blockWidth && validPosition; dx++) {
                                         const checkX = startX + dx;
                                         const checkY = startY + dy;
-                                        if (checkX >= this.gridSize - 1 || checkY >= this.gridSize - 1 || 
+                                        if (checkX >= this.gridWidth - 1 || checkY >= this.gridHeight - 1 || 
                                             checkX <= 0 || checkY <= 0 || // Don't touch perimeter
                                             (checkX % 3 === 0 || checkY % 3 === 0)) { // Don't overlap road grid
                                             validPosition = false;
@@ -840,7 +906,7 @@
                                 for (let dx = 0; dx < blockWidth; dx++) {
                                     const placeX = startX + dx;
                                     const placeY = startY + dy;
-                                    if (placeX < this.gridSize - 1 && placeY < this.gridSize - 1 && 
+                                    if (placeX < this.gridWidth - 1 && placeY < this.gridHeight - 1 && 
                                         placeX > 0 && placeY > 0) { // Keep away from perimeter
                                         this.terrainMap[placeY][placeX] = terrainType;
                                     }
@@ -855,9 +921,9 @@
                 this.policePos = [];
                 const corners = [
                     { x: 0, y: 0 },
-                    { x: this.gridSize - 1, y: 0 },
-                    { x: 0, y: this.gridSize - 1 },
-                    { x: this.gridSize - 1, y: this.gridSize - 1 }
+                    { x: this.gridWidth - 1, y: 0 },
+                    { x: 0, y: this.gridHeight - 1 },
+                    { x: this.gridWidth - 1, y: this.gridHeight - 1 }
                 ];
                 
                 // Find nearest road positions to each corner
@@ -866,8 +932,8 @@
                     let nearestRoad = null;
                     let minDistance = Infinity;
                     
-                    for (let y = 0; y < this.gridSize; y += 3) {
-                        for (let x = 0; x < this.gridSize; x += 3) {
+                    for (let y = 0; y < this.gridHeight; y += 3) {
+                        for (let x = 0; x < this.gridWidth; x += 3) {
                             if (this.isRoadOrIntersection(x, y)) {
                                 const distance = Math.abs(x - corner.x) + Math.abs(y - corner.y);
                                 if (distance < minDistance) {
@@ -1066,8 +1132,8 @@
 
             isValidMove(pos) {
                 // Check bounds and road access
-                if (pos.x < 0 || pos.x >= this.gridSize || 
-                    pos.y < 0 || pos.y >= this.gridSize || 
+                if (pos.x < 0 || pos.x >= this.gridWidth || 
+                    pos.y < 0 || pos.y >= this.gridHeight || 
                     !this.isRoadOrIntersection(pos.x, pos.y)) {
                     return false;
                 }
@@ -1088,8 +1154,8 @@
                     const newX = pos.x + move.x;
                     const newY = pos.y + move.y;
                     
-                    if (newX >= 0 && newX < this.gridSize && 
-                        newY >= 0 && newY < this.gridSize && 
+                    if (newX >= 0 && newX < this.gridWidth && 
+                        newY >= 0 && newY < this.gridHeight && 
                         this.isRoadOrIntersection(newX, newY)) {
                         directions.push({ x: newX, y: newY });
                     }
@@ -1411,14 +1477,14 @@
                     game.gameActive = true;
                     
                     // Try to preserve game state if grid allows
-                    if (oldGameState.playerPos.x < game.gridSize && oldGameState.playerPos.y < game.gridSize) {
+                    if (oldGameState.playerPos.x < game.gridWidth && oldGameState.playerPos.y < game.gridHeight) {
                         game.playerPos = oldGameState.playerPos;
                         game.moveCount = oldGameState.moveCount;
                         game.playerDirection = oldGameState.playerDirection;
                         
                         // Reposition police if they fit in new grid
                         game.policePos = oldGameState.policePos.filter(pos => 
-                            pos.x < game.gridSize && pos.y < game.gridSize
+                            pos.x < game.gridWidth && pos.y < game.gridHeight
                         );
                         
                         game.updateDisplay();
