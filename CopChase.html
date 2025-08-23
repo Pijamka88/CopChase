@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>City Chase Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #e94560 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: auto;
+            /* Telegram Web App specific styles */
+            background-color: var(--tg-theme-bg-color, #1a1a2e);
+            color: var(--tg-theme-text-color, white);
+            /* Prevent iOS zoom on input focus */
+            -webkit-text-size-adjust: 100%;
+            /* Safe area padding for iPhone notch */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        /* Rotation Overlay for Mobile */
+        .rotation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .rotation-message {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+
+        .rotation-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: rotate 2s infinite linear;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .rotation-text {
+            font-size: 1.2em;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 100vw;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        /* Menu Styles */
+        .menu {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .menu h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .menu p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 25%, #2868a8 50%, #1e5f99 75%, #15508a 100%);
+            /* Telegram Web App theme support */
+            background: var(--tg-theme-button-color, linear-gradient(135deg, #4a90e2 0%, #357abd 25%, #2868a8 50%, #1e5f99 75%, #15508a 100%));
+            color: var(--tg-theme-button-text-color, white);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+            /* Prevent text selection on mobile */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            /* Improve touch response */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(74, 144, 226, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+            background: linear-gradient(135deg, #357abd 0%, #2868a8 25%, #1e5f99 50%, #15508a 75%, #0d427b 100%);
+        }
+        
+        /* Touch-friendly button feedback */
+        .btn:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 2px 10px rgba(74, 144, 226, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        /* Game UI */
+        .game-ui {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .top-panel {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dice-container {
+            text-align: center;
+            margin: 10px;
+        }
+
+        .dice {
+            width: 50px;
+            height: 50px;
+            background: white;
+            color: #333;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 10px;
+            border: 2px solid #333;
+        }
+
+        .dice.rolling {
+            animation: roll 1s ease-in-out;
+        }
+
+        @keyframes roll {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg); }
+            50% { transform: rotate(180deg); }
+            75% { transform: rotate(270deg); }
+        }
+
+        /* Game Board */
+        .game-board {
+            flex: 1;
+            padding: 10px;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Optimize for horizontal scrolling on mobile */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .city-grid {
+            display: grid;
+            gap: 1px;
+            background: #2a4d3a;
+            padding: 15px;
+            border-radius: 10px;
+            border: 3px solid #666;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            /* Ensure horizontal layout on mobile landscape */
+            min-width: fit-content;
+        }
+
+        .cell {
+            border-radius: 2px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .land {
+            background: linear-gradient(135deg, #4a7c59, #5d8f6a);
+        }
+
+        .land-brown {
+            background: linear-gradient(135deg, #8b6914, #a0761a);
+        }
+
+        .land-dark {
+            background: linear-gradient(135deg, #3a5d47, #4a7c59);
+        }
+
+        .land-desert {
+            background: linear-gradient(135deg, #c2a878, #d4b896);
+        }
+
+        .land-rocky {
+            background: linear-gradient(135deg, #708090, #778899);
+        }
+
+        .land-grass {
+            background: linear-gradient(135deg, #228b22, #32cd32);
+        }
+
+        .movement-highlight {
+            background: rgba(255, 255, 0, 0.6) !important;
+            border: 2px solid #ffd700 !important;
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .road {
+            background: linear-gradient(135deg, #555, #666);
+            border: 1px solid #444;
+            position: relative;
+        }
+
+        .road-horizontal {
+            background: linear-gradient(90deg, #555, #666, #555);
+        }
+
+        .road-horizontal::before {
+            content: '';
+            position: absolute;
+            top: 30%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ffff99;
+            opacity: 0.7;
+        }
+
+        .road-horizontal::after {
+            content: '';
+            position: absolute;
+            top: 70%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ffff99;
+            opacity: 0.7;
+        }
+
+        .road-vertical {
+            background: linear-gradient(0deg, #555, #666, #555);
+        }
+
+        .road-vertical::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 30%;
+            width: 1px;
+            background: #ffff99;
+            opacity: 0.7;
+        }
+
+        .road-vertical::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 70%;
+            width: 1px;
+            background: #ffff99;
+            opacity: 0.7;
+        }
+
+        .intersection {
+            background: linear-gradient(45deg, #666, #777, #666);
+            position: relative;
+            border: 2px solid #888;
+        }
+
+        .traffic-light {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            border: 1px solid #333;
+            box-shadow: 0 0 4px rgba(0,0,0,0.5);
+        }
+
+        .red-light { background: #ff4444; }
+        .green-light { background: #44ff44; }
+
+        .player {
+            position: absolute;
+            font-size: 20px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .direction-arrow {
+            font-size: 10px;
+            margin-bottom: -2px;
+            text-shadow: 0 0 2px rgba(0,0,0,0.8);
+        }
+
+        .police {
+            position: absolute;
+            font-size: 16px;
+            z-index: 9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .police-light {
+            position: absolute;
+            top: -2px;
+            width: 8px;
+            height: 4px;
+            border-radius: 2px;
+            animation: policeFlash 1.2s infinite;
+        }
+
+        @keyframes policeFlash {
+            0%, 50% { 
+                background: #ff0000;
+                box-shadow: 0 0 8px #ff0000, 0 0 12px #ff0000;
+            }
+            50.1%, 100% { 
+                background: #0000ff;
+                box-shadow: 0 0 8px #0000ff, 0 0 12px #0000ff;
+            }
+        }
+
+        /* Direction Controls */
+        .direction-controls {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.5);
+            /* Mobile optimization */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .direction-controls h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .direction-btn {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 25%, #2868a8 50%, #1e5f99 75%, #15508a 100%);
+            margin: 5px;
+            padding: 10px 20px;
+            box-shadow: 0 3px 12px rgba(74, 144, 226, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .direction-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .direction-btn:hover::before {
+            left: 100%;
+        }
+
+        .direction-btn:hover {
+            background: linear-gradient(135deg, #357abd 0%, #2868a8 25%, #1e5f99 50%, #15508a 75%, #0d427b 100%);
+            box-shadow: 0 5px 18px rgba(74, 144, 226, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        /* Game Over */
+        .game-over {
+            display: none;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .game-over h2 {
+            font-size: 2em;
+            color: #ff4444;
+            margin-bottom: 20px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            .top-panel {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .stats {
+                justify-content: center;
+            }
+            
+            .game-board {
+                padding: 5px;
+            }
+            
+            /* Show rotation overlay in portrait mode */
+            .rotation-overlay {
+                display: flex;
+            }
+        }
+        
+        /* Landscape mode for mobile devices */
+        @media (max-width: 926px) and (orientation: landscape) {
+            .rotation-overlay {
+                display: none !important;
+            }
+            
+            .container {
+                padding: 5px;
+            }
+            
+            .top-panel {
+                padding: 8px 15px;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .stats {
+                gap: 15px;
+            }
+            
+            .stat {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            
+            .game-board {
+                padding: 5px;
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+            
+            .city-grid {
+                padding: 8px;
+                max-height: calc(100vh - 140px);
+            }
+            
+            .dice {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .btn {
+                padding: 8px 16px;
+                font-size: 14px;
+                margin: 5px;
+            }
+            
+            .direction-controls {
+                padding: 10px;
+            }
+            
+            .direction-btn {
+                padding: 8px 16px;
+                margin: 3px;
+            }
+        }
+        
+        /* iPhone specific optimizations */
+        @media (max-device-width: 414px) and (-webkit-min-device-pixel-ratio: 2) {
+            body {
+                -webkit-text-size-adjust: none;
+            }
+            
+            .btn:active {
+                transform: scale(0.95);
+            }
+        }
+        
+        /* Telegram Web App specific styles */
+        @media (max-width: 480px) and (display-mode: standalone) {
+            .container {
+                padding-top: max(10px, env(safe-area-inset-top));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Rotation Overlay for Mobile Portrait Mode -->
+    <div id="rotationOverlay" class="rotation-overlay">
+        <div class="rotation-icon">📱</div>
+        <div class="rotation-message">Поверните экран</div>
+        <div class="rotation-text">
+            Для лучшего игрового опыта<br>
+            поверните устройство горизонтально
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Main Menu -->
+        <div id="menu" class="menu">
+            <h1>🚗 City Chase</h1>
+            <p>Escape from the police in this dice-rolling chase game!</p>
+            <p>🎲 Roll the dice to move • 🚦 Stop at red lights • 🚔 Avoid the police</p>
+            <button class="btn" onclick="startGame()">Start Game</button>
+            <button class="btn" onclick="showInstructions()">How to Play</button>
+        </div>
+
+        <!-- Game Interface -->
+        <div id="gameUI" class="game-ui">
+            <div class="top-panel">
+                <div class="stats">
+                    <div class="stat">🎲 Moves: <span id="moveCount">0</span></div>
+                    <div class="stat">🏃 Status: <span id="gameStatus">Running</span></div>
+                </div>
+                <div class="controls">
+                    <div class="dice-container">
+                        <div id="dice" class="dice">?</div>
+                        <button id="rollBtn" class="btn" onclick="rollDice()">Roll Dice</button>
+                    </div>
+                    <button class="btn" onclick="returnToMenu()">Menu</button>
+                </div>
+            </div>
+
+            <div class="game-board">
+                <div id="cityGrid" class="city-grid"></div>
+            </div>
+
+            <div id="directionControls" class="direction-controls">
+                <h3>🚦 Choose Direction</h3>
+                <button class="btn direction-btn" onclick="chooseDirection('straight')">⬆️ Straight</button>
+                <button class="btn direction-btn" onclick="chooseDirection('left')">⬅️ Left</button>
+                <button class="btn direction-btn" onclick="chooseDirection('right')">➡️ Right</button>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOver" class="game-over">
+            <h2 id="gameResult">Game Over!</h2>
+            <p id="finalScore"></p>
+            <button class="btn" onclick="startGame()">Play Again</button>
+            <button class="btn" onclick="returnToMenu()">Main Menu</button>
+        </div>
+    </div>
+
+    <script>
+        class CityChaseGame {
+            constructor() {
+                // Optimize grid size for mobile landscape
+                const isMobile = window.innerWidth < 480 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                const isLandscape = window.innerWidth > window.innerHeight;
+                
+                if (isMobile && isLandscape) {
+                    this.gridSize = window.innerWidth < 700 ? 12 : 15;
+                    this.cellSize = Math.min(25, Math.floor((window.innerHeight - 140) / this.gridSize));
+                } else {
+                    this.gridSize = window.innerWidth < 480 ? 15 : 21;
+                    this.cellSize = window.innerWidth < 480 ? 25 : 30;
+                }
+                
+                this.playerPos = { x: Math.floor(this.gridSize / 2), y: Math.floor(this.gridSize / 2) };
+                this.policePos = [];
+                this.moveCount = 0;
+                this.gameActive = false;
+                this.waitingForDirection = false;
+                this.currentDiceRoll = 0;
+                this.movesLeft = 0;
+                this.playerDirection = 0; // 0=up, 1=right, 2=down, 3=left
+                
+                this.initializeGame();
+            }
+
+            initializeGame() {
+                this.createCityGrid();
+                // Ensure player starts on a road (every 3 cells now)
+                const centerX = Math.floor(this.gridSize / 2);
+                const centerY = Math.floor(this.gridSize / 2);
+                
+                // Find nearest road intersection to center
+                let nearestRoadX = Math.floor(centerX / 3) * 3;
+                let nearestRoadY = Math.floor(centerY / 3) * 3;
+                
+                this.playerPos = { x: nearestRoadX, y: nearestRoadY };
+                this.playerDirection = Math.floor(Math.random() * 4); // Random initial direction
+                
+                this.spawnPolice();
+                this.updateDisplay();
+            }
+
+            createCityGrid() {
+                const grid = document.getElementById('cityGrid');
+                grid.innerHTML = '';
+                grid.style.gridTemplateColumns = `repeat(${this.gridSize}, ${this.cellSize}px)`;
+                grid.style.gridTemplateRows = `repeat(${this.gridSize}, ${this.cellSize}px)`;
+
+                // Create terrain map first
+                this.terrainMap = new Array(this.gridSize).fill(null).map(() => new Array(this.gridSize).fill('road'));
+                
+                // Generate terrain blocks of varied sizes
+                this.generateVariedTerrainBlocks();
+
+                // Create realistic city grid with perimeter roads and internal road network
+                for (let y = 0; y < this.gridSize; y++) {
+                    for (let x = 0; x < this.gridSize; x++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        cell.dataset.x = x;
+                        cell.dataset.y = y;
+                        cell.style.width = `${this.cellSize}px`;
+                        cell.style.height = `${this.cellSize}px`;
+
+                        // Check if this is perimeter (city border) - must be road
+                        const isPerimeter = (x === 0 || x === this.gridSize - 1 || y === 0 || y === this.gridSize - 1);
+                        
+                        // Check if this should be a road based on grid pattern
+                        const isRoadX = x % 3 === 0;
+                        const isRoadY = y % 3 === 0;
+                        
+                        // Force corners to be intersections
+                        const isCorner = (x === 0 && y === 0) || 
+                                        (x === this.gridSize - 1 && y === 0) || 
+                                        (x === 0 && y === this.gridSize - 1) || 
+                                        (x === this.gridSize - 1 && y === this.gridSize - 1);
+                        
+                        const terrainType = this.terrainMap[y][x];
+                        
+                        if (isPerimeter || ((isRoadX || isRoadY) && terrainType === 'road')) {
+                            if ((isRoadX && isRoadY) || isCorner) {
+                                // Intersection (both internal and corners)
+                                cell.classList.add('intersection');
+                                
+                                // Add traffic lights only to actual intersections (crossroads)
+                                if (!isPerimeter && !isCorner) {
+                                    // Internal intersection - 40% chance for traffic light
+                                    if (Math.random() > 0.6) {
+                                        const light = document.createElement('div');
+                                        light.className = `traffic-light ${Math.random() > 0.5 ? 'red-light' : 'green-light'}`;
+                                        cell.appendChild(light);
+                                    }
+                                } else if ((isPerimeter || isCorner) && (isRoadX && isRoadY)) {
+                                    // Corner/perimeter intersection - 30% chance for traffic light
+                                    if (Math.random() > 0.7) {
+                                        const light = document.createElement('div');
+                                        light.className = `traffic-light ${Math.random() > 0.5 ? 'red-light' : 'green-light'}`;
+                                        cell.appendChild(light);
+                                    }
+                                }
+                            } else if (isPerimeter) {
+                                // Perimeter road - display as empty road
+                                cell.classList.add('road');
+                                if (y === 0 || y === this.gridSize - 1) {
+                                    cell.classList.add('road-horizontal');
+                                } else {
+                                    cell.classList.add('road-vertical');
+                                }
+                            } else {
+                                // Road segment
+                                cell.classList.add('road');
+                                if (isRoadX || (isPerimeter && (y === 0 || y === this.gridSize - 1))) {
+                                    cell.classList.add('road-vertical');
+                                } else {
+                                    cell.classList.add('road-horizontal');
+                                }
+                            }
+                        } else {
+                            // Land area - use terrain type from terrain map or assign random if not set
+                            let finalTerrainType = this.terrainMap[y][x];
+                            if (finalTerrainType === 'road') {
+                                // Assign random terrain type for non-road areas
+                                const terrainTypes = ['land', 'land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass'];
+                                finalTerrainType = terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
+                                this.terrainMap[y][x] = finalTerrainType;
+                            }
+                            
+                            cell.classList.add(finalTerrainType);
+                            
+                            // Add buildings and trees only to green and dark land (not brown) with reduced density
+                            if (finalTerrainType !== 'land-brown' && finalTerrainType !== 'land-desert') {
+                                const featureChance = Math.random();
+                                if (featureChance > 0.85) { // Reduced from 0.6 to 0.85
+                                    cell.innerHTML = '🏢';
+                                    cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                                } else if (featureChance > 0.75) { // Reduced from 0.4 to 0.75
+                                    cell.innerHTML = '🌳';
+                                    cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                                } else if (featureChance > 0.7) { // Reduced from 0.3 to 0.7
+                                    cell.innerHTML = '🏠';
+                                    cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                                } else if (featureChance > 0.65) { // Reduced from 0.2 to 0.65
+                                    cell.innerHTML = '🌲';
+                                    cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                                }
+                            }
+                        }
+
+                        grid.appendChild(cell);
+                    }
+                }
+            }
+
+            generateVariedTerrainBlocks() {
+                const terrainTypes = ['land', 'land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass'];
+                
+                // Start with all cells as roads
+                for (let y = 0; y < this.gridSize; y++) {
+                    for (let x = 0; x < this.gridSize; x++) {
+                        this.terrainMap[y][x] = 'road';
+                    }
+                }
+                
+                // Generate varied terrain blocks with different sizes
+                const attempts = 60; // Increased attempts for better coverage
+                for (let i = 0; i < attempts; i++) {
+                    // Random block dimensions (width and height can be different)
+                    const blockWidth = Math.floor(Math.random() * 4) + 2; // 2-5 cells wide
+                    const blockHeight = Math.floor(Math.random() * 4) + 2; // 2-5 cells high
+                    const terrainType = terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
+                    
+                    // Find a suitable position (not on perimeter or road grid lines)
+                    const maxX = this.gridSize - blockWidth - 1; // -1 to avoid perimeter
+                    const maxY = this.gridSize - blockHeight - 1; // -1 to avoid perimeter
+                    
+                    if (maxX > 1 && maxY > 1) { // Ensure we have space inside perimeter
+                        let startX, startY;
+                        let validPosition = false;
+                        let positionAttempts = 0;
+                        
+                        while (!validPosition && positionAttempts < 25) {
+                            startX = Math.floor(Math.random() * maxX) + 1; // +1 to avoid perimeter
+                            startY = Math.floor(Math.random() * maxY) + 1; // +1 to avoid perimeter
+                            
+                            // Ensure terrain blocks don't overlap with main road grid (every 3rd cell)
+                            if (startX % 3 !== 0 && startY % 3 !== 0) {
+                                validPosition = true;
+                                
+                                // Check if area is clear and doesn't touch perimeter
+                                for (let dy = 0; dy < blockHeight && validPosition; dy++) {
+                                    for (let dx = 0; dx < blockWidth && validPosition; dx++) {
+                                        const checkX = startX + dx;
+                                        const checkY = startY + dy;
+                                        if (checkX >= this.gridSize - 1 || checkY >= this.gridSize - 1 || 
+                                            checkX <= 0 || checkY <= 0 || // Don't touch perimeter
+                                            (checkX % 3 === 0 || checkY % 3 === 0)) { // Don't overlap road grid
+                                            validPosition = false;
+                                        }
+                                    }
+                                }
+                            }
+                            positionAttempts++;
+                        }
+                        
+                        if (validPosition) {
+                            // Place terrain block
+                            for (let dy = 0; dy < blockHeight; dy++) {
+                                for (let dx = 0; dx < blockWidth; dx++) {
+                                    const placeX = startX + dx;
+                                    const placeY = startY + dy;
+                                    if (placeX < this.gridSize - 1 && placeY < this.gridSize - 1 && 
+                                        placeX > 0 && placeY > 0) { // Keep away from perimeter
+                                        this.terrainMap[placeY][placeX] = terrainType;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            spawnPolice() {
+                this.policePos = [];
+                const corners = [
+                    { x: 0, y: 0 },
+                    { x: this.gridSize - 1, y: 0 },
+                    { x: 0, y: this.gridSize - 1 },
+                    { x: this.gridSize - 1, y: this.gridSize - 1 }
+                ];
+                
+                // Find nearest road positions to each corner
+                const roadCorners = [];
+                corners.forEach(corner => {
+                    let nearestRoad = null;
+                    let minDistance = Infinity;
+                    
+                    for (let y = 0; y < this.gridSize; y += 3) {
+                        for (let x = 0; x < this.gridSize; x += 3) {
+                            if (this.isRoadOrIntersection(x, y)) {
+                                const distance = Math.abs(x - corner.x) + Math.abs(y - corner.y);
+                                if (distance < minDistance) {
+                                    minDistance = distance;
+                                    nearestRoad = { x, y };
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (nearestRoad) {
+                        roadCorners.push(nearestRoad);
+                    }
+                });
+
+                // Spawn 2 police cars in farthest corners
+                for (let i = 0; i < 2 && roadCorners.length > 0; i++) {
+                    const cornerIndex = Math.floor(Math.random() * roadCorners.length);
+                    const corner = roadCorners[cornerIndex];
+                    roadCorners.splice(cornerIndex, 1);
+                    this.policePos.push({ ...corner });
+                }
+            }
+
+            updateDisplay() {
+                // Clear previous positions
+                document.querySelectorAll('.player, .police').forEach(el => el.remove());
+
+                // Update player position with direction arrow above car
+                const playerCell = document.querySelector(`[data-x="${this.playerPos.x}"][data-y="${this.playerPos.y}"]`);
+                if (playerCell) {
+                    const playerIcon = document.createElement('div');
+                    playerIcon.className = 'player';
+                    
+                    const directionArrows = ['⬆️', '➡️', '⬇️', '⬅️'];
+                    
+                    // Arrow above, car below
+                    playerIcon.innerHTML = `
+                        <div class="direction-arrow">${directionArrows[this.playerDirection]}</div>
+                        <div>🚗</div>
+                    `;
+                    
+                    playerIcon.style.fontSize = `${this.cellSize * 0.6}px`;
+                    playerCell.appendChild(playerIcon);
+                }
+
+                // Update police positions
+                this.policePos.forEach(pos => {
+                    const policeCell = document.querySelector(`[data-x="${pos.x}"][data-y="${pos.y}"]`);
+                    if (policeCell) {
+                        const policeIcon = document.createElement('div');
+                        policeIcon.className = 'police';
+                        
+                        // Add flashing light
+                        const flashingLight = document.createElement('div');
+                        flashingLight.className = 'police-light';
+                        
+                        policeIcon.innerHTML = `
+                            <div class="police-light"></div>
+                            <div>🚔</div>
+                        `;
+                        
+                        policeIcon.style.fontSize = `${this.cellSize * 0.6}px`;
+                        policeCell.appendChild(policeIcon);
+                    }
+                });
+
+                // Update UI
+                document.getElementById('moveCount').textContent = this.moveCount;
+            }
+
+            rollDice() {
+                if (!this.gameActive || this.waitingForDirection) return;
+
+                const dice = document.getElementById('dice');
+                const rollBtn = document.getElementById('rollBtn');
+                
+                dice.classList.add('rolling');
+                rollBtn.disabled = true;
+
+                setTimeout(() => {
+                    this.currentDiceRoll = Math.floor(Math.random() * 6) + 1;
+                    dice.textContent = this.currentDiceRoll;
+                    dice.classList.remove('rolling');
+                    
+                    this.movesLeft = this.currentDiceRoll;
+                    
+                    // Police moves immediately after dice roll
+                    this.movePolice();
+                    this.checkGameState();
+                    
+                    if (this.gameActive) {
+                        this.movePlayer();
+                    }
+                    
+                    rollBtn.disabled = false;
+                }, 1000);
+            }
+
+            movePlayer() {
+                if (this.movesLeft <= 0) {
+                    // Clear movement highlights
+                    this.clearMovementHighlights();
+                    // Police moves again after player completes all moves
+                    this.movePolice();
+                    this.checkGameState();
+                    return;
+                }
+
+                // Get next position based on current direction
+                const nextPos = this.getNextPosition(this.playerPos, this.playerDirection);
+                
+                // Check if next position is blocked by police
+                const blockedByPolice = this.policePos.some(police => 
+                    police.x === nextPos.x && police.y === nextPos.y
+                );
+                
+                if (blockedByPolice) {
+                    document.getElementById('gameStatus').textContent = 'Blocked by police! Choose another direction';
+                    this.showDirectionChoice();
+                    return;
+                }
+                
+                // Check if move is valid (within bounds and on road)
+                if (!this.isValidMove(nextPos)) {
+                    // If not valid move, show direction choice
+                    this.showDirectionChoice();
+                    return;
+                }
+                
+                // Move player
+                this.playerPos = nextPos;
+                this.movesLeft--;
+                
+                // Highlight the movement AFTER moving
+                this.highlightMovement(this.playerPos);
+                
+                // Check if at intersection
+                if (this.isIntersection(this.playerPos)) {
+                    const light = this.getTrafficLight(this.playerPos);
+                    if (light && light.classList.contains('red-light')) {
+                        // Stop at red light and consume remaining moves
+                        this.movesLeft = 0;
+                        document.getElementById('gameStatus').textContent = 'Stopped at red light 🔴 - Choose direction';
+                        this.showDirectionChoice();
+                        return;
+                    } else if (this.movesLeft > 0) {
+                        // Show direction choice at any intersection (with or without traffic light)
+                        this.showDirectionChoice();
+                        return;
+                    }
+                }
+
+                this.updateDisplay();
+                
+                if (this.movesLeft > 0) {
+                    setTimeout(() => this.movePlayer(), 450);
+                } else {
+                    // Clear movement highlights after completing moves
+                    setTimeout(() => {
+                        this.clearMovementHighlights();
+                        // Police moves after player completes all moves
+                        this.movePolice();
+                        this.checkGameState();
+                    }, 500);
+                }
+            }
+
+            highlightMovement(pos) {
+                const cell = document.querySelector(`[data-x="${pos.x}"][data-y="${pos.y}"]`);
+                if (cell) {
+                    cell.classList.add('movement-highlight');
+                }
+            }
+
+            clearMovementHighlights() {
+                document.querySelectorAll('.movement-highlight').forEach(cell => {
+                    cell.classList.remove('movement-highlight');
+                });
+            }
+
+            getNextPosition(pos, direction) {
+                const directions = [
+                    { x: 0, y: -1 }, // up
+                    { x: 1, y: 0 },  // right
+                    { x: 0, y: 1 },  // down
+                    { x: -1, y: 0 }  // left
+                ];
+                
+                const move = directions[direction];
+                return {
+                    x: pos.x + move.x,
+                    y: pos.y + move.y
+                };
+            }
+
+            isValidMove(pos) {
+                // Check bounds and road access
+                if (pos.x < 0 || pos.x >= this.gridSize || 
+                    pos.y < 0 || pos.y >= this.gridSize || 
+                    !this.isRoadOrIntersection(pos.x, pos.y)) {
+                    return false;
+                }
+                
+                return true;
+            }
+
+            getAvailableDirections(pos) {
+                const directions = [];
+                const moves = [
+                    { x: 0, y: -1 }, // up
+                    { x: 1, y: 0 },  // right
+                    { x: 0, y: 1 },  // down
+                    { x: -1, y: 0 }  // left
+                ];
+
+                moves.forEach(move => {
+                    const newX = pos.x + move.x;
+                    const newY = pos.y + move.y;
+                    
+                    if (newX >= 0 && newX < this.gridSize && 
+                        newY >= 0 && newY < this.gridSize && 
+                        this.isRoadOrIntersection(newX, newY)) {
+                        directions.push({ x: newX, y: newY });
+                    }
+                });
+
+                return directions;
+            }
+
+            chooseBestDirection(directions) {
+                // Simple AI: move away from closest police
+                let bestDir = directions[0];
+                let maxDistance = -1;
+
+                directions.forEach(dir => {
+                    let minPoliceDistance = Infinity;
+                    this.policePos.forEach(police => {
+                        const distance = Math.abs(dir.x - police.x) + Math.abs(dir.y - police.y);
+                        minPoliceDistance = Math.min(minPoliceDistance, distance);
+                    });
+                    
+                    if (minPoliceDistance > maxDistance) {
+                        maxDistance = minPoliceDistance;
+                        bestDir = dir;
+                    }
+                });
+
+                return bestDir;
+            }
+
+            isRoadOrIntersection(x, y) {
+                return x % 3 === 0 || y % 3 === 0;
+            }
+
+            isIntersection(pos) {
+                const { x, y } = pos;
+                return x % 3 === 0 && y % 3 === 0;
+            }
+
+            getTrafficLight(pos) {
+                const cell = document.querySelector(`[data-x="${pos.x}"][data-y="${pos.y}"]`);
+                return cell ? cell.querySelector('.traffic-light') : null;
+            }
+
+            showDirectionChoice() {
+                // Check if player has any valid moves available
+                const availableDirections = [];
+                for (let dir = 0; dir < 4; dir++) {
+                    const nextPos = this.getNextPosition(this.playerPos, dir);
+                    const blockedByPolice = this.policePos.some(police => 
+                        police.x === nextPos.x && police.y === nextPos.y
+                    );
+                    
+                    if (this.isValidMove(nextPos) && !blockedByPolice) {
+                        availableDirections.push(dir);
+                    }
+                }
+                
+                // If no valid directions available, game over
+                if (availableDirections.length === 0) {
+                    document.getElementById('gameStatus').textContent = 'Completely surrounded by police!';
+                    setTimeout(() => this.endGame(false), 1000);
+                    return;
+                }
+                
+                this.waitingForDirection = true;
+                document.getElementById('directionControls').style.display = 'block';
+            }
+
+            chooseDirection(direction) {
+                document.getElementById('directionControls').style.display = 'none';
+                this.waitingForDirection = false;
+                
+                // Calculate new direction
+                let newDirection = this.playerDirection;
+                if (direction === 'straight') {
+                    // Keep current direction
+                } else if (direction === 'left') {
+                    newDirection = (this.playerDirection + 3) % 4; // Turn left
+                } else if (direction === 'right') {
+                    newDirection = (this.playerDirection + 1) % 4; // Turn right
+                }
+                
+                // Check if the chosen direction is blocked by police
+                const nextPos = this.getNextPosition(this.playerPos, newDirection);
+                const blockedByPolice = this.policePos.some(police => 
+                    police.x === nextPos.x && police.y === nextPos.y
+                );
+                
+                if (blockedByPolice || !this.isValidMove(nextPos)) {
+                    document.getElementById('gameStatus').textContent = 'That direction is blocked! Choose another.';
+                    this.showDirectionChoice();
+                    return;
+                }
+                
+                // Update player direction
+                this.playerDirection = newDirection;
+
+                // Reset status message
+                document.getElementById('gameStatus').textContent = 'Running';
+
+                // Continue movement in new direction
+                if (this.movesLeft > 0) {
+                    setTimeout(() => this.movePlayer(), 450);
+                } else {
+                    // Clear movement highlights
+                    this.clearMovementHighlights();
+                    // Police moves after player completes all moves
+                    this.movePolice();
+                    this.checkGameState();
+                }
+            }
+
+            movePolice() {
+                // Move police with staggered delay for visual clarity (optimized for mobile)
+                const isMobile = window.innerWidth < 480 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                const delayMultiplier = isMobile ? 100 : 150; // Faster on mobile for better responsiveness
+                
+                this.policePos.forEach((police, index) => {
+                    setTimeout(() => {
+                        const directions = this.getAvailableDirections(police);
+                        if (directions.length > 0) {
+                            // Police moves towards player
+                            let bestMove = directions[0];
+                            let minDistance = Infinity;
+
+                            directions.forEach(dir => {
+                                const distance = Math.abs(dir.x - this.playerPos.x) + Math.abs(dir.y - this.playerPos.y);
+                                if (distance < minDistance) {
+                                    minDistance = distance;
+                                    bestMove = dir;
+                                }
+                            });
+
+                            police.x = bestMove.x;
+                            police.y = bestMove.y;
+                        }
+                        
+                        // Update display after each police move
+                        this.updateDisplay();
+                    }, index * delayMultiplier);
+                });
+            }
+
+            checkGameState() {
+                // Check if caught by police
+                for (let police of this.policePos) {
+                    if (police.x === this.playerPos.x && police.y === this.playerPos.y) {
+                        this.endGame(false);
+                        return;
+                    }
+                }
+
+                // Update move count
+                this.moveCount++;
+                document.getElementById('gameStatus').textContent = 'Running';
+
+                // Check win condition (survived 30 moves for larger city)
+                if (this.moveCount >= 30) {
+                    this.endGame(true);
+                }
+            }
+
+            endGame(won) {
+                this.gameActive = false;
+                document.getElementById('gameUI').style.display = 'none';
+                document.getElementById('gameOver').style.display = 'block';
+                
+                if (won) {
+                    triggerHaptic('success'); // Success haptic feedback
+                    document.getElementById('gameResult').textContent = '🎉 You Escaped!';
+                    document.getElementById('gameResult').style.color = '#44ff44';
+                } else {
+                    triggerHaptic('error'); // Error haptic feedback
+                    document.getElementById('gameResult').textContent = '🚔 Caught!';
+                    document.getElementById('gameResult').style.color = '#ff4444';
+                }
+                
+                document.getElementById('finalScore').textContent = `You survived ${this.moveCount} moves!`;
+            }
+        }
+
+        let game = null;
+        
+        // Haptic feedback function for Telegram Web App
+        function triggerHaptic(type = 'impact') {
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
+                if (type === 'success') {
+                    window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+                } else if (type === 'error') {
+                    window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+                } else if (type === 'warning') {
+                    window.Telegram.WebApp.HapticFeedback.notificationOccurred('warning');
+                } else {
+                    window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+                }
+            }
+        }
+
+        function startGame() {
+            // Clear any existing game state
+            if (game) {
+                game.gameActive = false;
+            }
+            
+            // Hide menu and game over screens
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('gameOver').style.display = 'none';
+            document.getElementById('directionControls').style.display = 'none';
+            document.getElementById('gameUI').style.display = 'flex';
+            
+            // Create new game instance
+            game = new CityChaseGame();
+            game.gameActive = true;
+        }
+
+        function returnToMenu() {
+            // Clear any active timers and reset game state
+            if (game) {
+                game.gameActive = false;
+                game = null;
+            }
+            
+            // Close any open popups
+            document.getElementById('directionControls').style.display = 'none';
+            
+            // Show menu, hide other screens
+            document.getElementById('gameUI').style.display = 'none';
+            document.getElementById('gameOver').style.display = 'none';
+            document.getElementById('menu').style.display = 'block';
+        }
+
+        function rollDice() {
+            if (game) {
+                triggerHaptic(); // Haptic feedback on dice roll
+                game.rollDice();
+            }
+        }
+
+        function chooseDirection(direction) {
+            if (game) {
+                triggerHaptic(); // Haptic feedback on direction choice
+                game.chooseDirection(direction);
+            }
+        }
+
+        function showInstructions() {
+            const instructions = `🎮 Как играть в City Chase:
+
+🎲 Бросайте кости для движения
+🚗 Вы начинаете в центре города
+🚔 Две полицейские машины начинают с углов
+🚦 Останавливайтесь на красный свет (полиция игнорирует)
+🛣️ Двигайтесь по дорогам и выбирайте направления
+🏃 Выживите 30 ходов для победы
+❌ Игра окончена, если полиция поймает
+
+📱 Поверните телефон горизонтально для лучшего опыта!\n\nУдачи в побеге! 🍀`;
+            
+            // Use Telegram Web App popup if available
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.showPopup) {
+                window.Telegram.WebApp.showPopup({
+                    title: 'Как играть',
+                    message: instructions,
+                    buttons: [{
+                        type: 'ok',
+                        text: 'Понятно'
+                    }]
+                });
+            } else {
+                alert(instructions);
+            }
+        }
+
+        // Telegram Web App initialization
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+            
+            // Enable closing confirmation
+            window.Telegram.WebApp.enableClosingConfirmation();
+            
+            // Set header color to match game theme
+            window.Telegram.WebApp.setHeaderColor('#1a1a2e');
+            
+            // Handle viewport changes
+            window.Telegram.WebApp.onEvent('viewportChanged', () => {
+                checkOrientation();
+            });
+        }
+        
+        // Orientation detection for mobile devices
+        function checkOrientation() {
+            const rotationOverlay = document.getElementById('rotationOverlay');
+            const isMobile = window.innerWidth < 480 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isPortrait = window.innerHeight > window.innerWidth;
+            
+            if (isMobile && isPortrait) {
+                rotationOverlay.style.display = 'flex';
+            } else {
+                rotationOverlay.style.display = 'none';
+            }
+        }
+        
+        // Handle orientation change
+        function handleOrientationChange() {
+            setTimeout(() => {
+                checkOrientation();
+                // Reinitialize game if active to adjust grid size
+                if (game && game.gameActive) {
+                    const oldGameState = {
+                        playerPos: game.playerPos,
+                        policePos: game.policePos,
+                        moveCount: game.moveCount,
+                        playerDirection: game.playerDirection
+                    };
+                    
+                    // Recreate game with new dimensions
+                    game = new CityChaseGame();
+                    game.gameActive = true;
+                    
+                    // Try to preserve game state if grid allows
+                    if (oldGameState.playerPos.x < game.gridSize && oldGameState.playerPos.y < game.gridSize) {
+                        game.playerPos = oldGameState.playerPos;
+                        game.moveCount = oldGameState.moveCount;
+                        game.playerDirection = oldGameState.playerDirection;
+                        
+                        // Reposition police if they fit in new grid
+                        game.policePos = oldGameState.policePos.filter(pos => 
+                            pos.x < game.gridSize && pos.y < game.gridSize
+                        );
+                        
+                        game.updateDisplay();
+                    }
+                }
+            }, 300);
+        }
+        
+        // Event listeners for orientation changes
+        window.addEventListener('orientationchange', handleOrientationChange);
+        window.addEventListener('resize', handleOrientationChange);
+        
+        // Initial orientation check
+        window.addEventListener('load', () => {
+            checkOrientation();
+            
+            // Prevent pull-to-refresh on iOS Safari
+            document.body.addEventListener('touchstart', function(e) {
+                if (e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    if (touch.clientY === 0) {
+                        e.preventDefault();
+                    }
+                }
+            }, { passive: false });
+            
+            // Prevent overscroll on iOS
+            document.body.addEventListener('touchmove', function(e) {
+                if (e.scale !== 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+        
+        // Prevent zoom on double tap for iOS
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        });
+        
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>
