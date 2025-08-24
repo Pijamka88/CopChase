@@ -109,7 +109,7 @@
         /* Status panel positioned at the very bottom of screen */
         .status-panel {
             position: fixed;
-            bottom: 10px;
+            bottom: 165px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.15);
@@ -583,7 +583,7 @@
             }
             
             .status-panel {
-                bottom: 8px;
+                bottom: 15px;
                 left: 50%;
                 transform: translateX(-50%);
                 padding: 6px 10px;
@@ -591,8 +591,14 @@
             
             .direction-controls {
                 bottom: 8px;
-                min-width: 280px;
+                left: 0;
+                right: 0;
+                transform: none;
+                width: 100%;
+                min-width: unset;
                 padding: 12px;
+                margin: 0;
+                border-radius: 0;
             }
             
             .status-panel .stat {
