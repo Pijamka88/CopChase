@@ -576,15 +576,13 @@
             .game-board {
                 padding: 1px;
                 padding-top: 2px;
-                height: calc(100vh - 160px); /* Increased reserved space for UI elements */
-                padding-bottom: 100px; /* Increased padding for bottom UI */
-                overflow: hidden;
+                height: calc(100vh - 120px); /* Reserve space for UI elements */
+                padding-bottom: 80px; /* Additional padding for bottom UI */
             }
             
             .city-grid {
                 padding: 4px;
-                margin-bottom: 30px; /* Increased space for bottom UI */
-                max-height: calc(100vh - 200px); /* Ensure grid doesn't overflow */
+                margin-bottom: 20px; /* Space for bottom UI */
             }
             
             .status-panel {
@@ -718,12 +716,12 @@
                 
                 // Calculate cell size based on available screen space optimized for mobile
                 const availableWidth = Math.min(window.innerWidth - 20, 420); // Reduced for mobile
-                const availableHeight = window.innerHeight - 200; // Increased UI reserve for mobile
+                const availableHeight = window.innerHeight - 140; // Reduced UI reserve
                 
                 // Calculate cell size to fit the grid with smaller cells for mobile
                 const cellSizeByWidth = Math.floor(availableWidth / this.gridSize.width);
                 const cellSizeByHeight = Math.floor(availableHeight / this.gridSize.height);
-                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 32), 20); // Increased: min 20px, max 32px
+                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 28), 18); // Min 18px, max 28px per cell
                 
                 this.playerPos = { x: Math.floor(this.gridSize.width / 2), y: Math.floor(this.gridSize.height / 2) };
                 this.policePos = [];
@@ -743,9 +741,9 @@
                 const centerX = Math.floor(this.gridSize.width / 2);
                 const centerY = Math.floor(this.gridSize.height / 2);
                 
-                // Find nearest road intersection to center (every 4 cells)
-                let nearestRoadX = Math.floor(centerX / 4) * 4;
-                let nearestRoadY = Math.floor(centerY / 4) * 4;
+                // Find nearest road intersection to center
+                let nearestRoadX = Math.floor(centerX / 3) * 3;
+                let nearestRoadY = Math.floor(centerY / 3) * 3;
                 
                 this.playerPos = { x: nearestRoadX, y: nearestRoadY };
                 this.playerDirection = Math.floor(Math.random() * 4); // Random initial direction
@@ -779,9 +777,9 @@
                         // Check if this is perimeter (city border) - must be road
                         const isPerimeter = (x === 0 || x === this.gridSize.width - 1 || y === 0 || y === this.gridSize.height - 1);
                         
-                        // Check if this should be a road based on grid pattern (every 4 cells for fewer roads)
-                        const isRoadX = x % 4 === 0;
-                        const isRoadY = y % 4 === 0;
+                        // Check if this should be a road based on grid pattern
+                        const isRoadX = x % 3 === 0;
+                        const isRoadY = y % 3 === 0;
                         
                         // Force corners to be intersections
                         const isCorner = (x === 0 && y === 0) || 
@@ -909,25 +907,25 @@
                     }
                 }
                 
-                // Procedural terrain generation with maximum 24 land cells (increased for more terrain)
+                // Procedural terrain generation with maximum 12 land cells
                 let totalLandCells = 0;
-                const maxLandCells = 24;
+                const maxLandCells = 12;
                 const maxAttempts = 50;
                 
                 for (let attempt = 0; attempt < maxAttempts && totalLandCells < maxLandCells; attempt++) {
                     const remainingCells = maxLandCells - totalLandCells;
                     
-                    // Dynamic cluster sizing based on remaining cells (larger clusters for more land)
+                    // Dynamic cluster sizing based on remaining cells
                     let clusterSize;
-                    if (remainingCells >= 8) {
-                        // Large clusters (6-10 cells) when 8+ cells remain
-                        clusterSize = Math.floor(Math.random() * 5) + 6; // 6, 7, 8, 9, or 10
-                    } else if (remainingCells >= 4) {
-                        // Medium clusters (3-6 cells) when 4-7 cells remain
-                        clusterSize = Math.floor(Math.random() * 4) + 3; // 3, 4, 5, or 6
+                    if (remainingCells >= 6) {
+                        // Large clusters (4-6 cells) when 6+ cells remain
+                        clusterSize = Math.floor(Math.random() * 3) + 4; // 4, 5, or 6
+                    } else if (remainingCells >= 3) {
+                        // Medium clusters (2-4 cells) when 3-5 cells remain
+                        clusterSize = Math.floor(Math.random() * 3) + 2; // 2, 3, or 4
                     } else {
-                        // Small clusters (1-3 cells) when fewer than 4 remain
-                        clusterSize = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
+                        // Small clusters (1-2 cells) when fewer than 3 remain
+                        clusterSize = Math.floor(Math.random() * 2) + 1; // 1 or 2
                     }
                     
                     // Don't exceed remaining cells
@@ -935,17 +933,17 @@
                     
                     if (clusterSize <= 0) break;
                     
-                    // Generate cluster dimensions that fit the cluster size (larger clusters)
+                    // Generate cluster dimensions that fit the cluster size
                     let blockWidth, blockHeight;
-                    if (clusterSize <= 3) {
-                        blockWidth = clusterSize <= 2 ? clusterSize : 3;
-                        blockHeight = clusterSize <= 2 ? 1 : 1;
-                    } else if (clusterSize <= 6) {
+                    if (clusterSize <= 2) {
+                        blockWidth = clusterSize === 1 ? 1 : 2;
+                        blockHeight = clusterSize === 1 ? 1 : 1;
+                    } else if (clusterSize <= 4) {
+                        blockWidth = 2;
+                        blockHeight = Math.ceil(clusterSize / 2);
+                    } else {
                         blockWidth = 3;
                         blockHeight = Math.ceil(clusterSize / 3);
-                    } else {
-                        blockWidth = 4;
-                        blockHeight = Math.ceil(clusterSize / 4);
                     }
                     
                     const terrainType = terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
@@ -963,8 +961,8 @@
                             startX = Math.floor(Math.random() * maxX) + 2;
                             startY = Math.floor(Math.random() * maxY) + 2;
                             
-                            // Check if starting position avoids main roads (every 4 cells)
-                            if (startX % 4 !== 0 && startY % 4 !== 0) {
+                            // Check if starting position avoids main roads
+                            if (startX % 3 !== 0 && startY % 3 !== 0) {
                                 validPosition = true;
                                 
                                 // Verify the entire block area is clear and count actual cells
@@ -974,8 +972,8 @@
                                         const checkX = startX + dx;
                                         const checkY = startY + dy;
                                         
-                                        // Make sure we don't place on roads or boundaries (every 4 cells)
-                                        if (checkX % 4 === 0 || checkY % 4 === 0 || 
+                                        // Make sure we don't place on roads or boundaries
+                                        if (checkX % 3 === 0 || checkY % 3 === 0 || 
                                             checkX >= this.gridSize.width - 1 || checkY >= this.gridSize.height - 1 ||
                                             checkX <= 0 || checkY <= 0) {
                                             validPosition = false;
@@ -1001,10 +999,10 @@
                                     const placeX = startX + dx;
                                     const placeY = startY + dy;
                                     
-                                    // Place terrain ensuring we stay within valid bounds (every 4 cells)
+                                    // Place terrain ensuring we stay within valid bounds
                                     if (placeX > 0 && placeY > 0 && 
                                         placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 &&
-                                        placeX % 4 !== 0 && placeY % 4 !== 0) {
+                                        placeX % 3 !== 0 && placeY % 3 !== 0) {
                                         this.terrainMap[placeY][placeX] = terrainType;
                                         cellsPlaced++;
                                         totalLandCells++;
@@ -1033,8 +1031,8 @@
                     let nearestRoad = null;
                     let minDistance = Infinity;
                     
-                    for (let y = 0; y < this.gridSize.height; y += 4) {
-                        for (let x = 0; x < this.gridSize.width; x += 4) {
+                    for (let y = 0; y < this.gridSize.height; y += 3) {
+                        for (let x = 0; x < this.gridSize.width; x += 3) {
                             if (this.isRoadOrIntersection(x, y)) {
                                 const distance = Math.abs(x - corner.x) + Math.abs(y - corner.y);
                                 if (distance < minDistance) {
@@ -1312,12 +1310,12 @@
             }
 
             isRoadOrIntersection(x, y) {
-                return x % 4 === 0 || y % 4 === 0;
+                return x % 3 === 0 || y % 3 === 0;
             }
 
             isIntersection(pos) {
                 const { x, y } = pos;
-                return x % 4 === 0 && y % 4 === 0;
+                return x % 3 === 0 && y % 3 === 0;
             }
 
             getTrafficLight(pos) {
