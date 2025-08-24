@@ -723,7 +723,7 @@
                 // Calculate cell size to fit the grid with smaller cells for mobile
                 const cellSizeByWidth = Math.floor(availableWidth / this.gridSize.width);
                 const cellSizeByHeight = Math.floor(availableHeight / this.gridSize.height);
-                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 24), 16); // Reduced max size, min 16px
+                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 32), 20); // Increased: min 20px, max 32px
                 
                 this.playerPos = { x: Math.floor(this.gridSize.width / 2), y: Math.floor(this.gridSize.height / 2) };
                 this.policePos = [];
