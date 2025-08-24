@@ -442,7 +442,7 @@
 
         .direction-btn {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-            margin: 3px;
+            margin: 2px;
             padding: 12px 24px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 16px;
@@ -593,15 +593,17 @@
             }
             
             .direction-controls {
-                bottom: 8px;
-                left: 0;
-                right: 0;
+                position: relative;
+                bottom: auto;
+                left: auto;
+                right: auto;
                 transform: none;
-                width: 100%;
+                width: auto;
                 min-width: unset;
                 padding: 12px;
-                margin: 0;
-                border-radius: 0;
+                margin: 10px 0;
+                border-radius: 16px;
+                display: none;
             }
             
             .status-panel .stat {
@@ -743,7 +745,7 @@
                 
                 // Find nearest road intersection to center
                 let nearestRoadX = Math.floor(centerX / 3) * 3;
-                let nearestRoadY = Math.floor(centerY / 3) * 3;
+                let nearestRoadY = Math.floor(centerY / 5) * 5;
                 
                 this.playerPos = { x: nearestRoadX, y: nearestRoadY };
                 this.playerDirection = Math.floor(Math.random() * 4); // Random initial direction
@@ -779,7 +781,7 @@
                         
                         // Check if this should be a road based on grid pattern
                         const isRoadX = x % 3 === 0;
-                        const isRoadY = y % 3 === 0;
+                        const isRoadY = y % 5 === 0;
                         
                         // Force corners to be intersections
                         const isCorner = (x === 0 && y === 0) || 
@@ -909,7 +911,7 @@
                 
                 // Procedural terrain generation with maximum 12 land cells
                 let totalLandCells = 0;
-                const maxLandCells = 12;
+                const maxLandCells = 36;
                 const maxAttempts = 50;
                 
                 for (let attempt = 0; attempt < maxAttempts && totalLandCells < maxLandCells; attempt++) {
@@ -917,15 +919,15 @@
                     
                     // Dynamic cluster sizing based on remaining cells
                     let clusterSize;
-                    if (remainingCells >= 6) {
-                        // Large clusters (4-6 cells) when 6+ cells remain
-                        clusterSize = Math.floor(Math.random() * 3) + 4; // 4, 5, or 6
-                    } else if (remainingCells >= 3) {
-                        // Medium clusters (2-4 cells) when 3-5 cells remain
-                        clusterSize = Math.floor(Math.random() * 3) + 2; // 2, 3, or 4
+                    if (remainingCells >= 12) {
+                        // Large clusters (8-15 cells) when 12+ cells remain
+                        clusterSize = Math.floor(Math.random() * 8) + 8; // 8-15
+                    } else if (remainingCells >= 6) {
+                        // Medium clusters (4-8 cells) when 6-11 cells remain
+                        clusterSize = Math.floor(Math.random() * 5) + 4; // 4-8
                     } else {
-                        // Small clusters (1-2 cells) when fewer than 3 remain
-                        clusterSize = Math.floor(Math.random() * 2) + 1; // 1 or 2
+                        // Small clusters (1-4 cells) when fewer than 6 remain
+                        clusterSize = Math.floor(Math.random() * 4) + 1; // 1-4
                     }
                     
                     // Don't exceed remaining cells
@@ -962,7 +964,7 @@
                             startY = Math.floor(Math.random() * maxY) + 2;
                             
                             // Check if starting position avoids main roads
-                            if (startX % 3 !== 0 && startY % 3 !== 0) {
+                            if (startX % 3 !== 0 && startY % 5 !== 0) {
                                 validPosition = true;
                                 
                                 // Verify the entire block area is clear and count actual cells
@@ -973,7 +975,7 @@
                                         const checkY = startY + dy;
                                         
                                         // Make sure we don't place on roads or boundaries
-                                        if (checkX % 3 === 0 || checkY % 3 === 0 || 
+                                        if (checkX % 3 === 0 || checkY % 5 === 0 || 
                                             checkX >= this.gridSize.width - 1 || checkY >= this.gridSize.height - 1 ||
                                             checkX <= 0 || checkY <= 0) {
                                             validPosition = false;
@@ -1002,7 +1004,7 @@
                                     // Place terrain ensuring we stay within valid bounds
                                     if (placeX > 0 && placeY > 0 && 
                                         placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 &&
-                                        placeX % 3 !== 0 && placeY % 3 !== 0) {
+                                        placeX % 3 !== 0 && placeY % 5 !== 0) {
                                         this.terrainMap[placeY][placeX] = terrainType;
                                         cellsPlaced++;
                                         totalLandCells++;
@@ -1031,7 +1033,7 @@
                     let nearestRoad = null;
                     let minDistance = Infinity;
                     
-                    for (let y = 0; y < this.gridSize.height; y += 3) {
+                    for (let y = 0; y < this.gridSize.height; y += 5) {
                         for (let x = 0; x < this.gridSize.width; x += 3) {
                             if (this.isRoadOrIntersection(x, y)) {
                                 const distance = Math.abs(x - corner.x) + Math.abs(y - corner.y);
@@ -1310,12 +1312,12 @@
             }
 
             isRoadOrIntersection(x, y) {
-                return x % 3 === 0 || y % 3 === 0;
+                return x % 3 === 0 || y % 5 === 0;
             }
 
             isIntersection(pos) {
                 const { x, y } = pos;
-                return x % 3 === 0 && y % 3 === 0;
+                return x % 3 === 0 && y % 5 === 0;
             }
 
             getTrafficLight(pos) {
