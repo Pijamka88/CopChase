@@ -106,11 +106,12 @@
             height: 60px;
         }
 
-        /* Status panel in bottom-left corner */
+        /* Status panel positioned higher and centered */
         .status-panel {
             position: fixed;
-            bottom: 15px;
-            left: 15px;
+            bottom: 150px;
+            left: 50%;
+            transform: translateX(-50%);
             background: rgba(0,0,0,0.15);
             padding: 8px 12px;
             border-radius: 12px;
@@ -421,19 +422,21 @@
             }
         }
 
-        /* Direction Controls */
+        /* Direction Controls - positioned below status panel */
         .direction-controls {
             display: none;
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
             text-align: center;
             padding: 18px;
             background: rgba(0,0,0,0.25);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-        }
-
-        .direction-controls h3 {
-            margin-bottom: 15px;
-            color: #ffd700;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1500;
         }
 
         .direction-btn {
@@ -463,14 +466,30 @@
         /* Game Over */
         .game-over {
             display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
             padding: 50px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            min-width: 320px;
+            max-width: 90vw;
         }
 
         .game-over h2 {
             font-size: 2em;
             color: #ff4444;
             margin-bottom: 20px;
+        }
+
+        .game-over .btn {
+            margin-top: 30px;
         }
 
         /* Instructions Popup */
@@ -563,8 +582,9 @@
             }
             
             .status-panel {
-                bottom: 10px;
-                left: 10px;
+                bottom: 120px;
+                left: 50%;
+                transform: translateX(-50%);
                 padding: 6px 10px;
             }
             
@@ -637,7 +657,6 @@
             <button id="rollBtn" class="dice-roll-btn" onclick="rollDice()">🎲<br>Roll</button>
 
             <div id="directionControls" class="direction-controls">
-                <h3>🚦 Choose Direction</h3>
                 <button class="btn direction-btn" onclick="chooseDirection('straight')">⬆️ Straight</button>
                 <button class="btn direction-btn" onclick="chooseDirection('left')">⬅️ Left</button>
                 <button class="btn direction-btn" onclick="chooseDirection('right')">➡️ Right</button>
@@ -1080,7 +1099,7 @@
                     return;
                 }
 
-                // Check if player is completely blocked by police before any movement
+                // Check if player is completely blocked before any movement
                 const allDirections = [0, 1, 2, 3]; // up, right, down, left
                 const validDirections = allDirections.filter(dir => {
                     const testPos = this.getNextPosition(this.playerPos, dir);
@@ -1089,7 +1108,7 @@
                 
                 if (validDirections.length === 0) {
                     // Player is completely blocked - game over
-                    document.getElementById('gameStatus').textContent = 'Completely blocked by police!';
+                    document.getElementById('gameStatus').textContent = 'Surrounded by police!';
                     setTimeout(() => this.endGame(false), 1000);
                     return;
                 }
@@ -1106,7 +1125,7 @@
                     
                     if (blockedByPolice) {
                         // Show direction choice since current direction is blocked
-                        document.getElementById('gameStatus').textContent = 'Blocked by police! Choose another direction';
+                        document.getElementById('gameStatus').textContent = 'Blocked by police!';
                         this.showDirectionChoice();
                         return;
                     } else {
@@ -1131,9 +1150,9 @@
                     if (light && light.classList.contains('red-light')) {
                         // Stop at red light and consume remaining moves
                         this.movesLeft = 0;
-                        document.getElementById('gameStatus').textContent = 'Stopped at red light 🔴 - Choose direction';
+                        document.getElementById('gameStatus').textContent = 'Stopped at red light 🔴';
                     } else {
-                        document.getElementById('gameStatus').textContent = 'At intersection - Choose direction';
+                        document.getElementById('gameStatus').textContent = 'At intersection';
                     }
                     // Always show direction choice at intersections regardless of traffic light
                     this.showDirectionChoice();
@@ -1266,18 +1285,14 @@
                 const availableDirections = [];
                 for (let dir = 0; dir < 4; dir++) {
                     const nextPos = this.getNextPosition(this.playerPos, dir);
-                    const blockedByPolice = this.policePos.some(police => 
-                        police.x === nextPos.x && police.y === nextPos.y
-                    );
-                    
-                    if (this.isValidMove(nextPos) && !blockedByPolice) {
+                    if (this.isValidMove(nextPos)) {
                         availableDirections.push(dir);
                     }
                 }
                 
                 // If no valid directions available, game over
                 if (availableDirections.length === 0) {
-                    document.getElementById('gameStatus').textContent = 'Completely surrounded by police!';
+                    document.getElementById('gameStatus').textContent = 'Surrounded by police!';
                     setTimeout(() => this.endGame(false), 1000);
                     return;
                 }
@@ -1312,9 +1327,9 @@
                     );
                     
                     if (blockedByPolice) {
-                        document.getElementById('gameStatus').textContent = 'That direction is blocked by police! Choose another.';
+                        document.getElementById('gameStatus').textContent = 'That direction is blocked by police!';
                     } else {
-                        document.getElementById('gameStatus').textContent = 'That direction is blocked! Choose another.';
+                        document.getElementById('gameStatus').textContent = 'That direction is blocked!';
                     }
                     this.showDirectionChoice();
                     return;
