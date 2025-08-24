@@ -106,10 +106,10 @@
             height: 60px;
         }
 
-        /* Status panel positioned higher and centered */
+        /* Status panel positioned at the very bottom of screen */
         .status-panel {
             position: fixed;
-            bottom: 150px;
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.15);
@@ -422,11 +422,11 @@
             }
         }
 
-        /* Direction Controls - positioned below status panel */
+        /* Direction Controls - horizontally fixed position */
         .direction-controls {
             display: none;
             position: fixed;
-            bottom: 50px;
+            bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
@@ -437,6 +437,7 @@
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             z-index: 1500;
+            min-width: 300px;
         }
 
         .direction-btn {
@@ -582,10 +583,15 @@
             }
             
             .status-panel {
-                bottom: 120px;
+                bottom: 8px;
                 left: 50%;
                 transform: translateX(-50%);
                 padding: 6px 10px;
+            }
+            
+            .direction-controls {
+                bottom: 50px;
+                min-width: 280px;
             }
             
             .status-panel .stat {
