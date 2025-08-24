@@ -133,7 +133,7 @@
         }
 
         .top-panel {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.15);
             padding: 10px 15px;
             display: flex;
             justify-content: space-between;
@@ -459,7 +459,7 @@
             display: none;
             text-align: center;
             padding: 18px;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.25);
             /* Mobile optimization */
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -806,8 +806,8 @@
     <script>
         class CityChaseGame {
             constructor() {
-                // Portrait mode optimized: 16 width x 30 height for optimal mobile viewing
-                this.gridSize = { width: 16, height: 30 };
+                // Portrait mode optimized: 16 width x 28 height for optimal mobile viewing
+                this.gridSize = { width: 16, height: 28 };
                 
                 // Calculate cell size based on available screen space with larger minimum for smaller grid
                 const availableWidth = Math.min(window.innerWidth - 25, 480); // Optimized for mobile
@@ -1391,10 +1391,14 @@
                 
                 this.waitingForDirection = true;
                 document.getElementById('directionControls').style.display = 'block';
+                // Hide the Roll button when direction controls appear
+                document.getElementById('rollBtn').style.display = 'none';
             }
 
             chooseDirection(direction) {
                 document.getElementById('directionControls').style.display = 'none';
+                // Show the Roll button again when direction controls are hidden
+                document.getElementById('rollBtn').style.display = 'block';
                 this.waitingForDirection = false;
                 
                 // Calculate new direction
@@ -1570,6 +1574,9 @@
             document.getElementById('gameOver').style.display = 'none';
             document.getElementById('directionControls').style.display = 'none';
             document.getElementById('gameUI').style.display = 'flex';
+            
+            // Ensure Roll button is visible
+            document.getElementById('rollBtn').style.display = 'block';
             
             // Create new game instance
             game = new CityChaseGame();
