@@ -32,6 +32,14 @@
             padding-bottom: env(safe-area-inset-bottom);
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
+            /* Enhanced mobile optimization */
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         /* Removed rotation overlay - game now supports portrait mode */
@@ -42,6 +50,9 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            position: relative;
+            /* Telegram Web App optimization */
+            background: var(--tg-theme-bg-color, transparent);
         }
 
         /* Menu Styles */
@@ -565,56 +576,56 @@
         @media (max-width: 480px) {
             .top-panel {
                 flex-direction: row;
-                gap: 8px;
-                padding: 8px;
+                gap: 6px;
+                padding: 6px;
                 height: auto;
-                min-height: 50px;
+                min-height: 45px;
                 justify-content: space-between;
             }
 
             .stats {
                 justify-content: center;
-                gap: 15px;
+                gap: 12px;
             }
             
             .stat {
-                padding: 6px 12px;
-                font-size: 13px;
+                padding: 5px 10px;
+                font-size: 12px;
             }
             
             .menu-btn {
-                padding: 6px 10px;
-                font-size: 16px;
-                min-width: 40px;
+                padding: 5px 8px;
+                font-size: 14px;
+                min-width: 35px;
             }
             
             .game-board {
-                padding: 2px;
-                padding-top: 3px;
+                padding: 1px;
+                padding-top: 2px;
             }
             
             .city-grid {
-                padding: 6px;
+                padding: 4px;
             }
             
             .dice-roll-btn {
-                bottom: 15px;
-                right: 15px;
-                width: 65px;
-                height: 65px;
-                font-size: 0.85em;
+                bottom: 12px;
+                right: 12px;
+                width: 60px;
+                height: 60px;
+                font-size: 0.8em;
             }
             
             .dice {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
             }
             
             .btn {
-                padding: 10px 18px;
-                font-size: 14px;
-                margin: 4px;
+                padding: 8px 15px;
+                font-size: 13px;
+                margin: 3px;
             }
         }
         
@@ -704,7 +715,15 @@
         /* Telegram Web App specific styles */
         @media (max-width: 480px) and (display-mode: standalone) {
             .container {
-                padding-top: max(10px, env(safe-area-inset-top));
+                padding-top: max(8px, env(safe-area-inset-top));
+            }
+        }
+        
+        /* Enhanced Telegram Web App optimization */
+        @supports (padding: max(0px)) {
+            .container {
+                padding-left: max(8px, env(safe-area-inset-left));
+                padding-right: max(8px, env(safe-area-inset-right));
             }
         }
     </style>
@@ -713,7 +732,7 @@
     <div class="container">
         <!-- Main Menu -->
         <div id="menu" class="menu">
-            <h1>🏙️ Cop Chase</h1>
+            <h1>Cop Chase</h1>
             <p style="text-align: left;">Escape from the police in this dice-rolling chase game!</p>
             <div style="margin: 20px 0; line-height: 2; text-align: left;">
                 <div>🎲 Roll the dice to move</div>
@@ -787,17 +806,17 @@
     <script>
         class CityChaseGame {
             constructor() {
-                // Portrait mode optimized: 18 width x 34 height for optimal mobile viewing
-                this.gridSize = { width: 18, height: 34 };
+                // Portrait mode optimized: 16 width x 31 height for optimal mobile viewing
+                this.gridSize = { width: 16, height: 31 };
                 
-                // Calculate cell size based on available screen space with larger minimum
-                const availableWidth = Math.min(window.innerWidth - 30, 540); // Optimized for mobile
-                const availableHeight = window.innerHeight - 180; // Reserve space for UI
+                // Calculate cell size based on available screen space with larger minimum for smaller grid
+                const availableWidth = Math.min(window.innerWidth - 25, 480); // Optimized for mobile
+                const availableHeight = window.innerHeight - 160; // Reserve space for UI
                 
                 // Calculate cell size to fit the grid with larger minimum cell size
                 const cellSizeByWidth = Math.floor(availableWidth / this.gridSize.width);
                 const cellSizeByHeight = Math.floor(availableHeight / this.gridSize.height);
-                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 32), 22); // Min 22px, max 32px per cell
+                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 35), 24); // Min 24px, max 35px per cell
                 
                 this.playerPos = { x: Math.floor(this.gridSize.width / 2), y: Math.floor(this.gridSize.height / 2) };
                 this.policePos = [];
