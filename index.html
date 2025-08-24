@@ -401,7 +401,7 @@
 
         .player {
             position: absolute;
-            font-size: 20px;
+            font-size: 16px;
             z-index: 10;
             display: flex;
             flex-direction: column;
@@ -415,7 +415,7 @@
         }
 
         .direction-arrow {
-            font-size: 8px;
+            font-size: 6px;
             margin-bottom: -3px;
             text-shadow: 0 0 2px rgba(0,0,0,0.8);
             line-height: 1;
@@ -423,7 +423,7 @@
 
         .police {
             position: absolute;
-            font-size: 18px;
+            font-size: 14px;
             z-index: 9;
             display: flex;
             flex-direction: column;
@@ -629,78 +629,6 @@
             }
         }
         
-        /* Landscape mode optimizations for Telegram Web App */
-        @media (max-width: 926px) and (orientation: landscape) {
-            .container {
-                padding: 3px;
-            }
-            
-            .top-panel {
-                padding: 6px 12px;
-                flex-direction: row;
-                justify-content: space-between;
-                height: 45px;
-                min-height: 45px;
-            }
-            
-            .stats {
-                gap: 12px;
-            }
-            
-            .stat {
-                padding: 5px 10px;
-                font-size: 12px;
-            }
-            
-            .menu-btn {
-                padding: 4px 8px;
-                font-size: 14px;
-                min-width: 35px;
-            }
-            
-            .game-board {
-                padding: 2px;
-                overflow-x: auto;
-                overflow-y: hidden;
-                height: calc(100vh - 120px);
-                padding-top: 3px;
-            }
-            
-            .city-grid {
-                padding: 4px;
-                max-height: calc(100vh - 120px);
-            }
-            
-            .dice {
-                width: 35px;
-                height: 35px;
-                font-size: 16px;
-            }
-            
-            .btn {
-                padding: 6px 14px;
-                font-size: 13px;
-                margin: 3px;
-            }
-            
-            .direction-controls {
-                padding: 11px;
-            }
-            
-            .direction-btn {
-                padding: 6px 14px;
-                margin: 2px;
-            }
-            
-            .dice-roll-btn {
-                width: 55px;
-                height: 55px;
-                font-size: 0.75em;
-                bottom: 10px;
-                right: 10px;
-            }
-        }
-        
         /* iPhone specific optimizations */
         @media (max-device-width: 414px) and (-webkit-min-device-pixel-ratio: 2) {
             body {
@@ -809,14 +737,14 @@
                 // Portrait mode optimized: 16 width x 28 height for optimal mobile viewing
                 this.gridSize = { width: 16, height: 28 };
                 
-                // Calculate cell size based on available screen space with larger minimum for smaller grid
-                const availableWidth = Math.min(window.innerWidth - 25, 480); // Optimized for mobile
-                const availableHeight = window.innerHeight - 160; // Reserve space for UI
+                // Calculate cell size based on available screen space optimized for mobile
+                const availableWidth = Math.min(window.innerWidth - 20, 420); // Reduced for mobile
+                const availableHeight = window.innerHeight - 140; // Reduced UI reserve
                 
-                // Calculate cell size to fit the grid with larger minimum cell size
+                // Calculate cell size to fit the grid with smaller cells for mobile
                 const cellSizeByWidth = Math.floor(availableWidth / this.gridSize.width);
                 const cellSizeByHeight = Math.floor(availableHeight / this.gridSize.height);
-                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 35), 24); // Min 24px, max 35px per cell
+                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 28), 18); // Min 18px, max 28px per cell
                 
                 this.playerPos = { x: Math.floor(this.gridSize.width / 2), y: Math.floor(this.gridSize.height / 2) };
                 this.policePos = [];
@@ -948,40 +876,40 @@
                                     // Industrial areas - more factories and industrial buildings
                                     if (featureChance > 0.70) { // 30% occurrence
                                         cell.innerHTML = '🏭'; // Factory
-                                        cell.style.fontSize = `${this.cellSize * 0.75}px`;
+                                        cell.style.fontSize = `${this.cellSize * 0.55}px`; // Reduced for mobile
                                     } else if (featureChance > 0.60) {
                                         cell.innerHTML = '🏢'; // Office building
-                                        cell.style.fontSize = `${this.cellSize * 0.75}px`;
+                                        cell.style.fontSize = `${this.cellSize * 0.55}px`; // Reduced for mobile
                                     }
                                 } else if (finalTerrainType === 'land-grass') {
                                     // Residential areas - houses and trees
                                     if (featureChance > 0.75) { // 25% occurrence
                                         cell.innerHTML = '🏠'; // House
-                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
                                     } else if (featureChance > 0.65) {
                                         cell.innerHTML = '🌳'; // Tree
-                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
                                     } else if (featureChance > 0.58) {
                                         cell.innerHTML = '🌲'; // Evergreen tree
-                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
                                     }
                                 } else if (finalTerrainType === 'land') {
                                     // Mixed urban areas
                                     if (featureChance > 0.78) { // 22% occurrence
                                         cell.innerHTML = '🏢'; // Office building
-                                        cell.style.fontSize = `${this.cellSize * 0.75}px`;
+                                        cell.style.fontSize = `${this.cellSize * 0.55}px`; // Reduced for mobile
                                     } else if (featureChance > 0.68) {
                                         cell.innerHTML = '🏠'; // House
-                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
                                     } else if (featureChance > 0.60) {
                                         cell.innerHTML = '🌳'; // Tree
-                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
                                     }
                                 } else {
                                     // Other terrain types - sparse features
                                     if (featureChance > 0.85) {
                                         cell.innerHTML = '🌳'; // Tree
-                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
                                     }
                                 }
                             }
@@ -1002,40 +930,60 @@
                     }
                 }
                 
-                // Generate larger terrain blocks with enhanced procedural generation
-                const attempts = 40; // Increased attempts for better coverage
+                // Enhanced terrain generation with proper cluster sizes
+                const attempts = 30;
                 for (let i = 0; i < attempts; i++) {
-                    // Use larger block sizes as specified (6, 8, 10, 12) but limit to max 8
-                    const blockSizes = [6, 7, 8];
-                    const blockWidth = Math.min(blockSizes[Math.floor(Math.random() * blockSizes.length)], this.gridSize.width - 2);
-                    const blockHeight = Math.min(blockSizes[Math.floor(Math.random() * blockSizes.length)], this.gridSize.height - 2);
+                    // Create terrain clusters with varied sizes
+                    const clusterType = Math.random();
+                    let blockWidth, blockHeight;
+                    
+                    if (clusterType < 0.3) {
+                        // Small clusters (3-4 cells)
+                        blockWidth = Math.floor(Math.random() * 2) + 3; // 3 or 4
+                        blockHeight = Math.floor(Math.random() * 2) + 3; // 3 or 4
+                    } else if (clusterType < 0.6) {
+                        // Medium clusters (5-7 cells)
+                        blockWidth = Math.floor(Math.random() * 3) + 5; // 5, 6, or 7
+                        blockHeight = Math.floor(Math.random() * 3) + 5; // 5, 6, or 7
+                    } else {
+                        // Large clusters (8-10 cells) - but respecting the 8 cell limit
+                        blockWidth = Math.floor(Math.random() * 1) + 8; // 8
+                        blockHeight = Math.floor(Math.random() * 1) + 8; // 8
+                    }
+                    
+                    // Ensure blocks fit within grid
+                    blockWidth = Math.min(blockWidth, this.gridSize.width - 4);
+                    blockHeight = Math.min(blockHeight, this.gridSize.height - 4);
+                    
                     const terrainType = terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
                     
-                    // Find a suitable position (not on perimeter or road grid lines)
-                    const maxX = this.gridSize.width - blockWidth - 1;
-                    const maxY = this.gridSize.height - blockHeight - 1;
+                    // Find suitable position avoiding roads
+                    const maxX = this.gridSize.width - blockWidth - 2;
+                    const maxY = this.gridSize.height - blockHeight - 2;
                     
-                    if (maxX > 1 && maxY > 1) {
+                    if (maxX > 2 && maxY > 2) {
                         let startX, startY;
                         let validPosition = false;
                         let positionAttempts = 0;
                         
-                        while (!validPosition && positionAttempts < 25) {
-                            startX = Math.floor(Math.random() * maxX) + 1;
-                            startY = Math.floor(Math.random() * maxY) + 1;
+                        while (!validPosition && positionAttempts < 15) {
+                            startX = Math.floor(Math.random() * maxX) + 2;
+                            startY = Math.floor(Math.random() * maxY) + 2;
                             
-                            // Ensure terrain blocks don't overlap with main road grid (every 3rd cell)
+                            // Check if starting position avoids main roads
                             if (startX % 3 !== 0 && startY % 3 !== 0) {
                                 validPosition = true;
                                 
-                                // Check if area is clear and doesn't touch perimeter
+                                // Verify the entire block area is clear
                                 for (let dy = 0; dy < blockHeight && validPosition; dy++) {
                                     for (let dx = 0; dx < blockWidth && validPosition; dx++) {
                                         const checkX = startX + dx;
                                         const checkY = startY + dy;
-                                        if (checkX >= this.gridSize.width - 1 || checkY >= this.gridSize.height - 1 || 
-                                            checkX <= 0 || checkY <= 0 ||
-                                            (checkX % 3 === 0 || checkY % 3 === 0)) {
+                                        
+                                        // Make sure we don't place on roads or boundaries
+                                        if (checkX % 3 === 0 || checkY % 3 === 0 || 
+                                            checkX >= this.gridSize.width - 1 || checkY >= this.gridSize.height - 1 ||
+                                            checkX <= 0 || checkY <= 0) {
                                             validPosition = false;
                                         }
                                     }
@@ -1045,13 +993,16 @@
                         }
                         
                         if (validPosition) {
-                            // Place terrain block
+                            // Place the full terrain block without random gaps
                             for (let dy = 0; dy < blockHeight; dy++) {
                                 for (let dx = 0; dx < blockWidth; dx++) {
                                     const placeX = startX + dx;
                                     const placeY = startY + dy;
-                                    if (placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 && 
-                                        placeX > 0 && placeY > 0) {
+                                    
+                                    // Place terrain ensuring we stay within valid bounds
+                                    if (placeX > 0 && placeY > 0 && 
+                                        placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 &&
+                                        placeX % 3 !== 0 && placeY % 3 !== 0) {
                                         this.terrainMap[placeY][placeX] = terrainType;
                                     }
                                 }
@@ -1187,6 +1138,20 @@
                     return;
                 }
 
+                // Check if player is completely blocked by police before any movement
+                const allDirections = [0, 1, 2, 3]; // up, right, down, left
+                const validDirections = allDirections.filter(dir => {
+                    const testPos = this.getNextPosition(this.playerPos, dir);
+                    return this.isValidMove(testPos);
+                });
+                
+                if (validDirections.length === 0) {
+                    // Player is completely blocked - game over
+                    document.getElementById('gameStatus').textContent = 'Completely blocked by police!';
+                    setTimeout(() => this.endGame(false), 1000);
+                    return;
+                }
+
                 // Get next position based on current direction
                 const nextPos = this.getNextPosition(this.playerPos, this.playerDirection);
                 
@@ -1198,32 +1163,18 @@
                     );
                     
                     if (blockedByPolice) {
-                        // Check if player has any valid moves at all
-                        const availableDirections = [];
-                        for (let dir = 0; dir < 4; dir++) {
-                            const testPos = this.getNextPosition(this.playerPos, dir);
-                            if (this.isValidMove(testPos)) {
-                                availableDirections.push(dir);
-                            }
-                        }
-                        
-                        if (availableDirections.length === 0) {
-                            // No valid moves - game over
-                            document.getElementById('gameStatus').textContent = 'Blocked by police! No escape!';
-                            setTimeout(() => this.endGame(false), 1000);
-                            return;
-                        } else {
-                            // Show direction choice since current direction is blocked
-                            document.getElementById('gameStatus').textContent = 'Blocked by police! Choose another direction';
-                            this.showDirectionChoice();
-                            return;
-                        }
+                        // Show direction choice since current direction is blocked
+                        document.getElementById('gameStatus').textContent = 'Blocked by police! Choose another direction';
+                        this.showDirectionChoice();
+                        return;
                     } else {
                         // Blocked by boundary or terrain - show direction choice
                         this.showDirectionChoice();
                         return;
                     }
                 }
+                
+                // ... existing code ...
                 
                 // Move player
                 this.playerPos = nextPos;
