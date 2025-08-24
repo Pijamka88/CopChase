@@ -334,7 +334,7 @@
         .road-horizontal::before {
             content: '';
             position: absolute;
-            top: 40%;
+            top: 42%;
             left: 0;
             right: 0;
             height: 1px;
@@ -345,7 +345,7 @@
         .road-horizontal::after {
             content: '';
             position: absolute;
-            top: 60%;
+            top: 58%;
             left: 0;
             right: 0;
             height: 1px;
@@ -362,7 +362,7 @@
             position: absolute;
             top: 0;
             bottom: 0;
-            left: 40%;
+            left: 42%;
             width: 1px;
             background: #ffff99;
             opacity: 0.7;
@@ -373,7 +373,7 @@
             position: absolute;
             top: 0;
             bottom: 0;
-            left: 60%;
+            left: 58%;
             width: 1px;
             background: #ffff99;
             opacity: 0.7;
@@ -458,7 +458,7 @@
         .direction-controls {
             display: none;
             text-align: center;
-            padding: 15px;
+            padding: 18px;
             background: rgba(0,0,0,0.5);
             /* Mobile optimization */
             backdrop-filter: blur(10px);
@@ -684,7 +684,7 @@
             }
             
             .direction-controls {
-                padding: 9px;
+                padding: 11px;
             }
             
             .direction-btn {
@@ -806,8 +806,8 @@
     <script>
         class CityChaseGame {
             constructor() {
-                // Portrait mode optimized: 16 width x 31 height for optimal mobile viewing
-                this.gridSize = { width: 16, height: 31 };
+                // Portrait mode optimized: 16 width x 30 height for optimal mobile viewing
+                this.gridSize = { width: 16, height: 30 };
                 
                 // Calculate cell size based on available screen space with larger minimum for smaller grid
                 const availableWidth = Math.min(window.innerWidth - 25, 480); // Optimized for mobile
