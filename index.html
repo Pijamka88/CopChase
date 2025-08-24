@@ -6,7 +6,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>City Chase Game</title>
+    <title>Cop Chase Game</title>
     <style>
         * {
             margin: 0;
@@ -60,13 +60,13 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
             min-width: 320px;
             max-width: 90vw;
+            min-height: 400px;
         }
 
         .menu h1 {
             font-size: 2.2em;
             margin-bottom: 20px;
             color: #ffd700;
-            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
             font-weight: 700;
         }
 
@@ -136,6 +136,12 @@
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
+        }
+
+        .menu-btn {
+            padding: 8px 12px;
+            font-size: 18px;
+            min-width: 50px;
         }
 
         .stat {
@@ -237,19 +243,20 @@
         /* Game Board */
         .game-board {
             flex: 1;
-            padding: 5px;
+            padding: 2px;
             overflow: hidden;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             height: calc(100vh - 60px);
+            padding-top: 5px;
         }
 
         .city-grid {
             display: grid;
             gap: 1px;
             background: #2a4d3a;
-            padding: 15px;
+            padding: 8px;
             border-radius: 10px;
             border: 3px solid #666;
             position: relative;
@@ -316,7 +323,7 @@
         .road-horizontal::before {
             content: '';
             position: absolute;
-            top: 30%;
+            top: 40%;
             left: 0;
             right: 0;
             height: 1px;
@@ -327,7 +334,7 @@
         .road-horizontal::after {
             content: '';
             position: absolute;
-            top: 70%;
+            top: 60%;
             left: 0;
             right: 0;
             height: 1px;
@@ -344,7 +351,7 @@
             position: absolute;
             top: 0;
             bottom: 0;
-            left: 30%;
+            left: 40%;
             width: 1px;
             background: #ffff99;
             opacity: 0.7;
@@ -355,7 +362,7 @@
             position: absolute;
             top: 0;
             bottom: 0;
-            left: 70%;
+            left: 60%;
             width: 1px;
             background: #ffff99;
             opacity: 0.7;
@@ -383,7 +390,7 @@
 
         .player {
             position: absolute;
-            font-size: 18px;
+            font-size: 20px;
             z-index: 10;
             display: flex;
             flex-direction: column;
@@ -397,7 +404,7 @@
         }
 
         .direction-arrow {
-            font-size: 7px;
+            font-size: 8px;
             margin-bottom: -3px;
             text-shadow: 0 0 2px rgba(0,0,0,0.8);
             line-height: 1;
@@ -405,7 +412,7 @@
 
         .police {
             position: absolute;
-            font-size: 15px;
+            font-size: 18px;
             z-index: 9;
             display: flex;
             flex-direction: column;
@@ -440,7 +447,7 @@
         .direction-controls {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             background: rgba(0,0,0,0.5);
             /* Mobile optimization */
             backdrop-filter: blur(10px);
@@ -533,6 +540,7 @@
             line-height: 1.6;
             margin-bottom: 20px;
             opacity: 0.9;
+            text-align: left;
         }
 
         .instructions-close {
@@ -553,44 +561,19 @@
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
         }
 
-        /* Mobile Responsive - Optimized for Portrait Mode */
+        /* Mobile Responsive - Optimized for Portrait Mode and Telegram Web App */
         @media (max-width: 480px) {
             .top-panel {
-                flex-direction: column;
-                gap: 10px;
-                padding: 10px;
+                flex-direction: row;
+                gap: 8px;
+                padding: 8px;
+                height: auto;
+                min-height: 50px;
+                justify-content: space-between;
             }
 
             .stats {
                 justify-content: center;
-            }
-            
-            .game-board {
-                padding: 5px;
-            }
-            
-            .dice-roll-btn {
-                bottom: 20px;
-                right: 20px;
-                width: 70px;
-                height: 70px;
-                font-size: 0.9em;
-            }
-        }
-        
-        /* Landscape mode optimizations */
-        @media (max-width: 926px) and (orientation: landscape) {
-            .container {
-                padding: 5px;
-            }
-            
-            .top-panel {
-                padding: 8px 15px;
-                flex-direction: row;
-                justify-content: space-between;
-            }
-            
-            .stats {
                 gap: 15px;
             }
             
@@ -599,42 +582,111 @@
                 font-size: 13px;
             }
             
+            .menu-btn {
+                padding: 6px 10px;
+                font-size: 16px;
+                min-width: 40px;
+            }
+            
             .game-board {
-                padding: 5px;
-                overflow-x: auto;
-                overflow-y: hidden;
+                padding: 2px;
+                padding-top: 3px;
             }
             
             .city-grid {
-                padding: 8px;
-                max-height: calc(100vh - 140px);
+                padding: 6px;
+            }
+            
+            .dice-roll-btn {
+                bottom: 15px;
+                right: 15px;
+                width: 65px;
+                height: 65px;
+                font-size: 0.85em;
             }
             
             .dice {
                 width: 40px;
                 height: 40px;
-                font-size: 20px;
+                font-size: 18px;
             }
             
             .btn {
-                padding: 8px 16px;
+                padding: 10px 18px;
                 font-size: 14px;
-                margin: 5px;
+                margin: 4px;
+            }
+        }
+        
+        /* Landscape mode optimizations for Telegram Web App */
+        @media (max-width: 926px) and (orientation: landscape) {
+            .container {
+                padding: 3px;
             }
             
-            .direction-controls {
-                padding: 10px;
+            .top-panel {
+                padding: 6px 12px;
+                flex-direction: row;
+                justify-content: space-between;
+                height: 45px;
+                min-height: 45px;
             }
             
-            .direction-btn {
-                padding: 8px 16px;
+            .stats {
+                gap: 12px;
+            }
+            
+            .stat {
+                padding: 5px 10px;
+                font-size: 12px;
+            }
+            
+            .menu-btn {
+                padding: 4px 8px;
+                font-size: 14px;
+                min-width: 35px;
+            }
+            
+            .game-board {
+                padding: 2px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                height: calc(100vh - 120px);
+                padding-top: 3px;
+            }
+            
+            .city-grid {
+                padding: 4px;
+                max-height: calc(100vh - 120px);
+            }
+            
+            .dice {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+            
+            .btn {
+                padding: 6px 14px;
+                font-size: 13px;
                 margin: 3px;
             }
             
+            .direction-controls {
+                padding: 9px;
+            }
+            
+            .direction-btn {
+                padding: 6px 14px;
+                margin: 2px;
+            }
+            
             .dice-roll-btn {
-                width: 60px;
-                height: 60px;
-                font-size: 0.8em;
+                width: 55px;
+                height: 55px;
+                font-size: 0.75em;
+                bottom: 10px;
+                right: 10px;
             }
         }
         
@@ -661,25 +713,31 @@
     <div class="container">
         <!-- Main Menu -->
         <div id="menu" class="menu">
-            <h1>🚗 City Chase</h1>
-            <p>Escape from the police in this dice-rolling chase game!</p>
-            <p>🎲 Roll the dice to move • 🚦 Stop at red lights • 🚔 Avoid the police</p>
-            <button class="btn" onclick="startGame()">Start Game</button>
-            <button class="btn" onclick="showInstructions()">How to Play</button>
+            <h1>🏙️ Cop Chase</h1>
+            <p style="text-align: left;">Escape from the police in this dice-rolling chase game!</p>
+            <div style="margin: 20px 0; line-height: 2; text-align: left;">
+                <div>🎲 Roll the dice to move</div>
+                <div>🚦 Stop at red lights</div>
+                <div>🚔 Avoid the police</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                <button class="btn" onclick="startGame()">Start Game</button>
+                <button class="btn" onclick="showInstructions()">How to Play</button>
+            </div>
         </div>
 
         <!-- Game Interface -->
         <div id="gameUI" class="game-ui">
             <div class="top-panel">
-                <div class="stats">
-                    <div class="stat">🎲 Moves: <span id="moveCount">0</span></div>
-                    <div class="stat">🏃 Status: <span id="gameStatus">Running</span></div>
-                </div>
                 <div class="controls">
+                    <button class="btn menu-btn" onclick="returnToMenu()">🚪</button>
                     <div class="dice-container">
                         <div id="dice" class="dice">?</div>
                     </div>
-                    <button class="btn" onclick="returnToMenu()">Menu</button>
+                </div>
+                <div class="stats">
+                    <div class="stat">🎲 Moves: <span id="moveCount">0</span></div>
+                    <div class="stat">🏃 Status: <span id="gameStatus">Running</span></div>
                 </div>
             </div>
 
@@ -716,7 +774,7 @@
                     🚔 Two police cars start from corners<br>
                     🚦 Stop at red lights (police ignore them)<br>
                     🛣️ Move on roads and choose directions<br>
-                    🏃 Survive 30 moves to win<br>
+                    🏃 Survive 25 moves to win<br>
                     ❌ Game over if police catch you<br><br>
                     🎯 Game optimized for portrait mode!<br>
                     Good luck escaping! 🍀
@@ -729,17 +787,17 @@
     <script>
         class CityChaseGame {
             constructor() {
-                // Portrait mode optimized: 24 width x 48 height for large playing field
-                this.gridSize = { width: 24, height: 48 };
+                // Portrait mode optimized: 18 width x 34 height for optimal mobile viewing
+                this.gridSize = { width: 18, height: 34 };
                 
-                // Calculate cell size based on available screen space
-                const availableWidth = Math.min(window.innerWidth - 40, 600); // Increased max width for larger grid
-                const availableHeight = window.innerHeight - 200; // Reserve space for UI
+                // Calculate cell size based on available screen space with larger minimum
+                const availableWidth = Math.min(window.innerWidth - 30, 540); // Optimized for mobile
+                const availableHeight = window.innerHeight - 180; // Reserve space for UI
                 
-                // Calculate cell size to fit the 18x32 grid
+                // Calculate cell size to fit the grid with larger minimum cell size
                 const cellSizeByWidth = Math.floor(availableWidth / this.gridSize.width);
                 const cellSizeByHeight = Math.floor(availableHeight / this.gridSize.height);
-                this.cellSize = Math.min(cellSizeByWidth, cellSizeByHeight, 25); // Max 25px per cell for larger grid
+                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 32), 22); // Min 22px, max 32px per cell
                 
                 this.playerPos = { x: Math.floor(this.gridSize.width / 2), y: Math.floor(this.gridSize.height / 2) };
                 this.policePos = [];
@@ -812,13 +870,23 @@
                         const terrainType = this.terrainMap[y][x];
                         
                         if (isPerimeter || ((isRoadX || isRoadY) && terrainType === 'road')) {
-                            if ((isRoadX && isRoadY) || isCorner || isPerimeterIntersection) {
-                                // Intersection (internal, corners, and perimeter crossings)
+                            if ((isRoadX && isRoadY) || isCorner) {
+                                // Intersection (internal and corners)
                                 cell.classList.add('intersection');
                                 
                                 // Add traffic lights to intersections
-                                const trafficLightChance = isPerimeter ? 0.3 : 0.4; // 30% for perimeter, 40% for internal
+                                const trafficLightChance = isPerimeter ? 0.2 : 0.4; // 20% for perimeter, 40% for internal
                                 if (Math.random() < trafficLightChance) {
+                                    const light = document.createElement('div');
+                                    light.className = `traffic-light ${Math.random() > 0.5 ? 'red-light' : 'green-light'}`;
+                                    cell.appendChild(light);
+                                }
+                            } else if (isPerimeter && ((isRoadX && x !== 0 && x !== this.gridSize.width - 1) || (isRoadY && y !== 0 && y !== this.gridSize.height - 1))) {
+                                // Perimeter intersections where internal roads meet border
+                                cell.classList.add('intersection');
+                                
+                                // Add traffic lights to perimeter intersections
+                                if (Math.random() < 0.3) {
                                     const light = document.createElement('div');
                                     light.className = `traffic-light ${Math.random() > 0.5 ? 'red-light' : 'green-light'}`;
                                     cell.appendChild(light);
@@ -852,21 +920,50 @@
                             
                             cell.classList.add(finalTerrainType);
                             
-                            // Add buildings and trees only to green and dark land (not brown) with reduced density
+                            // Add buildings and trees with enhanced density and procedural placement
                             if (finalTerrainType !== 'land-brown' && finalTerrainType !== 'land-desert') {
                                 const featureChance = Math.random();
-                                if (featureChance > 0.85) { // 15% occurrence for buildings
-                                    cell.innerHTML = '🏢';
-                                    cell.style.fontSize = `${this.cellSize * 0.6}px`; // Reduced size for better balance
-                                } else if (featureChance > 0.75) {
-                                    cell.innerHTML = '🌳';
-                                    cell.style.fontSize = `${this.cellSize * 0.5}px`;
-                                } else if (featureChance > 0.7) {
-                                    cell.innerHTML = '🏠';
-                                    cell.style.fontSize = `${this.cellSize * 0.5}px`;
-                                } else if (featureChance > 0.65) {
-                                    cell.innerHTML = '🌲';
-                                    cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                                
+                                // Different building types based on terrain
+                                if (finalTerrainType === 'land-dark') {
+                                    // Industrial areas - more factories and industrial buildings
+                                    if (featureChance > 0.70) { // 30% occurrence
+                                        cell.innerHTML = '🏭'; // Factory
+                                        cell.style.fontSize = `${this.cellSize * 0.75}px`;
+                                    } else if (featureChance > 0.60) {
+                                        cell.innerHTML = '🏢'; // Office building
+                                        cell.style.fontSize = `${this.cellSize * 0.75}px`;
+                                    }
+                                } else if (finalTerrainType === 'land-grass') {
+                                    // Residential areas - houses and trees
+                                    if (featureChance > 0.75) { // 25% occurrence
+                                        cell.innerHTML = '🏠'; // House
+                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                    } else if (featureChance > 0.65) {
+                                        cell.innerHTML = '🌳'; // Tree
+                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                    } else if (featureChance > 0.58) {
+                                        cell.innerHTML = '🌲'; // Evergreen tree
+                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                    }
+                                } else if (finalTerrainType === 'land') {
+                                    // Mixed urban areas
+                                    if (featureChance > 0.78) { // 22% occurrence
+                                        cell.innerHTML = '🏢'; // Office building
+                                        cell.style.fontSize = `${this.cellSize * 0.75}px`;
+                                    } else if (featureChance > 0.68) {
+                                        cell.innerHTML = '🏠'; // House
+                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                    } else if (featureChance > 0.60) {
+                                        cell.innerHTML = '🌳'; // Tree
+                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                    }
+                                } else {
+                                    // Other terrain types - sparse features
+                                    if (featureChance > 0.85) {
+                                        cell.innerHTML = '🌳'; // Tree
+                                        cell.style.fontSize = `${this.cellSize * 0.65}px`;
+                                    }
                                 }
                             }
                         }
@@ -886,27 +983,27 @@
                     }
                 }
                 
-                // Generate varied terrain blocks with different sizes
-                const attempts = 80; // Increased for larger grid
+                // Generate larger terrain blocks with enhanced procedural generation
+                const attempts = 40; // Increased attempts for better coverage
                 for (let i = 0; i < attempts; i++) {
-                    // Random block dimensions using larger sizes as specified
-                    const blockSizes = [6, 8, 10, 12];
+                    // Use larger block sizes as specified (6, 8, 10, 12) but limit to max 8
+                    const blockSizes = [6, 7, 8];
                     const blockWidth = Math.min(blockSizes[Math.floor(Math.random() * blockSizes.length)], this.gridSize.width - 2);
                     const blockHeight = Math.min(blockSizes[Math.floor(Math.random() * blockSizes.length)], this.gridSize.height - 2);
                     const terrainType = terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
                     
                     // Find a suitable position (not on perimeter or road grid lines)
-                    const maxX = this.gridSize.width - blockWidth - 1; // -1 to avoid perimeter
-                    const maxY = this.gridSize.height - blockHeight - 1; // -1 to avoid perimeter
+                    const maxX = this.gridSize.width - blockWidth - 1;
+                    const maxY = this.gridSize.height - blockHeight - 1;
                     
-                    if (maxX > 1 && maxY > 1) { // Ensure we have space inside perimeter
+                    if (maxX > 1 && maxY > 1) {
                         let startX, startY;
                         let validPosition = false;
                         let positionAttempts = 0;
                         
                         while (!validPosition && positionAttempts < 25) {
-                            startX = Math.floor(Math.random() * maxX) + 1; // +1 to avoid perimeter
-                            startY = Math.floor(Math.random() * maxY) + 1; // +1 to avoid perimeter
+                            startX = Math.floor(Math.random() * maxX) + 1;
+                            startY = Math.floor(Math.random() * maxY) + 1;
                             
                             // Ensure terrain blocks don't overlap with main road grid (every 3rd cell)
                             if (startX % 3 !== 0 && startY % 3 !== 0) {
@@ -918,8 +1015,8 @@
                                         const checkX = startX + dx;
                                         const checkY = startY + dy;
                                         if (checkX >= this.gridSize.width - 1 || checkY >= this.gridSize.height - 1 || 
-                                            checkX <= 0 || checkY <= 0 || // Don't touch perimeter
-                                            (checkX % 3 === 0 || checkY % 3 === 0)) { // Don't overlap road grid
+                                            checkX <= 0 || checkY <= 0 ||
+                                            (checkX % 3 === 0 || checkY % 3 === 0)) {
                                             validPosition = false;
                                         }
                                     }
@@ -935,7 +1032,7 @@
                                     const placeX = startX + dx;
                                     const placeY = startY + dy;
                                     if (placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 && 
-                                        placeX > 0 && placeY > 0) { // Keep away from perimeter
+                                        placeX > 0 && placeY > 0) {
                                         this.terrainMap[placeY][placeX] = terrainType;
                                     }
                                 }
@@ -1326,6 +1423,9 @@
             }
 
             movePolice() {
+                // Display police movement status
+                document.getElementById('gameStatus').textContent = 'Police Moving...';
+                
                 // Move police with staggered delay for visual clarity (optimized for mobile)
                 const isMobile = window.innerWidth < 480 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
                 const delayMultiplier = isMobile ? 100 : 150; // Faster on mobile for better responsiveness
@@ -1346,14 +1446,43 @@
                                 }
                             });
 
+                            // Get movement direction for status message
+                            const moveDirection = this.getMovementDirection(police, bestMove);
+                            
                             police.x = bestMove.x;
                             police.y = bestMove.y;
+                            
+                            // Update status with direction
+                            document.getElementById('gameStatus').textContent = `Police Moving ${moveDirection}...`;
+                        } else {
+                            // Police is blocked
+                            document.getElementById('gameStatus').textContent = 'Police Blocked...';
                         }
                         
                         // Update display after each police move
                         this.updateDisplay();
+                        
+                        // Reset status after all police have moved
+                        if (index === this.policePos.length - 1) {
+                            setTimeout(() => {
+                                if (this.gameActive) {
+                                    document.getElementById('gameStatus').textContent = 'Running';
+                                }
+                            }, delayMultiplier);
+                        }
                     }, index * delayMultiplier);
                 });
+            }
+
+            getMovementDirection(from, to) {
+                const dx = to.x - from.x;
+                const dy = to.y - from.y;
+                
+                if (dy < 0) return 'North';
+                if (dy > 0) return 'South';
+                if (dx > 0) return 'East';
+                if (dx < 0) return 'West';
+                return 'In Place';
             }
 
             checkGameState() {
@@ -1369,8 +1498,8 @@
                 this.moveCount++;
                 document.getElementById('gameStatus').textContent = 'Running';
 
-                // Check win condition (survived 30 moves for larger city)
-                if (this.moveCount >= 30) {
+                // Check win condition (survived 25 moves for optimized city size)
+                if (this.moveCount >= 25) {
                     this.endGame(true);
                 }
             }
