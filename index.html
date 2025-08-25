@@ -106,10 +106,10 @@
             height: 60px;
         }
 
-        /* Status panel positioned at the top of screen */
+        /* Status panel positioned higher to align with Moves counter */
         .status-panel {
             position: fixed;
-            top: 70px;
+            top: 15px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.15);
@@ -149,12 +149,13 @@
         }
 
         .dice-container {
-            position: absolute;
-            top: 5px;
+            position: fixed;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             text-align: center;
-            z-index: 100;
+            z-index: 2000;
+            display: none;
         }
 
         .dice {
@@ -250,7 +251,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .land {
@@ -291,7 +292,6 @@
 
         .road {
             background: linear-gradient(135deg, #555, #666);
-            border: 1px solid #444;
             position: relative;
         }
 
@@ -350,7 +350,6 @@
         .intersection {
             background: linear-gradient(45deg, #666, #777, #666);
             position: relative;
-            border: 2px solid #888;
         }
 
         .traffic-light {
@@ -569,9 +568,9 @@
             }
             
             .menu-btn {
-                padding: 5px 8px;
-                font-size: 14px;
-                min-width: 35px;
+                padding: 4px 6px;
+                font-size: 12px;
+                min-width: 30px;
             }
             
             .game-board {
@@ -587,7 +586,7 @@
             }
             
             .status-panel {
-                top: 70px;
+                top: 15px;
                 left: 50%;
                 transform: translateX(-50%);
                 padding: 6px 10px;
@@ -656,15 +655,17 @@
             <div class="top-panel">
                 <div class="stat">🎲 Moves: <span id="moveCount">0</span></div>
                 <div class="controls">
-                    <div class="dice-container">
-                        <div id="dice" class="dice">?</div>
-                    </div>
                     <button class="btn menu-btn" onclick="returnToMenu()">🚪</button>
                 </div>
             </div>
 
             <div class="game-board">
                 <div id="cityGrid" class="city-grid"></div>
+                
+                <!-- Dice container centered on game field -->
+                <div class="dice-container">
+                    <div id="dice" class="dice">?</div>
+                </div>
             </div>
 
             <!-- Status panel in bottom-left corner -->
@@ -1110,7 +1111,11 @@
                 if (!this.gameActive || this.waitingForDirection) return;
 
                 const dice = document.getElementById('dice');
+                const diceContainer = document.querySelector('.dice-container');
                 const rollBtn = document.getElementById('rollBtn');
+                
+                // Show dice container in center of field
+                diceContainer.style.display = 'block';
                 
                 dice.classList.add('rolling');
                 rollBtn.disabled = true;
@@ -1119,6 +1124,11 @@
                     this.currentDiceRoll = Math.floor(Math.random() * 6) + 1;
                     dice.textContent = this.currentDiceRoll;
                     dice.classList.remove('rolling');
+                    
+                    // Hide dice container after showing result briefly
+                    setTimeout(() => {
+                        diceContainer.style.display = 'none';
+                    }, 800);
                     
                     this.movesLeft = this.currentDiceRoll;
                     
@@ -1589,6 +1599,7 @@
             document.getElementById('menu').style.display = 'none';
             document.getElementById('gameOver').style.display = 'none';
             document.getElementById('directionControls').style.display = 'none';
+            document.querySelector('.dice-container').style.display = 'none';
             document.getElementById('gameUI').style.display = 'flex';
             
             // Ensure Roll button is visible
