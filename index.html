@@ -68,13 +68,13 @@
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 12px 24px;
-            font-size: 0.9em;
+            padding: 18px 36px;
+            font-size: 1.4em;
             font-weight: 500;
             border-radius: 16px;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin: 6px;
+            margin: 12px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
@@ -106,10 +106,10 @@
             height: 60px;
         }
 
-        /* Status panel positioned at the very bottom of screen */
+        /* Status panel positioned at the top of screen */
         .status-panel {
             position: fixed;
-            bottom: 165px;
+            top: 70px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.15);
@@ -177,8 +177,8 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            width: 80px;
-            height: 80px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #f39c12 100%);
             border: none;
@@ -186,7 +186,7 @@
             transition: all 0.3s ease;
             z-index: 1000;
             box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4), inset 0 2px 0 rgba(255,255,255,0.3);
-            font-size: 1.1em;
+            font-size: 2.2em;
             font-weight: bold;
             color: #333;
             display: flex;
@@ -226,7 +226,7 @@
             overflow: hidden;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             height: calc(100vh - 60px);
             padding-top: 5px;
         }
@@ -422,13 +422,13 @@
             }
         }
 
-        /* Direction Controls - horizontally fixed position */
+        /* Direction Controls - centered on screen with high z-index */
         .direction-controls {
             display: none;
             position: fixed;
-            bottom: 60px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             text-align: center;
             padding: 18px;
             background: rgba(0,0,0,0.25);
@@ -436,14 +436,14 @@
             -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 1500;
+            z-index: 2500;
             min-width: 300px;
         }
 
         .direction-btn {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
             margin: 2px;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 16px;
             color: white;
@@ -537,7 +537,8 @@
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 12px 24px;
+            padding: 18px 36px;
+            font-size: 1.4em;
             border-radius: 16px;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -586,7 +587,7 @@
             }
             
             .status-panel {
-                bottom: 25px;
+                top: 70px;
                 left: 50%;
                 transform: translateX(-50%);
                 padding: 6px 10px;
@@ -613,9 +614,9 @@
             .dice-roll-btn {
                 bottom: 12px;
                 right: 12px;
-                width: 60px;
-                height: 60px;
-                font-size: 0.8em;
+                width: 120px;
+                height: 120px;
+                font-size: 1.6em;
             }
             
             .dice {
@@ -625,9 +626,9 @@
             }
             
             .btn {
-                padding: 8px 15px;
-                font-size: 13px;
-                margin: 3px;
+                padding: 14px 24px;
+                font-size: 1.2em;
+                margin: 6px;
             }
         }
         
@@ -678,7 +679,6 @@
                 <button class="btn direction-btn" onclick="chooseDirection('straight')">⬆️ Straight</button>
                 <button class="btn direction-btn" onclick="chooseDirection('left')">⬅️ Left</button>
                 <button class="btn direction-btn" onclick="chooseDirection('right')">➡️ Right</button>
-                <button class="btn direction-btn" onclick="skipTurn()" style="background: rgba(255, 100, 100, 0.2); border-color: rgba(255, 100, 100, 0.5);">⏭️ Skip Turn</button>
             </div>
         </div>
 
@@ -1124,7 +1124,16 @@
                     
                     // Police moves immediately after dice roll
                     this.movePolice();
-                    this.checkGameState();
+                    
+                    // Check for immediate game over after police move
+                    if (this.checkImmediateGameOver()) {
+                        return;
+                    }
+                    
+                    // Check if all paths are blocked after police movement
+                    if (this.checkAllPathsBlocked()) {
+                        return;
+                    }
                     
                     if (this.gameActive) {
                         this.movePlayer();
@@ -1144,17 +1153,8 @@
                     return;
                 }
 
-                // Check if player is completely blocked before any movement
-                const allDirections = [0, 1, 2, 3]; // up, right, down, left
-                const validDirections = allDirections.filter(dir => {
-                    const testPos = this.getNextPosition(this.playerPos, dir);
-                    return this.isValidMove(testPos);
-                });
-                
-                if (validDirections.length === 0) {
-                    // Player is completely blocked - game over
-                    document.getElementById('gameStatus').textContent = 'Surrounded by police!';
-                    setTimeout(() => this.endGame(false), 1000);
+                // Check if player has any valid moves available
+                if (this.checkAllPathsBlocked()) {
                     return;
                 }
 
@@ -1170,7 +1170,9 @@
                     
                     if (blockedByPolice) {
                         // Show direction choice since current direction is blocked
-                        document.getElementById('gameStatus').textContent = 'Blocked by police!';
+                        setTimeout(() => {
+                            document.getElementById('gameStatus').textContent = 'Blocked by police!';
+                        }, 300);
                         this.showDirectionChoice();
                         return;
                     } else {
@@ -1195,9 +1197,13 @@
                     if (light && light.classList.contains('red-light')) {
                         // Stop at red light and consume remaining moves
                         this.movesLeft = 0;
-                        document.getElementById('gameStatus').textContent = 'Stopped at red light 🔴';
+                        setTimeout(() => {
+                            document.getElementById('gameStatus').textContent = 'Stopped at red light 🔴';
+                        }, 300);
                     } else {
-                        document.getElementById('gameStatus').textContent = 'At intersection';
+                        setTimeout(() => {
+                            document.getElementById('gameStatus').textContent = 'At intersection';
+                        }, 300);
                     }
                     // Always show direction choice at intersections regardless of traffic light
                     this.showDirectionChoice();
@@ -1214,7 +1220,11 @@
                         this.clearMovementHighlights();
                         // Police moves after player completes all moves
                         this.movePolice();
-                        this.checkGameState();
+                        
+                        // Check game state including blocked paths
+                        if (this.gameActive && !this.checkAllPathsBlocked()) {
+                            this.checkGameState();
+                        }
                     }, 500);
                 }
             }
@@ -1248,10 +1258,17 @@
             }
 
             isValidMove(pos) {
-                // Check bounds and road access
+                // Check bounds - allow movement to boundary roads
                 if (pos.x < 0 || pos.x >= this.gridSize.width || 
-                    pos.y < 0 || pos.y >= this.gridSize.height || 
-                    !this.isRoadOrIntersection(pos.x, pos.y)) {
+                    pos.y < 0 || pos.y >= this.gridSize.height) {
+                    return false;
+                }
+                
+                // Check if position is a road or intersection - boundary cells are always roads
+                const isOnBoundary = (pos.x === 0 || pos.x === this.gridSize.width - 1 || 
+                                     pos.y === 0 || pos.y === this.gridSize.height - 1);
+                
+                if (!isOnBoundary && !this.isRoadOrIntersection(pos.x, pos.y)) {
                     return false;
                 }
                 
@@ -1326,19 +1343,8 @@
             }
 
             showDirectionChoice() {
-                // Check if player has any valid moves available
-                const availableDirections = [];
-                for (let dir = 0; dir < 4; dir++) {
-                    const nextPos = this.getNextPosition(this.playerPos, dir);
-                    if (this.isValidMove(nextPos)) {
-                        availableDirections.push(dir);
-                    }
-                }
-                
-                // If no valid directions available, game over
-                if (availableDirections.length === 0) {
-                    document.getElementById('gameStatus').textContent = 'Surrounded by police!';
-                    setTimeout(() => this.endGame(false), 1000);
+                // Check if all paths are blocked before showing direction choice
+                if (this.checkAllPathsBlocked()) {
                     return;
                 }
                 
@@ -1372,9 +1378,13 @@
                     );
                     
                     if (blockedByPolice) {
-                        document.getElementById('gameStatus').textContent = 'That direction is blocked by police!';
+                        setTimeout(() => {
+                            document.getElementById('gameStatus').textContent = 'That direction is blocked by police!';
+                        }, 300);
                     } else {
-                        document.getElementById('gameStatus').textContent = 'That direction is blocked!';
+                        setTimeout(() => {
+                            document.getElementById('gameStatus').textContent = 'That direction is blocked!';
+                        }, 300);
                     }
                     this.showDirectionChoice();
                     return;
@@ -1384,7 +1394,9 @@
                 this.playerDirection = newDirection;
 
                 // Reset status message
-                document.getElementById('gameStatus').textContent = 'Running';
+                setTimeout(() => {
+                    document.getElementById('gameStatus').textContent = 'Running';
+                }, 300);
 
                 // Continue movement in new direction
                 if (this.movesLeft > 0) {
@@ -1394,35 +1406,23 @@
                     this.clearMovementHighlights();
                     // Police moves after player completes all moves
                     this.movePolice();
-                    this.checkGameState();
+                    
+                    // Check game state including blocked paths
+                    if (this.gameActive && !this.checkAllPathsBlocked()) {
+                        this.checkGameState();
+                    }
                 }
             }
 
             skipTurn() {
-                document.getElementById('directionControls').style.display = 'none';
-                // Show the Roll button again when direction controls are hidden
-                document.getElementById('rollBtn').style.display = 'block';
-                this.waitingForDirection = false;
-                
-                // Skip all remaining moves
-                this.movesLeft = 0;
-                
-                // Clear movement highlights
-                this.clearMovementHighlights();
-                
-                // Update status
-                document.getElementById('gameStatus').textContent = 'Turn skipped';
-                
-                // Police moves after skipping turn
-                setTimeout(() => {
-                    this.movePolice();
-                    this.checkGameState();
-                }, 500);
+                // Skip turn functionality removed as per core game mechanics
             }
 
             movePolice() {
-                // Display police movement status
-                document.getElementById('gameStatus').textContent = 'Police Moving...';
+                // Display police movement status with delay
+                setTimeout(() => {
+                    document.getElementById('gameStatus').textContent = 'Police Moving...';
+                }, 300);
                 
                 // Move police with staggered delay for visual clarity
                 const delayMultiplier = 150;
@@ -1449,21 +1449,34 @@
                             police.x = bestMove.x;
                             police.y = bestMove.y;
                             
-                            // Update status with direction
-                            document.getElementById('gameStatus').textContent = `Police Moving ${moveDirection}...`;
+                            // Update status with direction and delay
+                            setTimeout(() => {
+                                document.getElementById('gameStatus').textContent = `Police Moving ${moveDirection}...`;
+                            }, 300);
                         } else {
                             // Police is blocked
-                            document.getElementById('gameStatus').textContent = 'Police Blocked...';
+                            setTimeout(() => {
+                                document.getElementById('gameStatus').textContent = 'Police Blocked...';
+                            }, 300);
                         }
                         
                         // Update display after each police move
                         this.updateDisplay();
                         
-                        // Reset status after all police have moved
+                        // Switch traffic lights and reset status after all police have moved
                         if (index === this.policePos.length - 1) {
                             setTimeout(() => {
+                                this.switchTrafficLights();
+                                
+                                // Check if all paths are blocked after police movement
+                                if (this.gameActive && this.checkAllPathsBlocked()) {
+                                    return;
+                                }
+                                
                                 if (this.gameActive) {
-                                    document.getElementById('gameStatus').textContent = 'Running';
+                                    setTimeout(() => {
+                                        document.getElementById('gameStatus').textContent = 'Running';
+                                    }, 300);
                                 }
                             }, delayMultiplier);
                         }
@@ -1482,23 +1495,69 @@
                 return 'In Place';
             }
 
+            switchTrafficLights() {
+                // Switch all traffic lights after police movement
+                document.querySelectorAll('.traffic-light').forEach(light => {
+                    if (light.classList.contains('red-light')) {
+                        light.classList.remove('red-light');
+                        light.classList.add('green-light');
+                    } else {
+                        light.classList.remove('green-light');
+                        light.classList.add('red-light');
+                    }
+                });
+            }
+
+            checkImmediateGameOver() {
+                // Check if police moved onto player's position
+                for (let police of this.policePos) {
+                    if (police.x === this.playerPos.x && police.y === this.playerPos.y) {
+                        setTimeout(() => {
+                            document.getElementById('gameStatus').textContent = 'Caught by police!';
+                        }, 300);
+                        setTimeout(() => this.endGame(false), 600);
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            checkAllPathsBlocked() {
+                // Check if all movement directions are blocked
+                const allDirections = [0, 1, 2, 3]; // up, right, down, left
+                const validDirections = allDirections.filter(dir => {
+                    const nextPos = this.getNextPosition(this.playerPos, dir);
+                    return this.isValidMove(nextPos);
+                });
+                
+                if (validDirections.length === 0) {
+                    // All paths are blocked - trigger game over
+                    setTimeout(() => {
+                        document.getElementById('gameStatus').textContent = 'All paths blocked!';
+                    }, 300);
+                    setTimeout(() => this.endGame(false), 600);
+                    return true;
+                }
+                
+                return false;
+            }
+
             checkGameState() {
                 // Check if caught by police
                 for (let police of this.policePos) {
                     if (police.x === this.playerPos.x && police.y === this.playerPos.y) {
-                        this.endGame(false);
+                        setTimeout(() => this.endGame(false), 300);
                         return;
                     }
                 }
 
                 // Update move count
                 this.moveCount++;
-                document.getElementById('gameStatus').textContent = 'Running';
+                setTimeout(() => {
+                    document.getElementById('gameStatus').textContent = 'Running';
+                }, 300);
 
-                // Check win condition (survived 25 moves for optimized city size)
-                if (this.moveCount >= 25) {
-                    this.endGame(true);
-                }
+                // Game continues indefinitely - no win condition
             }
 
             endGame(won) {
@@ -1569,9 +1628,7 @@
         }
 
         function skipTurn() {
-            if (game) {
-                game.skipTurn();
-            }
+            // Skip turn functionality removed as per core game mechanics
         }
 
         function showInstructions() {
