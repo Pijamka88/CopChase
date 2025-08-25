@@ -106,28 +106,13 @@
             height: 60px;
         }
 
-        /* Status panel positioned higher to align with Moves counter */
-        .status-panel {
-            position: fixed;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.15);
-            padding: 8px 12px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 1000;
+        .top-panel-left {
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
 
-        .status-panel .stat {
-            padding: 0;
-            background: transparent;
-            border-radius: 0;
-            font-size: 13px;
-            margin: 0;
-        }
+        /* Status integrated into top panel */
 
         .menu-btn {
             padding: 8px 12px;
@@ -251,7 +236,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .land {
@@ -292,6 +277,7 @@
 
         .road {
             background: linear-gradient(135deg, #555, #666);
+            border: 1px solid #444;
             position: relative;
         }
 
@@ -350,6 +336,7 @@
         .intersection {
             background: linear-gradient(45deg, #666, #777, #666);
             position: relative;
+            border: 2px solid #888;
         }
 
         .traffic-light {
@@ -562,6 +549,10 @@
                 justify-content: space-between;
             }
             
+            .top-panel-left {
+                gap: 10px;
+            }
+            
             .stat {
                 padding: 5px 10px;
                 font-size: 12px;
@@ -585,29 +576,18 @@
                 margin-bottom: 20px; /* Space for bottom UI */
             }
             
-            .status-panel {
-                top: 15px;
-                left: 50%;
-                transform: translateX(-50%);
-                padding: 6px 10px;
-            }
-            
             .direction-controls {
-                position: relative;
-                bottom: auto;
-                left: auto;
-                right: auto;
-                transform: none;
-                width: auto;
-                min-width: unset;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+                max-width: 300px;
                 padding: 12px;
-                margin: 10px 0;
+                margin: 0;
                 border-radius: 16px;
                 display: none;
-            }
-            
-            .status-panel .stat {
-                font-size: 11px;
+                z-index: 2500;
             }
             
             .dice-roll-btn {
@@ -653,7 +633,10 @@
         <!-- Game Interface -->
         <div id="gameUI" class="game-ui">
             <div class="top-panel">
-                <div class="stat">🎲 Moves: <span id="moveCount">0</span></div>
+                <div class="top-panel-left">
+                    <div class="stat">🎲 Moves: <span id="moveCount">0</span></div>
+                    <div class="stat">🏃 Status: <span id="gameStatus">Running</span></div>
+                </div>
                 <div class="controls">
                     <button class="btn menu-btn" onclick="returnToMenu()">🚪</button>
                 </div>
@@ -666,11 +649,6 @@
                 <div class="dice-container">
                     <div id="dice" class="dice">?</div>
                 </div>
-            </div>
-
-            <!-- Status panel in bottom-left corner -->
-            <div class="status-panel">
-                <div class="stat">🏃 Status: <span id="gameStatus">Running</span></div>
             </div>
 
             <!-- Circular dice roll button positioned at bottom-right -->
