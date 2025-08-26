@@ -561,10 +561,10 @@
             }
             
             .menu-btn {
-                padding: 1px 3px;
-                font-size: 8px;
-                min-width: 18px;
-                border-radius: 4px;
+                padding: 0px 1px;
+                font-size: 4px;
+                min-width: 9px;
+                border-radius: 2px;
             }
             
             .game-board {
@@ -599,10 +599,10 @@
             }
             
             .direction-btn {
-                padding: 3px 6px;
-                margin: 1px;
-                font-size: 9px;
-                border-radius: 5px;
+                padding: 1px 3px;
+                margin: 0px;
+                font-size: 4px;
+                border-radius: 2px;
             }
             
             .dice-roll-btn {
@@ -1720,7 +1720,7 @@
         function updateMusicButton() {
             const musicBtn = document.getElementById('musicBtn');
             if (musicBtn) {
-                musicBtn.innerHTML = isMusicPlaying ? '🔇' : '🔊';
+                musicBtn.innerHTML = isMusicPlaying ? '🔊' : '🔇';
                 musicBtn.title = isMusicPlaying ? 'Mute Music' : 'Unmute Music';
             }
         }
