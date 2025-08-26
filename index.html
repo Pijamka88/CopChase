@@ -390,7 +390,7 @@
 
         .police-light {
             position: absolute;
-            top: 0px;
+            top: -1px;
             width: 8px;
             height: 4px;
             border-radius: 2px;
@@ -561,10 +561,10 @@
             }
             
             .menu-btn {
-                padding: 2px 4px;
-                font-size: 9px;
-                min-width: 20px;
-                border-radius: 5px;
+                padding: 1px 3px;
+                font-size: 8px;
+                min-width: 18px;
+                border-radius: 4px;
             }
             
             .game-board {
@@ -1710,6 +1710,7 @@
                         isMusicPlaying = true;
                     }).catch(error => {
                         console.log('Music play failed:', error);
+                        isMusicPlaying = false;
                     });
                 }
                 updateMusicButton();
@@ -1719,7 +1720,7 @@
         function updateMusicButton() {
             const musicBtn = document.getElementById('musicBtn');
             if (musicBtn) {
-                musicBtn.innerHTML = isMusicPlaying ? '🔊' : '🔇';
+                musicBtn.innerHTML = isMusicPlaying ? '🔇' : '🔊';
                 musicBtn.title = isMusicPlaying ? 'Mute Music' : 'Unmute Music';
             }
         }
