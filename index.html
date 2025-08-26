@@ -572,6 +572,7 @@
                 padding-top: 1px;
                 height: calc(100vh - 100px);
                 padding-bottom: 60px;
+                align-items: center;
             }
             
             .city-grid {
@@ -579,6 +580,7 @@
                 margin-bottom: 10px;
                 border-radius: 6px;
                 border-width: 2px;
+                margin: 0 auto;
             }
             
             .direction-controls {
@@ -597,10 +599,10 @@
             }
             
             .direction-btn {
-                padding: 8px 16px;
+                padding: 6px 12px;
                 margin: 2px;
-                font-size: 14px;
-                border-radius: 10px;
+                font-size: 12px;
+                border-radius: 8px;
             }
             
             .dice-roll-btn {
@@ -613,10 +615,10 @@
             }
             
             .dice {
-                width: 30px;
-                height: 30px;
-                font-size: 14px;
-                border-radius: 6px;
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+                border-radius: 12px;
             }
             
             .btn {
@@ -654,6 +656,11 @@
             .instructions-content p {
                 font-size: 0.9em;
                 line-height: 1.4;
+            }
+            
+            .instructions-close {
+                padding: 12px 20px;
+                font-size: 1.0em;
             }
             
             .game-over {
@@ -694,7 +701,7 @@
                     <div class="stat">🏃 Status: <span id="gameStatus">Running</span></div>
                 </div>
                 <div class="controls">
-                    <button class="btn menu-btn" onclick="returnToMenu()">🚪</button>
+                    <button class="btn menu-btn" onclick="returnToMenu()">Menu</button>
                 </div>
             </div>
 
@@ -1183,7 +1190,7 @@
                         this.movePlayer();
                     }
                     
-                    rollBtn.disabled = false;
+                    // Don't re-enable roll button yet - wait for police turn to complete
                 }, 1000);
             }
 
@@ -1269,6 +1276,12 @@
                         if (this.gameActive && !this.checkAllPathsBlocked()) {
                             this.checkGameState();
                         }
+                        
+                        // Re-enable roll button after police turn completes
+                        setTimeout(() => {
+                            const rollBtn = document.getElementById('rollBtn');
+                            rollBtn.disabled = false;
+                        }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
                     }, 500);
                 }
             }
@@ -1455,6 +1468,12 @@
                     if (this.gameActive && !this.checkAllPathsBlocked()) {
                         this.checkGameState();
                     }
+                    
+                    // Re-enable roll button after police turn completes
+                    setTimeout(() => {
+                        const rollBtn = document.getElementById('rollBtn');
+                        rollBtn.disabled = false;
+                    }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
                 }
             }
 
@@ -1520,6 +1539,9 @@
                                 if (this.gameActive) {
                                     setTimeout(() => {
                                         document.getElementById('gameStatus').textContent = 'Running';
+                                        // Re-enable roll button after police turn completes
+                                        const rollBtn = document.getElementById('rollBtn');
+                                        rollBtn.disabled = false;
                                     }, 300);
                                 }
                             }, delayMultiplier);
