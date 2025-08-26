@@ -2,13 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- Telegram Web App Optimization -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Cop Chase">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="msapplication-navbutton-color" content="#1a1a2e">
+    
+    <!-- iOS Safe Area Support -->
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    
     <title>Cop Chase Game</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            /* Touch optimization for mobile */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         body {
@@ -16,9 +37,15 @@
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #e94560 100%);
             color: white;
             height: 100vh;
+            height: -webkit-fill-available;
             overflow: hidden;
             margin: 0;
             padding: 0;
+            /* iOS Safe Area Support */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
         }
 
         /* Removed rotation overlay - game now supports portrait mode */
@@ -26,9 +53,12 @@
         .container {
             width: 100vw;
             height: 100vh;
+            height: -webkit-fill-available;
             margin: 0;
             padding: 0;
             overflow: hidden;
+            /* Adjust for safe areas */
+            min-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
         }
 
         /* Menu Styles */
@@ -80,6 +110,9 @@
             overflow: hidden;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            /* Mobile touch optimization */
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+            touch-action: manipulation;
         }
 
         .btn:hover {
@@ -92,7 +125,10 @@
             display: none;
             flex-direction: column;
             height: 100vh;
+            height: -webkit-fill-available;
             overflow: hidden;
+            /* Safe area adjustments */
+            padding-top: env(safe-area-inset-top);
         }
 
         .top-panel {
