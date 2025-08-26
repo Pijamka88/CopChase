@@ -19,8 +19,6 @@
             overflow: hidden;
             margin: 0;
             padding: 0;
-            position: fixed;
-            width: 100%;
         }
 
         /* Removed rotation overlay - game now supports portrait mode */
@@ -564,10 +562,11 @@
             
             .menu-btn {
                 padding: 0px;
-                font-size: 2px;
-                min-width: 6px;
-                border-radius: 1px;
+                font-size: 1px;
+                min-width: 4px;
+                border-radius: 0px;
                 line-height: 1;
+                height: 6px;
             }
             
             .game-board {
@@ -576,8 +575,12 @@
                 height: calc(100vh - 100px);
                 padding-bottom: 60px;
                 align-items: center;
-                position: relative;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
                 overflow: hidden;
+                z-index: 1;
             }
             
             .city-grid {
@@ -586,8 +589,6 @@
                 border-radius: 6px;
                 border-width: 2px;
                 margin: 0 auto;
-                position: relative;
-                z-index: 1;
             }
             
             .direction-controls {
@@ -601,10 +602,11 @@
                 margin: 0;
                 border-radius: 12px;
                 display: none;
-                z-index: 2500;
-                background: rgba(0,0,0,0.3);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
+                z-index: 3000;
+                background: rgba(0,0,0,0.8);
+                backdrop-filter: blur(15px);
+                -webkit-backdrop-filter: blur(15px);
+                border: 1px solid rgba(255,255,255,0.2);
             }
             
             .direction-btn {
@@ -1420,9 +1422,6 @@
                     return;
                 }
                 
-                // Prevent viewport scrolling
-                document.body.style.overflow = 'hidden';
-                
                 this.waitingForDirection = true;
                 document.getElementById('directionControls').style.display = 'block';
                 // Hide the Roll button when direction controls appear
@@ -1433,10 +1432,6 @@
                 document.getElementById('directionControls').style.display = 'none';
                 // Show the Roll button again when direction controls are hidden
                 document.getElementById('rollBtn').style.display = 'block';
-                
-                // Restore viewport scrolling
-                document.body.style.overflow = 'hidden';
-                
                 this.waitingForDirection = false;
                 
                 // Calculate new direction
@@ -1693,17 +1688,6 @@
             backgroundMusic = document.getElementById('backgroundMusic');
             backgroundMusic.volume = 0.3; // Set volume to 30%
             updateMusicButton(); // Initialize button display
-            
-            // Prevent viewport resize on mobile when overlays appear
-            const viewport = document.querySelector('meta[name=viewport]');
-            if (viewport) {
-                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
-            }
-            
-            // Prevent mobile browser interface changes
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
-            document.body.style.height = '100vh';
         });
 
         function startMusic() {
