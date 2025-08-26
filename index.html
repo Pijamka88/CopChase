@@ -370,7 +370,7 @@
 
         .direction-arrow {
             font-size: 6px;
-            margin-bottom: -3px;
+            margin-bottom: -1px;
             text-shadow: 0 0 2px rgba(0,0,0,0.8);
             line-height: 1;
         }
@@ -390,7 +390,7 @@
 
         .police-light {
             position: absolute;
-            top: -2px;
+            top: 2px;
             width: 8px;
             height: 4px;
             border-radius: 2px;
@@ -561,10 +561,10 @@
             }
             
             .menu-btn {
-                padding: 4px 6px;
-                font-size: 12px;
-                min-width: 30px;
-                border-radius: 8px;
+                padding: 3px 5px;
+                font-size: 10px;
+                min-width: 25px;
+                border-radius: 6px;
             }
             
             .game-board {
@@ -599,10 +599,10 @@
             }
             
             .direction-btn {
-                padding: 6px 12px;
-                margin: 2px;
-                font-size: 12px;
-                border-radius: 8px;
+                padding: 4px 8px;
+                margin: 1px;
+                font-size: 10px;
+                border-radius: 6px;
             }
             
             .dice-roll-btn {
@@ -678,6 +678,12 @@
 </head>
 <body>
     <div class="container">
+        <!-- Background Music -->
+        <audio id="backgroundMusic" loop preload="auto">
+            <source src="CopChase_cut.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        
         <!-- Main Menu -->
         <div id="menu" class="menu">
             <h1>Cop Chase</h1>
@@ -701,6 +707,7 @@
                     <div class="stat">🏃 Status: <span id="gameStatus">Running</span></div>
                 </div>
                 <div class="controls">
+                    <button class="btn menu-btn" id="musicBtn" onclick="toggleMusic()">🔊</button>
                     <button class="btn menu-btn" onclick="returnToMenu()">Menu</button>
                 </div>
             </div>
@@ -737,15 +744,14 @@
             <div class="instructions-content">
                 <h2>🎮 How to Play</h2>
                 <p>
-                    🎲 Roll the dice to move<br>
-                    🚗 You start in the center of the city<br>
-                    🚔 Two police cars start from corners<br>
-                    🚦 Stop at red lights (police ignore them)<br>
-                    🛣️ Move on roads and choose directions<br>
-                    🏃 Survive 25 moves to win<br>
-                    ❌ Game over if police catch you<br><br>
-                    🎯 Game optimized for portrait mode!<br>
-                    Good luck escaping! 🍀
+                    🎲 <strong>Roll dice</strong> to move your car<br>
+                    🚗 <strong>Choose direction</strong> at intersections<br>
+                    🚦 <strong>Red lights</strong> stop you (police ignore them)<br>
+                    🚔 <strong>Avoid police</strong> - they chase you!<br>
+                    🛣️ <strong>Stay on roads</strong> - can't drive on land<br>
+                    ❌ <strong>Game over</strong> if caught or blocked<br><br>
+                    🎯 <strong>Goal:</strong> Survive as long as possible!<br>
+                    📱 <strong>Best played</strong> in portrait mode
                 </p>
                 <button class="instructions-close" onclick="closeInstructions()">Got it!</button>
             </div>
@@ -1597,12 +1603,27 @@
                 });
                 
                 if (validDirections.length === 0) {
-                    // All paths are blocked - trigger game over
-                    setTimeout(() => {
-                        document.getElementById('gameStatus').textContent = 'All paths blocked!';
-                    }, 300);
-                    setTimeout(() => this.endGame(false), 600);
-                    return true;
+                    // Check if blocked by police adjacent to player
+                    const adjacentToPolice = this.policePos.some(police => {
+                        const distance = Math.abs(police.x - this.playerPos.x) + Math.abs(police.y - this.playerPos.y);
+                        return distance === 1; // Adjacent (distance of 1)
+                    });
+                    
+                    if (adjacentToPolice) {
+                        // All paths blocked and police is adjacent - game over
+                        setTimeout(() => {
+                            document.getElementById('gameStatus').textContent = 'Trapped by police!';
+                        }, 300);
+                        setTimeout(() => this.endGame(false), 600);
+                        return true;
+                    } else {
+                        // All paths are blocked by terrain/boundaries
+                        setTimeout(() => {
+                            document.getElementById('gameStatus').textContent = 'All paths blocked!';
+                        }, 300);
+                        setTimeout(() => this.endGame(false), 600);
+                        return true;
+                    }
                 }
                 
                 return false;
@@ -1628,6 +1649,10 @@
 
             endGame(won) {
                 this.gameActive = false;
+                
+                // Stop background music
+                stopMusic();
+                
                 document.getElementById('gameUI').style.display = 'none';
                 document.getElementById('gameOver').style.display = 'block';
                 
@@ -1644,6 +1669,59 @@
         }
 
         let game = null;
+        let isMusicPlaying = false;
+        let backgroundMusic = null;
+
+        // Initialize music when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            backgroundMusic = document.getElementById('backgroundMusic');
+            backgroundMusic.volume = 0.3; // Set volume to 30%
+        });
+
+        function startMusic() {
+            if (backgroundMusic && !isMusicPlaying) {
+                backgroundMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    updateMusicButton();
+                }).catch(error => {
+                    console.log('Music autoplay prevented:', error);
+                    // Music will be started on first user interaction
+                });
+            }
+        }
+
+        function stopMusic() {
+            if (backgroundMusic && isMusicPlaying) {
+                backgroundMusic.pause();
+                backgroundMusic.currentTime = 0;
+                isMusicPlaying = false;
+                updateMusicButton();
+            }
+        }
+
+        function toggleMusic() {
+            if (backgroundMusic) {
+                if (isMusicPlaying) {
+                    backgroundMusic.pause();
+                    isMusicPlaying = false;
+                } else {
+                    backgroundMusic.play().then(() => {
+                        isMusicPlaying = true;
+                    }).catch(error => {
+                        console.log('Music play failed:', error);
+                    });
+                }
+                updateMusicButton();
+            }
+        }
+
+        function updateMusicButton() {
+            const musicBtn = document.getElementById('musicBtn');
+            if (musicBtn) {
+                musicBtn.textContent = isMusicPlaying ? '🔊' : '🔇';
+                musicBtn.title = isMusicPlaying ? 'Mute Music' : 'Unmute Music';
+            }
+        }
 
         function startGame() {
             // Clear any existing game state
@@ -1661,6 +1739,9 @@
             // Ensure Roll button is visible
             document.getElementById('rollBtn').style.display = 'block';
             
+            // Start background music
+            startMusic();
+            
             // Create new game instance
             game = new CityChaseGame();
             game.gameActive = true;
@@ -1672,6 +1753,9 @@
                 game.gameActive = false;
                 game = null;
             }
+            
+            // Stop background music
+            stopMusic();
             
             // Close any open popups
             document.getElementById('directionControls').style.display = 'none';
