@@ -256,14 +256,26 @@
         .city-grid {
             display: grid;
             gap: 1px;
-            background: #2a4d3a;
+            background: linear-gradient(135deg, #1a2f20 0%, #2a4d3a 50%, #1a2f20 100%);
             padding: 8px;
-            border-radius: 10px;
-            border: 3px solid #666;
+            border-radius: 12px;
+            border: 3px solid #444;
             position: relative;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            /* Ensure horizontal layout on mobile landscape */
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.1);
+            /* Ensure horizontal layout on mobile */
             min-width: fit-content;
+        }
+
+        .city-grid::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #666, #888, #666);
+            border-radius: 12px;
+            z-index: -1;
         }
 
         .cell {
@@ -272,31 +284,103 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: none;
         }
 
         .land {
-            background: linear-gradient(135deg, #4a7c59, #5d8f6a);
+            background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 50%, #5d8f6a 100%);
+            position: relative;
+        }
+
+        .land::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 2px,
+                rgba(255,255,255,0.05) 2px,
+                rgba(255,255,255,0.05) 4px
+            );
         }
 
         .land-brown {
-            background: linear-gradient(135deg, #8b6914, #a0761a);
+            background: linear-gradient(135deg, #6b4423 0%, #8b6914 50%, #a0761a 100%);
+            position: relative;
+        }
+
+        .land-brown::after {
+            content: '🏠';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8px;
+            opacity: 0.7;
         }
 
         .land-dark {
-            background: linear-gradient(135deg, #3a5d47, #4a7c59);
+            background: linear-gradient(135deg, #1a3024 0%, #3a5d47 50%, #4a7c59 100%);
+            position: relative;
+        }
+
+        .land-dark::after {
+            content: '🌲';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6px;
+            opacity: 0.8;
         }
 
         .land-desert {
-            background: linear-gradient(135deg, #c2a878, #d4b896);
+            background: linear-gradient(135deg, #b8956a 0%, #c2a878 50%, #d4b896 100%);
+            position: relative;
+        }
+
+        .land-desert::after {
+            content: '🌵';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6px;
+            opacity: 0.6;
         }
 
         .land-rocky {
-            background: linear-gradient(135deg, #708090, #778899);
+            background: linear-gradient(135deg, #5a6b7a 0%, #708090 50%, #778899 100%);
+            position: relative;
+        }
+
+        .land-rocky::after {
+            content: '⛰️';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6px;
+            opacity: 0.7;
         }
 
         .land-grass {
-            background: linear-gradient(135deg, #228b22, #32cd32);
+            background: linear-gradient(135deg, #1a7a1a 0%, #228b22 50%, #32cd32 100%);
+            position: relative;
+        }
+
+        .land-grass::after {
+            content: '🌿';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6px;
+            opacity: 0.8;
         }
 
         .movement-highlight {
@@ -312,13 +396,31 @@
         }
 
         .road {
-            background: linear-gradient(135deg, #555, #666);
-            border: 1px solid #444;
+            background: linear-gradient(135deg, #404040 0%, #555 50%, #666 100%);
+            border: 1px solid #333;
             position: relative;
+            box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+        }
+
+        .road::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 3px,
+                rgba(0,0,0,0.1) 3px,
+                rgba(0,0,0,0.1) 4px
+            );
         }
 
         .road-horizontal {
-            background: linear-gradient(90deg, #555, #666, #555);
+            background: linear-gradient(180deg, #404040 0%, #555 50%, #666 100%);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), inset 0 -2px 4px rgba(0,0,0,0.2);
         }
 
         .road-horizontal::before {
@@ -327,9 +429,10 @@
             top: 42%;
             left: 0;
             right: 0;
-            height: 1px;
-            background: #ffff99;
-            opacity: 0.7;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #ffff99 20%, #ffff99 80%, transparent 100%);
+            opacity: 0.8;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .road-horizontal::after {
@@ -338,13 +441,15 @@
             top: 58%;
             left: 0;
             right: 0;
-            height: 1px;
-            background: #ffff99;
-            opacity: 0.7;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #ffff99 20%, #ffff99 80%, transparent 100%);
+            opacity: 0.8;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .road-vertical {
-            background: linear-gradient(0deg, #555, #666, #555);
+            background: linear-gradient(90deg, #404040 0%, #555 50%, #666 100%);
+            box-shadow: inset 2px 0 4px rgba(0,0,0,0.2), inset -2px 0 4px rgba(0,0,0,0.2);
         }
 
         .road-vertical::before {
@@ -353,9 +458,10 @@
             top: 0;
             bottom: 0;
             left: 42%;
-            width: 1px;
-            background: #ffff99;
-            opacity: 0.7;
+            width: 2px;
+            background: linear-gradient(180deg, transparent 0%, #ffff99 20%, #ffff99 80%, transparent 100%);
+            opacity: 0.8;
+            box-shadow: 1px 0 2px rgba(0,0,0,0.3);
         }
 
         .road-vertical::after {
@@ -364,30 +470,56 @@
             top: 0;
             bottom: 0;
             left: 58%;
-            width: 1px;
-            background: #ffff99;
-            opacity: 0.7;
+            width: 2px;
+            background: linear-gradient(180deg, transparent 0%, #ffff99 20%, #ffff99 80%, transparent 100%);
+            opacity: 0.8;
+            box-shadow: 1px 0 2px rgba(0,0,0,0.3);
         }
 
         .intersection {
-            background: linear-gradient(45deg, #666, #777, #666);
+            background: linear-gradient(45deg, #505050 0%, #666 25%, #777 50%, #666 75%, #505050 100%);
             position: relative;
-            border: 2px solid #888;
+            border: 2px solid #333;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .intersection::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            right: 20%;
+            bottom: 20%;
+            background: repeating-linear-gradient(
+                45deg,
+                #ffff99,
+                #ffff99 2px,
+                transparent 2px,
+                transparent 6px
+            );
+            opacity: 0.3;
         }
 
         .traffic-light {
             position: absolute;
-            top: 3px;
-            right: 3px;
-            width: 6px;
-            height: 6px;
+            top: 2px;
+            right: 2px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            border: 1px solid #333;
-            box-shadow: 0 0 4px rgba(0,0,0,0.5);
+            border: 1px solid #222;
+            box-shadow: 0 0 6px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.2);
         }
 
-        .red-light { background: #ff4444; }
-        .green-light { background: #44ff44; }
+        .red-light { 
+            background: radial-gradient(circle at 30% 30%, #ff6666, #ff4444, #cc0000);
+            box-shadow: 0 0 8px #ff4444, 0 0 12px rgba(255,68,68,0.5);
+        }
+        
+        .green-light { 
+            background: radial-gradient(circle at 30% 30%, #66ff66, #44ff44, #00cc00);
+            box-shadow: 0 0 8px #44ff44, 0 0 12px rgba(68,255,68,0.5);
+        }
 
         .player {
             position: absolute;
