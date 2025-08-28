@@ -81,7 +81,7 @@
         }
 
         .menu h1 {
-            font-size: 2.2em;
+            font-size: 1.8em;
             margin-bottom: 20px;
             color: #ffd700;
             font-weight: 700;
@@ -144,7 +144,7 @@
 
         .top-panel-left {
             display: flex;
-            gap: 15px;
+            gap: 8px;
             align-items: center;
         }
 
@@ -152,7 +152,7 @@
 
         .menu-btn {
             padding: 4px 8px;
-            font-size: 14px;
+            font-size: 10px;
             min-width: 40px;
         }
 
@@ -165,12 +165,12 @@
 
         .controls {
             display: flex;
-            gap: 10px;
+            gap: 4px;
             flex-wrap: wrap;
         }
 
         .dice-container {
-            position: fixed;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -248,9 +248,9 @@
             overflow: hidden;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             height: calc(100vh - 60px);
-            padding-top: 40px;
+            padding-top: 0;
         }
 
         .city-grid {
@@ -284,103 +284,94 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .land {
             background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 50%, #5d8f6a 100%);
             position: relative;
         }
-
+        
         .land::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 2px,
-                rgba(255,255,255,0.05) 2px,
-                rgba(255,255,255,0.05) 4px
-            );
+            display: none;
         }
 
         .land-brown {
             background: linear-gradient(135deg, #6b4423 0%, #8b6914 50%, #a0761a 100%);
             position: relative;
         }
-
-        .land-brown::after {
-            content: '🏠';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 8px;
-            opacity: 0.7;
+        
+        .land-brown::before {
+            display: none;
         }
 
         .land-dark {
             background: linear-gradient(135deg, #1a3024 0%, #3a5d47 50%, #4a7c59 100%);
             position: relative;
         }
-
-        .land-dark::after {
-            content: '🌲';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 6px;
-            opacity: 0.8;
+        
+        .land-dark::before {
+            display: none;
         }
 
         .land-desert {
             background: linear-gradient(135deg, #b8956a 0%, #c2a878 50%, #d4b896 100%);
             position: relative;
         }
-
-        .land-desert::after {
-            content: '🏜️';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 6px;
-            opacity: 0.6;
+        
+        .land-desert::before {
+            display: none;
         }
 
         .land-rocky {
             background: linear-gradient(135deg, #5a6b7a 0%, #708090 50%, #778899 100%);
             position: relative;
         }
-
-        .land-rocky::after {
-            content: '⛰️';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 6px;
-            opacity: 0.7;
+        
+        .land-rocky::before {
+            display: none;
         }
 
         .land-grass {
             background: linear-gradient(135deg, #1a7a1a 0%, #228b22 50%, #32cd32 100%);
             position: relative;
         }
-
-        .land-grass::after {
-            content: '🌿';
+        
+        .land-grass::before {
+            display: none;
+        }
+        
+        .lake {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            position: relative;
+        }
+        
+        .shop {
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #cd853f 100%);
+            position: relative;
+        }
+        
+        .shop::before {
+            content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 6px;
-            opacity: 0.8;
+            top: 20%;
+            left: 20%;
+            right: 20%;
+            bottom: 20%;
+            background: repeating-linear-gradient(
+                90deg,
+                rgba(255,255,255,0.3),
+                rgba(255,255,255,0.3) 2px,
+                transparent 2px,
+                transparent 6px
+            ),
+            repeating-linear-gradient(
+                0deg,
+                rgba(255,255,255,0.2),
+                rgba(255,255,255,0.2) 2px,
+                transparent 2px,
+                transparent 6px
+            );
         }
 
         .movement-highlight {
@@ -576,10 +567,10 @@
             }
         }
 
-        /* Direction Controls - centered on screen with high z-index */
+        /* Direction Controls - centered on city grid with absolute positioning */
         .direction-controls {
             display: none;
-            position: fixed;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -718,7 +709,7 @@
             }
             
             .top-panel-left {
-                gap: 8px;
+                gap: 4px;
                 flex-wrap: wrap;
             }
             
@@ -730,7 +721,7 @@
             
             .menu-btn {
                 padding: 2px 4px;
-                font-size: 10px;
+                font-size: 8px;
                 min-width: 28px;
                 max-width: 32px;
                 border-radius: 6px;
@@ -767,13 +758,13 @@
             }
             
             .direction-controls {
-                position: fixed;
+                position: absolute;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
                 width: 85%;
-                max-width: 280px;
-                padding: 16px;
+                max-width: 320px;
+                padding: 12px;
                 margin: 0;
                 border-radius: 16px;
                 display: none;
@@ -785,12 +776,13 @@
             }
             
             .direction-btn {
-                padding: 8px 16px;
-                margin: 4px;
-                font-size: 14px;
+                padding: 6px 12px;
+                margin: 2px;
+                font-size: 12px;
                 border-radius: 8px;
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
+                display: inline-block;
             }
             
             .dice-roll-btn {
@@ -988,7 +980,7 @@
                 let nearestRoadY = Math.floor(centerY / 5) * 5;
                 
                 this.playerPos = { x: nearestRoadX, y: nearestRoadY };
-                this.playerDirection = Math.floor(Math.random() * 4); // Random initial direction
+                this.playerDirection = Math.floor(Math.random() * 4); // Random initial direction (0=up, 1=right, 2=down, 3=left)
                 
                 this.spawnPolice();
                 this.updateDisplay();
@@ -1078,7 +1070,7 @@
                             // Land area - use terrain type from terrain map or assign random if not set
                             let finalTerrainType = this.terrainMap[y][x];
                             if (finalTerrainType === 'road') {
-                                // Assign random terrain type for non-road areas
+                                // Assign random terrain type for non-road areas (excluding lake)
                                 const terrainTypes = ['land', 'land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass'];
                                 finalTerrainType = terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
                                 this.terrainMap[y][x] = finalTerrainType;
@@ -1086,8 +1078,13 @@
                             
                             cell.classList.add(finalTerrainType);
                             
-                            // Add buildings and trees with enhanced density and procedural placement
-                            if (finalTerrainType !== 'land-brown' && finalTerrainType !== 'land-desert') {
+                            // Add shop emoji for shops
+                            if (finalTerrainType === 'shop') {
+                                cell.innerHTML = '🏪';
+                                cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                            }
+                            // Add buildings and trees with enhanced density and procedural placement (skip for lakes and shops)
+                            else if (finalTerrainType !== 'land-brown' && finalTerrainType !== 'land-desert' && finalTerrainType !== 'lake') {
                                 const featureChance = Math.random();
                                 
                                 // Different building types based on terrain
@@ -1107,10 +1104,10 @@
                                         cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
                                     } else if (featureChance > 0.65) {
                                         cell.innerHTML = '🌳'; // Tree
-                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
+                                        cell.style.fontSize = `${this.cellSize * 0.7}px`; // Increased for larger trees
                                     } else if (featureChance > 0.58) {
                                         cell.innerHTML = '🌲'; // Evergreen tree
-                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
+                                        cell.style.fontSize = `${this.cellSize * 0.7}px`; // Increased for larger trees
                                     }
                                 } else if (finalTerrainType === 'land') {
                                     // Mixed urban areas
@@ -1122,13 +1119,13 @@
                                         cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
                                     } else if (featureChance > 0.60) {
                                         cell.innerHTML = '🌳'; // Tree
-                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
+                                        cell.style.fontSize = `${this.cellSize * 0.7}px`; // Increased for larger trees
                                     }
                                 } else {
                                     // Other terrain types - sparse features
                                     if (featureChance > 0.85) {
                                         cell.innerHTML = '🌳'; // Tree
-                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
+                                        cell.style.fontSize = `${this.cellSize * 0.7}px`; // Increased for larger trees
                                     }
                                 }
                             }
@@ -1140,7 +1137,7 @@
             }
 
             generateVariedTerrainBlocks() {
-                const terrainTypes = ['land', 'land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass'];
+                const terrainTypes = ['land', 'land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass', 'lake'];
                 
                 // Start with all cells as roads
                 for (let y = 0; y < this.gridSize.height; y++) {
@@ -1149,10 +1146,23 @@
                     }
                 }
                 
-                // Procedural terrain generation with maximum 12 land cells
+                // First, generate 2-3 small lakes
+                const numLakes = Math.floor(Math.random() * 2) + 2; // 2-3 lakes
+                for (let lake = 0; lake < numLakes; lake++) {
+                    const lakeSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells per lake
+                    this.generateLake(lakeSize);
+                }
+                
+                // Generate 3-5 shops near roads
+                const numShops = Math.floor(Math.random() * 3) + 3; // 3-5 shops
+                for (let shop = 0; shop < numShops; shop++) {
+                    this.generateShop();
+                }
+                
+                // Then generate other terrain with reduced total
                 let totalLandCells = 0;
-                const maxLandCells = 36;
-                const maxAttempts = 50;
+                const maxLandCells = 25; // Further reduced to make room for shops
+                const maxAttempts = 40;
                 
                 for (let attempt = 0; attempt < maxAttempts && totalLandCells < maxLandCells; attempt++) {
                     const remainingCells = maxLandCells - totalLandCells;
@@ -1160,14 +1170,14 @@
                     // Dynamic cluster sizing based on remaining cells
                     let clusterSize;
                     if (remainingCells >= 12) {
-                        // Large clusters (8-15 cells) when 12+ cells remain
-                        clusterSize = Math.floor(Math.random() * 8) + 8; // 8-15
+                        // Large clusters (6-12 cells) when 12+ cells remain
+                        clusterSize = Math.floor(Math.random() * 7) + 6; // 6-12
                     } else if (remainingCells >= 6) {
-                        // Medium clusters (4-8 cells) when 6-11 cells remain
-                        clusterSize = Math.floor(Math.random() * 5) + 4; // 4-8
+                        // Medium clusters (3-6 cells) when 6-11 cells remain
+                        clusterSize = Math.floor(Math.random() * 4) + 3; // 3-6
                     } else {
-                        // Small clusters (1-4 cells) when fewer than 6 remain
-                        clusterSize = Math.floor(Math.random() * 4) + 1; // 1-4
+                        // Small clusters (1-3 cells) when fewer than 6 remain
+                        clusterSize = Math.floor(Math.random() * 3) + 1; // 1-3
                     }
                     
                     // Don't exceed remaining cells
@@ -1188,7 +1198,9 @@
                         blockHeight = Math.ceil(clusterSize / 3);
                     }
                     
-                    const terrainType = terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
+                    // Exclude lake and shop from regular terrain generation
+                    const nonSpecialTerrains = ['land', 'land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass'];
+                    const terrainType = nonSpecialTerrains[Math.floor(Math.random() * nonSpecialTerrains.length)];
                     
                     // Find suitable position avoiding roads
                     const maxX = this.gridSize.width - blockWidth - 2;
@@ -1255,7 +1267,91 @@
                     }
                 }
                 
-                console.log(`Procedural generation complete: ${totalLandCells}/${maxLandCells} land cells placed`);
+                console.log(`Procedural generation complete: ${totalLandCells}/${maxLandCells} land cells placed, ${numLakes} lakes added, ${numShops} shops added`);
+            }
+            
+            generateLake(lakeSize) {
+                const maxAttempts = 20;
+                
+                for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                    // Choose lake position away from roads
+                    const centerX = Math.floor(Math.random() * (this.gridSize.width - 6)) + 3;
+                    const centerY = Math.floor(Math.random() * (this.gridSize.height - 6)) + 3;
+                    
+                    // Make sure lake center is not on a road
+                    if (centerX % 3 !== 0 && centerY % 5 !== 0) {
+                        const lakePositions = [];
+                        
+                        // Generate lake shape (compact cluster)
+                        if (lakeSize === 2) {
+                            lakePositions.push({x: centerX, y: centerY}, {x: centerX + 1, y: centerY});
+                        } else if (lakeSize === 3) {
+                            lakePositions.push(
+                                {x: centerX, y: centerY},
+                                {x: centerX + 1, y: centerY},
+                                {x: centerX, y: centerY + 1}
+                            );
+                        } else { // 4 cells
+                            lakePositions.push(
+                                {x: centerX, y: centerY},
+                                {x: centerX + 1, y: centerY},
+                                {x: centerX, y: centerY + 1},
+                                {x: centerX + 1, y: centerY + 1}
+                            );
+                        }
+                        
+                        // Check if all positions are valid
+                        const validLake = lakePositions.every(pos => 
+                            pos.x > 0 && pos.y > 0 && 
+                            pos.x < this.gridSize.width - 1 && pos.y < this.gridSize.height - 1 &&
+                            pos.x % 3 !== 0 && pos.y % 5 !== 0
+                        );
+                        
+                        if (validLake) {
+                            // Place the lake
+                            lakePositions.forEach(pos => {
+                                this.terrainMap[pos.y][pos.x] = 'lake';
+                            });
+                            return; // Lake successfully placed
+                        }
+                    }
+                }
+            }
+            
+            generateShop() {
+                const maxAttempts = 30;
+                
+                for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                    // Choose shop position near roads but not on roads
+                    const x = Math.floor(Math.random() * (this.gridSize.width - 4)) + 2;
+                    const y = Math.floor(Math.random() * (this.gridSize.height - 4)) + 2;
+                    
+                    // Make sure shop is not on a road
+                    if (x % 3 !== 0 && y % 5 !== 0) {
+                        // Check if near a road (within 1-2 cells)
+                        let nearRoad = false;
+                        for (let dx = -2; dx <= 2; dx++) {
+                            for (let dy = -2; dy <= 2; dy++) {
+                                const checkX = x + dx;
+                                const checkY = y + dy;
+                                if (checkX >= 0 && checkX < this.gridSize.width && 
+                                    checkY >= 0 && checkY < this.gridSize.height) {
+                                    if (checkX % 3 === 0 || checkY % 5 === 0) {
+                                        nearRoad = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (nearRoad) break;
+                        }
+                        
+                        // Check if position is valid and not already occupied
+                        if (nearRoad && this.terrainMap[y][x] === 'road') {
+                            this.terrainMap[y][x] = 'shop';
+                            return; // Shop successfully placed
+                        }
+                    }
+                }
             }
 
             spawnPolice() {
@@ -1410,25 +1506,11 @@
                 // Get next position based on current direction
                 const nextPos = this.getNextPosition(this.playerPos, this.playerDirection);
                 
-                // Check if move is valid (includes police collision detection)
+                // Check if move is valid
                 if (!this.isValidMove(nextPos)) {
-                    // Check if blocked specifically by police for game over condition
-                    const blockedByPolice = this.policePos.some(police => 
-                        police.x === nextPos.x && police.y === nextPos.y
-                    );
-                    
-                    if (blockedByPolice) {
-                        // Show direction choice since current direction is blocked
-                        setTimeout(() => {
-                            document.getElementById('gameStatus').textContent = 'Blocked by police!';
-                        }, 300);
-                        this.showDirectionChoice();
-                        return;
-                    } else {
-                        // Blocked by boundary or terrain - show direction choice
-                        this.showDirectionChoice();
-                        return;
-                    }
+                    // Blocked by boundary or terrain - show direction choice
+                    this.showDirectionChoice();
+                    return;
                 }
                 
                 // ... existing code ...
@@ -1527,15 +1609,6 @@
                     return false;
                 }
                 
-                // Check if position is occupied by police (bidirectional collision detection)
-                const blockedByPolice = this.policePos.some(police => 
-                    police.x === pos.x && police.y === pos.y
-                );
-                
-                if (blockedByPolice) {
-                    return false;
-                }
-                
                 return true;
             }
 
@@ -1625,22 +1698,12 @@
                     newDirection = (this.playerDirection + 1) % 4; // Turn right
                 }
                 
-                // Check if the chosen direction is valid (includes police collision detection)
+                // Check if the chosen direction is valid
                 const nextPos = this.getNextPosition(this.playerPos, newDirection);
                 if (!this.isValidMove(nextPos)) {
-                    const blockedByPolice = this.policePos.some(police => 
-                        police.x === nextPos.x && police.y === nextPos.y
-                    );
-                    
-                    if (blockedByPolice) {
-                        setTimeout(() => {
-                            document.getElementById('gameStatus').textContent = 'That direction is blocked by police!';
-                        }, 300);
-                    } else {
-                        setTimeout(() => {
-                            document.getElementById('gameStatus').textContent = 'That direction is blocked!';
-                        }, 300);
-                    }
+                    setTimeout(() => {
+                        document.getElementById('gameStatus').textContent = 'That direction is blocked!';
+                    }, 300);
                     this.showDirectionChoice();
                     return;
                 }
@@ -1795,27 +1858,12 @@
                 });
                 
                 if (validDirections.length === 0) {
-                    // Check if blocked by police adjacent to player
-                    const adjacentToPolice = this.policePos.some(police => {
-                        const distance = Math.abs(police.x - this.playerPos.x) + Math.abs(police.y - this.playerPos.y);
-                        return distance === 1; // Adjacent (distance of 1)
-                    });
-                    
-                    if (adjacentToPolice) {
-                        // All paths blocked and police is adjacent - game over
-                        setTimeout(() => {
-                            document.getElementById('gameStatus').textContent = 'Trapped by police!';
-                        }, 300);
-                        setTimeout(() => this.endGame(false), 600);
-                        return true;
-                    } else {
-                        // All paths are blocked by terrain/boundaries
-                        setTimeout(() => {
-                            document.getElementById('gameStatus').textContent = 'All paths blocked!';
-                        }, 300);
-                        setTimeout(() => this.endGame(false), 600);
-                        return true;
-                    }
+                    // All paths are blocked by terrain/boundaries
+                    setTimeout(() => {
+                        document.getElementById('gameStatus').textContent = 'All paths blocked!';
+                    }, 300);
+                    setTimeout(() => this.endGame(false), 600);
+                    return true;
                 }
                 
                 return false;
