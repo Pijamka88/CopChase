@@ -375,9 +375,12 @@
         }
 
         .movement-highlight {
-            background: rgba(255, 255, 0, 0.6) !important;
+            background: rgba(255, 255, 0, 0.4) !important;
             border: 2px solid #ffd700 !important;
-            animation: pulse 0.5s ease-in-out;
+            animation: pulse 0.6s ease-in-out infinite;
+            z-index: 5;
+            transform: scale(1.02);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3) !important;
         }
 
         @keyframes pulse {
@@ -697,7 +700,201 @@
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
         }
 
-        /* Mobile Responsive - Optimized for Portrait Mode and Telegram Web App */
+        /* Map Editor Styles */
+        .map-editor {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            height: -webkit-fill-available;
+            overflow: hidden;
+            padding-top: env(safe-area-inset-top);
+        }
+        
+        .editor-panel {
+            background: rgba(0,0,0,0.15);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 60px;
+        }
+        
+        .editor-tools {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .tool-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .tool-btn:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+        }
+        
+        .tool-btn.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .editor-board {
+            flex: 1;
+            padding: 10px;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .editor-grid {
+            display: grid;
+            gap: 1px;
+            background: linear-gradient(135deg, #1a2f20 0%, #2a4d3a 50%, #1a2f20 100%);
+            padding: 8px;
+            border-radius: 12px;
+            border: 3px solid #444;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            cursor: crosshair;
+        }
+        
+        .editor-cell {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+        
+        .editor-cell:hover {
+            border: 2px solid #ffd700;
+            transform: scale(1.1);
+            z-index: 10;
+        }
+        
+        /* Map Selection Modal */
+        .map-selection {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .map-selection-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: center;
+        }
+        
+        .map-selection h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+        
+        .map-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .map-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .map-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .map-info {
+            text-align: left;
+        }
+        
+        .map-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .map-size {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .map-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .map-action-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .map-action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .map-action-btn.delete {
+            background: rgba(255, 68, 68, 0.3);
+            border-color: rgba(255, 68, 68, 0.5);
+        }
+        
+        .map-action-btn.delete:hover {
+            background: rgba(255, 68, 68, 0.5);
+        }
         @media (max-width: 480px) {
             .top-panel {
                 flex-direction: row;
@@ -882,7 +1079,37 @@
             </div>
             <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
                 <button class="btn" onclick="startGame()">Start Game</button>
+                <button class="btn" onclick="showMapSelection()">Select Map</button>
+                <button class="btn" onclick="showMapEditor()">Map Editor</button>
                 <button class="btn" onclick="showInstructions()">How to Play</button>
+            </div>
+        </div>
+
+        <!-- Map Editor -->
+        <div id="mapEditor" class="map-editor">
+            <div class="editor-panel">
+                <div class="editor-tools">
+                    <button class="tool-btn active" data-tool="road-vertical" onclick="selectTool('road-vertical')">🔄 Vertical Road</button>
+                    <button class="tool-btn" data-tool="road-horizontal" onclick="selectTool('road-horizontal')">↔️ Horizontal Road</button>
+                    <button class="tool-btn" data-tool="intersection" onclick="selectTool('intersection')">✕ Intersection</button>
+                    <button class="tool-btn" data-tool="intersection-light" onclick="selectTool('intersection-light')">🚦 Intersection + Light</button>
+                    <button class="tool-btn" data-tool="land" onclick="selectTool('land')">🟫 Land</button>
+                    <button class="tool-btn" data-tool="land-grass" onclick="selectTool('land-grass')">🟩 Grass</button>
+                    <button class="tool-btn" data-tool="land-dark" onclick="selectTool('land-dark')">🟫 Dark</button>
+                    <button class="tool-btn" data-tool="land-brown" onclick="selectTool('land-brown')">🟤 Brown</button>
+                    <button class="tool-btn" data-tool="land-desert" onclick="selectTool('land-desert')">🟨 Desert</button>
+                    <button class="tool-btn" data-tool="land-rocky" onclick="selectTool('land-rocky')">⬜ Rocky</button>
+                    <button class="tool-btn" data-tool="lake" onclick="selectTool('lake')">💧 Lake</button>
+                </div>
+                <div class="editor-actions">
+                    <button class="btn menu-btn" onclick="clearEditor()">Clear</button>
+                    <button class="btn menu-btn" onclick="saveMap()">Save</button>
+                    <button class="btn menu-btn" onclick="testMap()">Test</button>
+                    <button class="btn menu-btn" onclick="returnToMenu()">Menu</button>
+                </div>
+            </div>
+            <div class="editor-board">
+                <div id="editorGrid" class="editor-grid"></div>
             </div>
         </div>
 
@@ -926,6 +1153,28 @@
             <button class="btn" onclick="returnToMenu()">Main Menu</button>
         </div>
 
+        <!-- Map Selection Modal -->
+        <div id="mapSelection" class="map-selection">
+            <div class="map-selection-content">
+                <h2>🗺️ Select Map</h2>
+                <div id="mapList" class="map-list">
+                    <div class="map-item" onclick="selectMap('default')">
+                        <div class="map-info">
+                            <div class="map-name">Default Map</div>
+                            <div class="map-size">16x28 - Procedural</div>
+                        </div>
+                        <div class="map-actions">
+                            <button class="map-action-btn" onclick="event.stopPropagation(); selectMap('default')">Select</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                    <button class="btn" onclick="closeMapSelection()">Close</button>
+                    <button class="btn" onclick="showMapEditor()">Create New</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Instructions Popup -->
         <div id="instructionsPopup" class="instructions-popup">
             <div class="instructions-content">
@@ -947,7 +1196,7 @@
 
     <script>
         class CityChaseGame {
-            constructor() {
+            constructor(customMapData = null) {
                 // Portrait mode optimized: 16 width x 28 height for optimal mobile viewing
                 this.gridSize = { width: 16, height: 28 };
                 
@@ -968,39 +1217,138 @@
                 this.currentDiceRoll = 0;
                 this.movesLeft = 0;
                 this.playerDirection = 0; // 0=up, 1=right, 2=down, 3=left
+                this.customMapData = customMapData;
                 
                 this.initializeGame();
             }
 
             initializeGame() {
+                // Check if we have custom map data
+                if (this.customMapData) {
+                    console.log('Loading custom map:', this.customMapData.name);
+                    this.loadCustomMap(this.customMapData);
+                } else {
+                    console.log('Creating default procedural map');
+                    this.createCityGrid();
+                    
+                    // Use setTimeout to ensure DOM is ready for default maps too
+                    setTimeout(() => {
+                        // Find valid starting position for default maps
+                        this.findValidPlayerStart();
+                        this.spawnPolice();
+                        this.updateDisplay();
+                    }, 50);
+                }
+            }
+            
+            loadCustomMap(mapData) {
+                console.log('Loading custom map:', mapData.name);
+                
+                // Load custom terrain map
+                this.terrainMap = mapData.terrain;
+                
+                // Recreate the grid with custom terrain
                 this.createCityGrid();
-                // Ensure player starts on a road (every 3 cells now)
-                const centerX = Math.floor(this.gridSize.width / 2);
-                const centerY = Math.floor(this.gridSize.height / 2);
                 
-                // Find nearest road intersection to center
-                let nearestRoadX = Math.floor(centerX / 3) * 3;
-                let nearestRoadY = Math.floor(centerY / 5) * 5;
+                // Use longer timeout to ensure DOM is fully rendered before placing entities
+                setTimeout(() => {
+                    console.log('Placing entities after DOM render...');
+                    
+                    // Verify DOM is ready
+                    const gridCells = document.querySelectorAll('#cityGrid .cell');
+                    console.log(`DOM verification: ${gridCells.length} cells found`);
+                    
+                    // Find a valid starting position for player
+                    this.findValidPlayerStart();
+                    console.log('Player positioned at:', this.playerPos);
+                    
+                    // Respawn police
+                    this.spawnPolice();
+                    console.log('Police positioned at:', this.policePos);
+                    
+                    // Update display to show player and police
+                    this.updateDisplay();
+                    
+                    // Verify entities are placed
+                    setTimeout(() => {
+                        const playerElements = document.querySelectorAll('.player');
+                        const policeElements = document.querySelectorAll('.police');
+                        console.log(`Verification: ${playerElements.length} player, ${policeElements.length} police elements found`);
+                        
+                        if (playerElements.length === 0 || policeElements.length === 0) {
+                            console.error('Entities not properly placed, attempting recovery...');
+                            this.updateDisplay(); // Try again
+                        }
+                    }, 100);
+                }, 150); // Increased delay for better reliability
+            }
+            
+            findValidPlayerStart() {
+                console.log('Finding valid player start position...');
                 
-                this.playerPos = { x: nearestRoadX, y: nearestRoadY };
-                this.playerDirection = Math.floor(Math.random() * 4); // Random initial direction (0=up, 1=right, 2=down, 3=left)
+                const roadPositions = [];
                 
-                this.spawnPolice();
-                this.updateDisplay();
+                // Collect all road positions
+                for (let y = 0; y < this.gridSize.height; y++) {
+                    for (let x = 0; x < this.gridSize.width; x++) {
+                        if (this.isRoadOrIntersection(x, y)) {
+                            roadPositions.push({ x, y });
+                            console.log(`Found road at (${x}, ${y})`);
+                        }
+                    }
+                }
+                
+                console.log(`Found ${roadPositions.length} total road positions`);
+                
+                if (roadPositions.length > 0) {
+                    // Choose a random road position from the center area preferably
+                    const centerX = Math.floor(this.gridSize.width / 2);
+                    const centerY = Math.floor(this.gridSize.height / 2);
+                    
+                    // Sort by distance from center and choose from the closest ones
+                    roadPositions.sort((a, b) => {
+                        const distA = Math.abs(a.x - centerX) + Math.abs(a.y - centerY);
+                        const distB = Math.abs(b.x - centerX) + Math.abs(b.y - centerY);
+                        return distA - distB;
+                    });
+                    
+                    // Choose from the closest quarter of positions
+                    const choiceRange = Math.max(1, Math.floor(roadPositions.length / 4));
+                    const randomIndex = Math.floor(Math.random() * choiceRange);
+                    const chosenPos = roadPositions[randomIndex];
+                    
+                    this.playerPos = { x: chosenPos.x, y: chosenPos.y };
+                    this.playerDirection = Math.floor(Math.random() * 4);
+                    console.log(`Player positioned at (${this.playerPos.x}, ${this.playerPos.y})`);
+                } else {
+                    // Fallback to center if no roads found
+                    console.log('No roads found, using center position');
+                    this.playerPos = { 
+                        x: Math.floor(this.gridSize.width / 2), 
+                        y: Math.floor(this.gridSize.height / 2) 
+                    };
+                    this.playerDirection = 0;
+                }
             }
 
             createCityGrid() {
+                console.log('Creating city grid...');
                 const grid = document.getElementById('cityGrid');
                 grid.innerHTML = '';
                 grid.style.gridTemplateColumns = `repeat(${this.gridSize.width}, ${this.cellSize}px)`;
                 grid.style.gridTemplateRows = `repeat(${this.gridSize.height}, ${this.cellSize}px)`;
 
-                // Create terrain map first
-                this.terrainMap = new Array(this.gridSize.height).fill(null).map(() => new Array(this.gridSize.width).fill('road'));
-                
-                // Generate terrain blocks of varied sizes
-                this.generateVariedTerrainBlocks();
+                // Create terrain map first (either custom or procedural)
+                if (!this.terrainMap) {
+                    console.log('No terrain map found, generating procedural terrain');
+                    this.terrainMap = new Array(this.gridSize.height).fill(null).map(() => new Array(this.gridSize.width).fill('land'));
+                    // Generate proper procedural city layout
+                    this.generateVariedTerrainBlocks();
+                } else {
+                    console.log('Using existing terrain map');
+                }
 
+                let cellsCreated = 0;
                 // Create realistic city grid with perimeter roads and internal road network
                 for (let y = 0; y < this.gridSize.height; y++) {
                     for (let x = 0; x < this.gridSize.width; x++) {
@@ -1010,58 +1358,44 @@
                         cell.dataset.y = y;
                         cell.style.width = `${this.cellSize}px`;
                         cell.style.height = `${this.cellSize}px`;
+                        cellsCreated++;
 
-                        // Check if this is perimeter (city border) - must be road
-                        const isPerimeter = (x === 0 || x === this.gridSize.width - 1 || y === 0 || y === this.gridSize.height - 1);
-                        
-                        // Check if this should be a road based on grid pattern
-                        const isRoadX = x % 3 === 0;
-                        const isRoadY = y % 5 === 0;
-                        
-                        // Force corners to be intersections
-                        const isCorner = (x === 0 && y === 0) || 
-                                        (x === this.gridSize.width - 1 && y === 0) || 
-                                        (x === 0 && y === this.gridSize.height - 1) || 
-                                        (x === this.gridSize.width - 1 && y === this.gridSize.height - 1);
-                        
-                        // Check if this is a perimeter intersection (where perimeter roads cross internal roads)
-                        const isPerimeterIntersection = isPerimeter && ((isRoadX && (y === 0 || y === this.gridSize.height - 1)) ||
-                                                                       (isRoadY && (x === 0 || x === this.gridSize.width - 1)));
-                        
                         const terrainType = this.terrainMap[y][x];
                         
-                        if (isPerimeter || ((isRoadX || isRoadY) && terrainType === 'road')) {
-                            if ((isRoadX && isRoadY) || isCorner) {
-                                // Intersection (internal and corners)
+                        if (terrainType === 'road' || terrainType === 'road-vertical' || terrainType === 'road-horizontal' || 
+                            terrainType === 'intersection' || terrainType === 'intersection-light') {
+                            // Handle different road types
+                            if (terrainType === 'intersection' || terrainType === 'intersection-light') {
+                                // Explicit intersection from editor or generation
                                 cell.classList.add('intersection');
                                 
-                                // Add traffic lights to intersections
-                                const trafficLightChance = isPerimeter ? 0.2 : 0.4; // 20% for perimeter, 40% for internal
-                                if (Math.random() < trafficLightChance) {
+                                // Add traffic light if specified
+                                if (terrainType === 'intersection-light') {
                                     const light = document.createElement('div');
                                     light.className = `traffic-light ${Math.random() > 0.5 ? 'red-light' : 'green-light'}`;
                                     cell.appendChild(light);
                                 }
-                            } else if (isPerimeter && ((isRoadX && x !== 0 && x !== this.gridSize.width - 1) || (isRoadY && y !== 0 && y !== this.gridSize.height - 1))) {
-                                // Perimeter intersections where internal roads meet border
-                                cell.classList.add('intersection');
-                                
-                                // Add traffic lights to perimeter intersections
-                                if (Math.random() < 0.3) {
-                                    const light = document.createElement('div');
-                                    light.className = `traffic-light ${Math.random() > 0.5 ? 'red-light' : 'green-light'}`;
-                                    cell.appendChild(light);
-                                }
-                            } else if (isPerimeter) {
-                                // Perimeter road - display as empty road
-                                cell.classList.add('road');
-                                if (y === 0 || y === this.gridSize.height - 1) {
-                                    cell.classList.add('road-horizontal');
-                                } else {
-                                    cell.classList.add('road-vertical');
-                                }
+                            } else if (terrainType === 'road-vertical') {
+                                // Explicit vertical road
+                                cell.classList.add('road', 'road-vertical');
+                            } else if (terrainType === 'road-horizontal') {
+                                // Explicit horizontal road
+                                cell.classList.add('road', 'road-horizontal');
                             } else {
-                                // Road segment
+                                // Generic road (fallback)
+                                cell.classList.add('road');
+                            }
+                        } else if (this.isRoadPosition(x, y)) {
+                            // Fallback for positions that should be roads based on grid pattern
+                            const isPerimeter = (x === 0 || x === this.gridSize.width - 1 || y === 0 || y === this.gridSize.height - 1);
+                            const isRoadX = x % 3 === 0;
+                            const isRoadY = y % 5 === 0;
+                            
+                            if ((isRoadX && isRoadY)) {
+                                // Intersection at crossing
+                                cell.classList.add('intersection');
+                            } else {
+                                // Regular road with appropriate direction
                                 cell.classList.add('road');
                                 if (isRoadX || (isPerimeter && (y === 0 || y === this.gridSize.height - 1))) {
                                     cell.classList.add('road-vertical');
@@ -1070,207 +1404,257 @@
                                 }
                             }
                         } else {
-                            // Land area - use terrain type from terrain map or assign random if not set
-                            let finalTerrainType = this.terrainMap[y][x];
-                            if (finalTerrainType === 'road') {
-                                // Assign random terrain type for non-road areas (excluding lake)
-                                const terrainTypes = ['land', 'land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass'];
-                                finalTerrainType = terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
-                                this.terrainMap[y][x] = finalTerrainType;
-                            }
+                            // Use terrain from terrain map
+                            cell.classList.add(terrainType);
                             
-                            cell.classList.add(finalTerrainType);
-                            
-                            // Add shop emoji for shops
-                            if (finalTerrainType === 'shop') {
+                            // Add appropriate content based on terrain type
+                            if (terrainType === 'shop') {
                                 cell.innerHTML = '🏪';
                                 cell.style.fontSize = `${this.cellSize * 0.6}px`;
-                            }
-                            // Add buildings and trees with enhanced density and procedural placement (skip for lakes and shops)
-                            else if (finalTerrainType !== 'land-brown' && finalTerrainType !== 'land-desert' && finalTerrainType !== 'lake') {
-                                const featureChance = Math.random();
-                                
-                                // Different building types based on terrain
-                                if (finalTerrainType === 'land-dark') {
-                                    // Industrial areas - more factories and industrial buildings
-                                    if (featureChance > 0.70) { // 30% occurrence
-                                        cell.innerHTML = '🏭'; // Factory
-                                        cell.style.fontSize = `${this.cellSize * 0.55}px`; // Reduced for mobile
-                                    } else if (featureChance > 0.60) {
-                                        cell.innerHTML = '🏢'; // Office building
-                                        cell.style.fontSize = `${this.cellSize * 0.55}px`; // Reduced for mobile
-                                    }
-                                } else if (finalTerrainType === 'land-grass') {
-                                    // Residential areas - houses and trees
-                                    if (featureChance > 0.75) { // 25% occurrence
-                                        cell.innerHTML = '🏠'; // House
-                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
-                                    } else if (featureChance > 0.65) {
-                                        cell.innerHTML = '🌳'; // Tree
-                                        cell.style.fontSize = `${this.cellSize * 0.7}px`; // Increased for larger trees
-                                    } else if (featureChance > 0.58) {
-                                        cell.innerHTML = '🌲'; // Evergreen tree
-                                        cell.style.fontSize = `${this.cellSize * 0.7}px`; // Increased for larger trees
-                                    }
-                                } else if (finalTerrainType === 'land') {
-                                    // Mixed urban areas
-                                    if (featureChance > 0.78) { // 22% occurrence
-                                        cell.innerHTML = '🏢'; // Office building
-                                        cell.style.fontSize = `${this.cellSize * 0.55}px`; // Reduced for mobile
-                                    } else if (featureChance > 0.68) {
-                                        cell.innerHTML = '🏠'; // House
-                                        cell.style.fontSize = `${this.cellSize * 0.5}px`; // Reduced for mobile
-                                    } else if (featureChance > 0.60) {
-                                        cell.innerHTML = '🌳'; // Tree
-                                        cell.style.fontSize = `${this.cellSize * 0.7}px`; // Increased for larger trees
-                                    }
-                                } else {
-                                    // Other terrain types - sparse features
-                                    if (featureChance > 0.85) {
-                                        cell.innerHTML = '🌳'; // Tree
-                                        cell.style.fontSize = `${this.cellSize * 0.7}px`; // Increased for larger trees
-                                    }
-                                }
+                            } else if (terrainType !== 'land-brown' && terrainType !== 'land-desert' && terrainType !== 'lake') {
+                                // Add buildings and trees for appropriate terrain types
+                                this.addTerrainFeatures(cell, terrainType);
                             }
                         }
 
                         grid.appendChild(cell);
                     }
                 }
+                console.log(`Grid created with ${cellsCreated} cells`);
             }
-
-            generateVariedTerrainBlocks() {
-                const terrainTypes = ['land', 'land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass', 'lake'];
-                
-                // Start with all cells as roads
-                for (let y = 0; y < this.gridSize.height; y++) {
-                    for (let x = 0; x < this.gridSize.width; x++) {
-                        this.terrainMap[y][x] = 'road';
+            
+            isRoadPosition(x, y) {
+                // Check if position should be a road based on grid pattern or explicit terrain
+                if (this.terrainMap && this.terrainMap[y] && this.terrainMap[y][x]) {
+                    const terrain = this.terrainMap[y][x];
+                    if (terrain === 'road' || terrain === 'road-vertical' || terrain === 'road-horizontal' || 
+                        terrain === 'intersection' || terrain === 'intersection-light') {
+                        return true;
+                    }
+                    // If explicitly set to non-road terrain, return false
+                    if (terrain !== 'land') {
+                        return false;
                     }
                 }
                 
-                // First, generate 2-3 small lakes
-                const numLakes = Math.floor(Math.random() * 2) + 2; // 2-3 lakes
+                // Default procedural road pattern for areas without explicit terrain
+                const isPerimeter = (x === 0 || x === this.gridSize.width - 1 || y === 0 || y === this.gridSize.height - 1);
+                const isRoadX = x % 3 === 0;
+                const isRoadY = y % 5 === 0;
+                return isPerimeter || isRoadX || isRoadY;
+            }
+            
+            addTerrainFeatures(cell, terrainType) {
+                const featureChance = Math.random();
+                
+                if (terrainType === 'land-dark') {
+                    // Industrial areas
+                    if (featureChance > 0.70) {
+                        cell.innerHTML = '🏭';
+                        cell.style.fontSize = `${this.cellSize * 0.55}px`;
+                    } else if (featureChance > 0.60) {
+                        cell.innerHTML = '🏢';
+                        cell.style.fontSize = `${this.cellSize * 0.55}px`;
+                    }
+                } else if (terrainType === 'land-grass') {
+                    // Residential areas - increased greenery
+                    if (featureChance > 0.65) { // Increased from 0.75
+                        cell.innerHTML = '🏠';
+                        cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                    } else if (featureChance > 0.45) { // Increased from 0.65
+                        cell.innerHTML = '🌳';
+                        cell.style.fontSize = `${this.cellSize * 0.7}px`;
+                    } else if (featureChance > 0.25) { // Increased from 0.58
+                        cell.innerHTML = '🌲';
+                        cell.style.fontSize = `${this.cellSize * 0.7}px`;
+                    }
+                } else if (terrainType === 'land') {
+                    // Mixed urban areas
+                    if (featureChance > 0.78) {
+                        cell.innerHTML = '🏢';
+                        cell.style.fontSize = `${this.cellSize * 0.55}px`;
+                    } else if (featureChance > 0.68) {
+                        cell.innerHTML = '🏠';
+                        cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                    } else if (featureChance > 0.60) {
+                        cell.innerHTML = '🌳';
+                        cell.style.fontSize = `${this.cellSize * 0.7}px`;
+                    }
+                } else {
+                    // Other terrain types
+                    if (featureChance > 0.85) {
+                        cell.innerHTML = '🌳';
+                        cell.style.fontSize = `${this.cellSize * 0.7}px`;
+                    }
+                }
+            }
+
+            generateVariedTerrainBlocks() {
+                // Initialize with base land terrain
+                for (let y = 0; y < this.gridSize.height; y++) {
+                    for (let x = 0; x < this.gridSize.width; x++) {
+                        this.terrainMap[y][x] = 'land';
+                    }
+                }
+                
+                // Create procedural road network with proper city layout
+                this.generateRoadNetwork();
+                
+                // Generate terrain features
+                this.generateTerrainFeatures();
+                
+                console.log('Procedural city generation complete');
+            }
+            
+            generateRoadNetwork() {
+                // Create horizontal perimeter roads at top and bottom
+                for (let x = 0; x < this.gridSize.width; x++) {
+                    this.terrainMap[0][x] = 'road-horizontal';
+                    this.terrainMap[this.gridSize.height - 1][x] = 'road-horizontal';
+                }
+                
+                // Create vertical perimeter roads at left and right
+                for (let y = 1; y < this.gridSize.height - 1; y++) {
+                    this.terrainMap[y][0] = 'road-vertical';
+                    this.terrainMap[y][this.gridSize.width - 1] = 'road-vertical';
+                }
+                
+                // Create main vertical roads (every 3 cells)
+                for (let x = 3; x < this.gridSize.width - 1; x += 3) {
+                    for (let y = 1; y < this.gridSize.height - 1; y++) {
+                        // Skip if this position will be a horizontal road
+                        if (y % 5 !== 0) {
+                            this.terrainMap[y][x] = 'road-vertical';
+                        }
+                    }
+                }
+                
+                // Create main horizontal roads (every 5 cells)
+                for (let y = 5; y < this.gridSize.height - 1; y += 5) {
+                    for (let x = 1; x < this.gridSize.width - 1; x++) {
+                        // Skip if this position will be a vertical road
+                        if (x % 3 !== 0) {
+                            this.terrainMap[y][x] = 'road-horizontal';
+                        }
+                    }
+                }
+                
+                // Create intersections at ALL road crossings
+                for (let y = 0; y < this.gridSize.height; y++) {
+                    for (let x = 0; x < this.gridSize.width; x++) {
+                        let needsIntersection = false;
+                        
+                        // Check for intersections at grid crossings
+                        if (x % 3 === 0 && y % 5 === 0) {
+                            needsIntersection = true;
+                        }
+                        
+                        // Check for intersections at perimeter crossings
+                        if ((x === 0 || x === this.gridSize.width - 1) && (y === 0 || y === this.gridSize.height - 1)) {
+                            needsIntersection = true;
+                        }
+                        
+                        // Check for intersections where vertical roads meet top/bottom perimeter
+                        if ((y === 0 || y === this.gridSize.height - 1) && x % 3 === 0) {
+                            needsIntersection = true;
+                        }
+                        
+                        // Check for intersections where horizontal roads meet left/right perimeter
+                        if ((x === 0 || x === this.gridSize.width - 1) && y % 5 === 0) {
+                            needsIntersection = true;
+                        }
+                        
+                        if (needsIntersection) {
+                            this.terrainMap[y][x] = 'intersection';
+                            
+                            // Add traffic lights to internal intersections only (not on perimeter)
+                            if (x > 0 && x < this.gridSize.width - 1 && y > 0 && y < this.gridSize.height - 1) {
+                                if (Math.random() < 0.4) { // 40% chance for traffic lights
+                                    this.terrainMap[y][x] = 'intersection-light';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            generateTerrainFeatures() {
+                // Generate 2-3 small lakes
+                const numLakes = Math.floor(Math.random() * 2) + 2;
                 for (let lake = 0; lake < numLakes; lake++) {
                     const lakeSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells per lake
                     this.generateLake(lakeSize);
                 }
                 
-                // Generate 3-5 shops near roads
-                const numShops = Math.floor(Math.random() * 3) + 3; // 3-5 shops
-                for (let shop = 0; shop < numShops; shop++) {
-                    this.generateShop();
-                }
-                
-                // Then generate other terrain with reduced total
+                // Generate terrain blocks for urban variety
                 let totalLandCells = 0;
-                const maxLandCells = 25; // Further reduced to make room for shops
-                const maxAttempts = 40;
+                const maxLandCells = 18; // Slightly increased to accommodate more grass
+                const maxAttempts = 25;
+                
+                // Increased probability of grass terrain
+                const terrainTypes = ['land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass', 'land-grass', 'land-grass'];
                 
                 for (let attempt = 0; attempt < maxAttempts && totalLandCells < maxLandCells; attempt++) {
                     const remainingCells = maxLandCells - totalLandCells;
                     
-                    // Dynamic cluster sizing based on remaining cells
+                    // Smaller clusters for better city appearance
                     let clusterSize;
-                    if (remainingCells >= 12) {
-                        // Large clusters (6-12 cells) when 12+ cells remain
-                        clusterSize = Math.floor(Math.random() * 7) + 6; // 6-12
-                    } else if (remainingCells >= 6) {
-                        // Medium clusters (3-6 cells) when 6-11 cells remain
-                        clusterSize = Math.floor(Math.random() * 4) + 3; // 3-6
+                    if (remainingCells >= 8) {
+                        clusterSize = Math.floor(Math.random() * 4) + 3; // 3-6 cells
+                    } else if (remainingCells >= 4) {
+                        clusterSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells
                     } else {
-                        // Small clusters (1-3 cells) when fewer than 6 remain
-                        clusterSize = Math.floor(Math.random() * 3) + 1; // 1-3
+                        clusterSize = Math.floor(Math.random() * 2) + 1; // 1-2 cells
                     }
                     
-                    // Don't exceed remaining cells
-                    clusterSize = Math.min(clusterSize, remainingCells);
+                    clusterSize = Math.min(clusterSize, remainingCells, 6); // Max 6 cells per cluster
                     
                     if (clusterSize <= 0) break;
                     
-                    // Generate cluster dimensions that fit the cluster size
-                    let blockWidth, blockHeight;
-                    if (clusterSize <= 2) {
-                        blockWidth = clusterSize === 1 ? 1 : 2;
-                        blockHeight = clusterSize === 1 ? 1 : 1;
-                    } else if (clusterSize <= 4) {
-                        blockWidth = 2;
-                        blockHeight = Math.ceil(clusterSize / 2);
-                    } else {
-                        blockWidth = 3;
-                        blockHeight = Math.ceil(clusterSize / 3);
-                    }
+                    const terrainType = terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
                     
-                    // Exclude lake and shop from regular terrain generation
-                    const nonSpecialTerrains = ['land', 'land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass'];
-                    const terrainType = nonSpecialTerrains[Math.floor(Math.random() * nonSpecialTerrains.length)];
-                    
-                    // Find suitable position avoiding roads
-                    const maxX = this.gridSize.width - blockWidth - 2;
-                    const maxY = this.gridSize.height - blockHeight - 2;
-                    
-                    if (maxX > 2 && maxY > 2) {
-                        let startX, startY;
-                        let validPosition = false;
-                        let positionAttempts = 0;
+                    // Find suitable position away from roads
+                    let placed = false;
+                    for (let placementAttempt = 0; placementAttempt < 20 && !placed; placementAttempt++) {
+                        const startX = Math.floor(Math.random() * (this.gridSize.width - 4)) + 2;
+                        const startY = Math.floor(Math.random() * (this.gridSize.height - 4)) + 2;
                         
-                        while (!validPosition && positionAttempts < 15) {
-                            startX = Math.floor(Math.random() * maxX) + 2;
-                            startY = Math.floor(Math.random() * maxY) + 2;
+                        // Check if area is clear of roads
+                        if (this.terrainMap[startY][startX] === 'land' && 
+                            startX % 3 !== 0 && startY % 5 !== 0) {
                             
-                            // Check if starting position avoids main roads
-                            if (startX % 3 !== 0 && startY % 5 !== 0) {
-                                validPosition = true;
-                                
-                                // Verify the entire block area is clear and count actual cells
-                                let actualCellsInCluster = 0;
-                                for (let dy = 0; dy < blockHeight && validPosition; dy++) {
-                                    for (let dx = 0; dx < blockWidth && validPosition; dx++) {
-                                        const checkX = startX + dx;
-                                        const checkY = startY + dy;
-                                        
-                                        // Make sure we don't place on roads or boundaries
-                                        if (checkX % 3 === 0 || checkY % 5 === 0 || 
-                                            checkX >= this.gridSize.width - 1 || checkY >= this.gridSize.height - 1 ||
-                                            checkX <= 0 || checkY <= 0) {
-                                            validPosition = false;
-                                        } else {
-                                            actualCellsInCluster++;
-                                        }
-                                    }
-                                }
-                                
-                                // Check if we have enough space for the cluster and won't exceed limit
-                                if (actualCellsInCluster > clusterSize || totalLandCells + actualCellsInCluster > maxLandCells) {
-                                    validPosition = false;
-                                }
-                            }
-                            positionAttempts++;
-                        }
-                        
-                        if (validPosition) {
-                            // Place the terrain cluster
+                            // Place cluster in a compact formation
+                            let cellsToPlace = [];
                             let cellsPlaced = 0;
-                            for (let dy = 0; dy < blockHeight && cellsPlaced < clusterSize; dy++) {
-                                for (let dx = 0; dx < blockWidth && cellsPlaced < clusterSize; dx++) {
+                            
+                            // Generate positions for cluster
+                            for (let dy = 0; dy < 3 && cellsPlaced < clusterSize; dy++) {
+                                for (let dx = 0; dx < 3 && cellsPlaced < clusterSize; dx++) {
                                     const placeX = startX + dx;
                                     const placeY = startY + dy;
                                     
-                                    // Place terrain ensuring we stay within valid bounds
-                                    if (placeX > 0 && placeY > 0 && 
-                                        placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 &&
+                                    if (placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 &&
+                                        this.terrainMap[placeY][placeX] === 'land' &&
                                         placeX % 3 !== 0 && placeY % 5 !== 0) {
-                                        this.terrainMap[placeY][placeX] = terrainType;
+                                        cellsToPlace.push({x: placeX, y: placeY});
                                         cellsPlaced++;
-                                        totalLandCells++;
                                     }
                                 }
+                            }
+                            
+                            // Place the cluster if we have enough valid cells
+                            if (cellsToPlace.length >= Math.min(clusterSize, 2)) {
+                                cellsToPlace.slice(0, clusterSize).forEach(pos => {
+                                    this.terrainMap[pos.y][pos.x] = terrainType;
+                                    totalLandCells++;
+                                });
+                                placed = true;
                             }
                         }
                     }
                 }
                 
-                console.log(`Procedural generation complete: ${totalLandCells}/${maxLandCells} land cells placed, ${numLakes} lakes added, ${numShops} shops added`);
+                console.log(`Terrain generation complete: ${totalLandCells}/${maxLandCells} terrain cells, ${numLakes} lakes`);
             }
             
             generateLake(lakeSize) {
@@ -1320,90 +1704,91 @@
                     }
                 }
             }
-            
-            generateShop() {
-                const maxAttempts = 30;
-                
-                for (let attempt = 0; attempt < maxAttempts; attempt++) {
-                    // Choose shop position near roads but not on roads
-                    const x = Math.floor(Math.random() * (this.gridSize.width - 4)) + 2;
-                    const y = Math.floor(Math.random() * (this.gridSize.height - 4)) + 2;
-                    
-                    // Make sure shop is not on a road
-                    if (x % 3 !== 0 && y % 5 !== 0) {
-                        // Check if near a road (within 1-2 cells)
-                        let nearRoad = false;
-                        for (let dx = -2; dx <= 2; dx++) {
-                            for (let dy = -2; dy <= 2; dy++) {
-                                const checkX = x + dx;
-                                const checkY = y + dy;
-                                if (checkX >= 0 && checkX < this.gridSize.width && 
-                                    checkY >= 0 && checkY < this.gridSize.height) {
-                                    if (checkX % 3 === 0 || checkY % 5 === 0) {
-                                        nearRoad = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (nearRoad) break;
-                        }
-                        
-                        // Check if position is valid and not already occupied
-                        if (nearRoad && this.terrainMap[y][x] === 'road') {
-                            this.terrainMap[y][x] = 'shop';
-                            return; // Shop successfully placed
-                        }
-                    }
-                }
-            }
 
             spawnPolice() {
+                console.log('Spawning police...');
                 this.policePos = [];
-                const corners = [
-                    { x: 0, y: 0 },
-                    { x: this.gridSize.width - 1, y: 0 },
-                    { x: 0, y: this.gridSize.height - 1 },
-                    { x: this.gridSize.width - 1, y: this.gridSize.height - 1 }
-                ];
                 
-                // Find nearest road positions to each corner
-                const roadCorners = [];
-                corners.forEach(corner => {
-                    let nearestRoad = null;
-                    let minDistance = Infinity;
+                // Find all possible road positions for police spawning
+                const roadPositions = [];
+                for (let y = 0; y < this.gridSize.height; y++) {
+                    for (let x = 0; x < this.gridSize.width; x++) {
+                        if (this.isRoadOrIntersection(x, y)) {
+                            // Don't spawn police too close to player
+                            const distance = Math.abs(x - this.playerPos.x) + Math.abs(y - this.playerPos.y);
+                            if (distance > 3) { // Minimum distance from player
+                                roadPositions.push({ x, y });
+                            }
+                        }
+                    }
+                }
+                
+                console.log(`Found ${roadPositions.length} possible police positions`);
+                
+                // Spawn 2 police cars at random road positions
+                const numPolice = Math.min(2, roadPositions.length);
+                for (let i = 0; i < numPolice; i++) {
+                    if (roadPositions.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * roadPositions.length);
+                        const position = roadPositions[randomIndex];
+                        this.policePos.push({ ...position });
+                        console.log(`Police ${i + 1} spawned at (${position.x}, ${position.y})`);
+                        // Remove used position to avoid duplicates
+                        roadPositions.splice(randomIndex, 1);
+                    }
+                }
+                
+                // Enhanced fallback system
+                if (this.policePos.length === 0) {
+                    console.log('No suitable positions found, using enhanced fallback');
                     
-                    for (let y = 0; y < this.gridSize.height; y += 5) {
-                        for (let x = 0; x < this.gridSize.width; x += 3) {
+                    // Try all road positions with reduced distance
+                    for (let y = 0; y < this.gridSize.height; y++) {
+                        for (let x = 0; x < this.gridSize.width; x++) {
                             if (this.isRoadOrIntersection(x, y)) {
-                                const distance = Math.abs(x - corner.x) + Math.abs(y - corner.y);
-                                if (distance < minDistance) {
-                                    minDistance = distance;
-                                    nearestRoad = { x, y };
+                                const distance = Math.abs(x - this.playerPos.x) + Math.abs(y - this.playerPos.y);
+                                if (distance > 1 && this.policePos.length < 2) { // Any road not adjacent to player
+                                    this.policePos.push({ x, y });
+                                    console.log(`Fallback police ${this.policePos.length} at (${x}, ${y})`);
                                 }
                             }
                         }
                     }
                     
-                    if (nearestRoad) {
-                        roadCorners.push(nearestRoad);
+                    // Final fallback: use corners if still no police
+                    if (this.policePos.length === 0) {
+                        const corners = [
+                            { x: 0, y: 0 },
+                            { x: this.gridSize.width - 1, y: 0 },
+                            { x: 0, y: this.gridSize.height - 1 },
+                            { x: this.gridSize.width - 1, y: this.gridSize.height - 1 }
+                        ];
+                        
+                        for (let i = 0; i < Math.min(2, corners.length); i++) {
+                            this.policePos.push({ ...corners[i] });
+                            console.log(`Corner fallback police ${i + 1} at (${corners[i].x}, ${corners[i].y})`);
+                        }
                     }
-                });
-
-                // Spawn 2 police cars in farthest corners
-                for (let i = 0; i < 2 && roadCorners.length > 0; i++) {
-                    const cornerIndex = Math.floor(Math.random() * roadCorners.length);
-                    const corner = roadCorners[cornerIndex];
-                    roadCorners.splice(cornerIndex, 1);
-                    this.policePos.push({ ...corner });
                 }
+                
+                console.log(`Total police spawned: ${this.policePos.length}`);
             }
 
             updateDisplay() {
-                // Clear previous positions
-                document.querySelectorAll('.player, .police').forEach(el => el.remove());
+                console.log('Updating display...');
+                console.log('Player position:', this.playerPos);
+                console.log('Police positions:', this.policePos);
+                
+                // Clear previous positions first
+                const existingEntities = document.querySelectorAll('.player, .police');
+                console.log(`Removing ${existingEntities.length} existing entities`);
+                existingEntities.forEach(el => {
+                    el.remove();
+                });
 
                 // Update player position with direction arrow above car
-                const playerCell = document.querySelector(`[data-x="${this.playerPos.x}"][data-y="${this.playerPos.y}"]`);
+                const playerCell = document.querySelector(`#cityGrid [data-x="${this.playerPos.x}"][data-y="${this.playerPos.y}"]`);
+                console.log('Player cell query result:', playerCell);
                 if (playerCell) {
                     const playerIcon = document.createElement('div');
                     playerIcon.className = 'player';
@@ -1416,33 +1801,85 @@
                         <div>🚗</div>
                     `;
                     
-                    // Remove inline styling to let CSS handle sizing
                     playerCell.appendChild(playerIcon);
+                    console.log('Player icon added to cell at:', this.playerPos);
+                } else {
+                    console.error('Player cell not found at position:', this.playerPos);
+                    console.log('Available cells:', document.querySelectorAll('#cityGrid [data-x][data-y]').length);
+                    
+                    // Try alternative query method
+                    const allCells = document.querySelectorAll('#cityGrid .cell');
+                    console.log(`Alternative search: ${allCells.length} total cells`);
+                    
+                    for (let cell of allCells) {
+                        if (cell.dataset.x == this.playerPos.x && cell.dataset.y == this.playerPos.y) {
+                            console.log('Found player cell via alternative method');
+                            const playerIcon = document.createElement('div');
+                            playerIcon.className = 'player';
+                            const directionArrows = ['⬆️', '➡️', '⬇️', '⬅️'];
+                            playerIcon.innerHTML = `
+                                <div class="direction-arrow">${directionArrows[this.playerDirection]}</div>
+                                <div>🚗</div>
+                            `;
+                            cell.appendChild(playerIcon);
+                            console.log('Player icon added via alternative method');
+                            break;
+                        }
+                    }
                 }
 
                 // Update police positions
-                this.policePos.forEach(pos => {
-                    const policeCell = document.querySelector(`[data-x="${pos.x}"][data-y="${pos.y}"]`);
+                this.policePos.forEach((pos, index) => {
+                    const policeCell = document.querySelector(`#cityGrid [data-x="${pos.x}"][data-y="${pos.y}"]`);
+                    console.log(`Police ${index + 1} cell query result:`, policeCell, 'at position:', pos);
                     if (policeCell) {
                         const policeIcon = document.createElement('div');
                         policeIcon.className = 'police';
-                        
-                        // Add flashing light
-                        const flashingLight = document.createElement('div');
-                        flashingLight.className = 'police-light';
                         
                         policeIcon.innerHTML = `
                             <div class="police-light"></div>
                             <div>🚔</div>
                         `;
                         
-                        // Remove inline styling to let CSS handle sizing
                         policeCell.appendChild(policeIcon);
+                        console.log(`Police ${index + 1} icon added to cell`);
+                    } else {
+                        console.error(`Police ${index + 1} cell not found at position:`, pos);
+                        
+                        // Try alternative query method for police
+                        const allCells = document.querySelectorAll('#cityGrid .cell');
+                        for (let cell of allCells) {
+                            if (cell.dataset.x == pos.x && cell.dataset.y == pos.y) {
+                                console.log(`Found police ${index + 1} cell via alternative method`);
+                                const policeIcon = document.createElement('div');
+                                policeIcon.className = 'police';
+                                policeIcon.innerHTML = `
+                                    <div class="police-light"></div>
+                                    <div>🚔</div>
+                                `;
+                                cell.appendChild(policeIcon);
+                                console.log(`Police ${index + 1} icon added via alternative method`);
+                                break;
+                            }
+                        }
                     }
                 });
 
                 // Update UI
                 document.getElementById('moveCount').textContent = this.moveCount;
+                
+                // Final verification
+                setTimeout(() => {
+                    const finalPlayerCount = document.querySelectorAll('.player').length;
+                    const finalPoliceCount = document.querySelectorAll('.police').length;
+                    console.log(`Final verification: ${finalPlayerCount} player, ${finalPoliceCount} police elements`);
+                    
+                    if (finalPlayerCount === 0 || finalPoliceCount === 0) {
+                        console.warn('Some entities missing after display update');
+                    }
+                }, 50);
+                
+                console.log('Display update completed');
             }
 
             rollDice() {
@@ -1493,11 +1930,13 @@
 
             movePlayer() {
                 if (this.movesLeft <= 0) {
-                    // Clear movement highlights
-                    this.clearMovementHighlights();
-                    // Police moves again after player completes all moves
-                    this.movePolice();
-                    this.checkGameState();
+                    // Clear movement highlights with delay
+                    setTimeout(() => {
+                        this.clearMovementHighlights();
+                        // Police moves again after player completes all moves
+                        this.movePolice();
+                        this.checkGameState();
+                    }, 600);
                     return;
                 }
 
@@ -1563,7 +2002,7 @@
                 if (this.movesLeft > 0) {
                     setTimeout(() => this.movePlayer(), 450);
                 } else {
-                    // Clear movement highlights after completing moves
+                    // Clear movement highlights after completing moves with delay
                     setTimeout(() => {
                         this.clearMovementHighlights();
                         // Police moves after player completes all moves
@@ -1579,14 +2018,17 @@
                             const rollBtn = document.getElementById('rollBtn');
                             rollBtn.disabled = false;
                         }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
-                    }, 500);
+                    }, 800); // Increased delay to let highlighting show longer
                 }
             }
 
             highlightMovement(pos) {
                 const cell = document.querySelector(`[data-x="${pos.x}"][data-y="${pos.y}"]`);
                 if (cell) {
-                    cell.classList.add('movement-highlight');
+                    // Add highlighting with small delay to ensure it shows
+                    setTimeout(() => {
+                        cell.classList.add('movement-highlight');
+                    }, 50);
                 }
             }
 
@@ -1612,17 +2054,14 @@
             }
 
             isValidMove(pos) {
-                // Check bounds - allow movement to boundary roads
+                // Check bounds first
                 if (pos.x < 0 || pos.x >= this.gridSize.width || 
                     pos.y < 0 || pos.y >= this.gridSize.height) {
                     return false;
                 }
                 
-                // Check if position is a road or intersection - boundary cells are always roads
-                const isOnBoundary = (pos.x === 0 || pos.x === this.gridSize.width - 1 || 
-                                     pos.y === 0 || pos.y === this.gridSize.height - 1);
-                
-                if (!isOnBoundary && !this.isRoadOrIntersection(pos.x, pos.y)) {
+                // Check if position is strictly a road, intersection, or traffic light
+                if (!this.isRoadOrIntersection(pos.x, pos.y)) {
                     return false;
                 }
                 
@@ -1651,10 +2090,20 @@
                     const newX = pos.x + move.x;
                     const newY = pos.y + move.y;
                     
+                    // Check bounds and ensure it's a valid road position
                     if (newX >= 0 && newX < this.gridSize.width && 
                         newY >= 0 && newY < this.gridSize.height && 
                         this.isRoadOrIntersection(newX, newY)) {
-                        directions.push({ x: newX, y: newY });
+                        
+                        // Also check that the position isn't occupied by another police car
+                        const occupiedByPolice = this.policePos.some(police => 
+                            police.x === newX && police.y === newY && 
+                            (police.x !== pos.x || police.y !== pos.y) // Don't count self
+                        );
+                        
+                        if (!occupiedByPolice) {
+                            directions.push({ x: newX, y: newY });
+                        }
                     }
                 });
 
@@ -1683,11 +2132,45 @@
             }
 
             isRoadOrIntersection(x, y) {
-                return x % 3 === 0 || y % 5 === 0;
+                // Check explicit terrain types first
+                if (this.terrainMap && this.terrainMap[y] && this.terrainMap[y][x]) {
+                    const terrain = this.terrainMap[y][x];
+                    if (terrain === 'road' || terrain === 'road-vertical' || terrain === 'road-horizontal' || 
+                        terrain === 'intersection' || terrain === 'intersection-light') {
+                        return true;
+                    }
+                    // If terrain is explicitly set to non-road (like land, lake, etc.), return false
+                    if (terrain !== 'land') {
+                        return false;
+                    }
+                }
+                
+                // Fallback to procedural road pattern for land areas
+                const isPerimeter = (x === 0 || x === this.gridSize.width - 1 || y === 0 || y === this.gridSize.height - 1);
+                const isRoadX = x % 3 === 0;
+                const isRoadY = y % 5 === 0;
+                
+                // Only allow procedural roads on land terrain
+                if (this.terrainMap && this.terrainMap[y] && this.terrainMap[y][x] && 
+                    this.terrainMap[y][x] !== 'land') {
+                    return false;
+                }
+                
+                return isPerimeter || isRoadX || isRoadY;
             }
 
             isIntersection(pos) {
                 const { x, y } = pos;
+                
+                // Check if position has explicit intersection terrain
+                if (this.terrainMap && this.terrainMap[y] && this.terrainMap[y][x]) {
+                    const terrain = this.terrainMap[y][x];
+                    if (terrain === 'intersection' || terrain === 'intersection-light') {
+                        return true;
+                    }
+                }
+                
+                // Fallback to grid-based intersection detection
                 return x % 3 === 0 && y % 5 === 0;
             }
 
@@ -1756,21 +2239,23 @@
                 if (this.movesLeft > 0) {
                     setTimeout(() => this.movePlayer(), 450);
                 } else {
-                    // Clear movement highlights
-                    this.clearMovementHighlights();
-                    // Police moves after player completes all moves
-                    this.movePolice();
-                    
-                    // Check game state including blocked paths
-                    if (this.gameActive && !this.checkAllPathsBlocked()) {
-                        this.checkGameState();
-                    }
-                    
-                    // Re-enable roll button after police turn completes
+                    // Clear movement highlights with delay
                     setTimeout(() => {
-                        const rollBtn = document.getElementById('rollBtn');
-                        rollBtn.disabled = false;
-                    }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
+                        this.clearMovementHighlights();
+                        // Police moves after player completes all moves
+                        this.movePolice();
+                        
+                        // Check game state including blocked paths
+                        if (this.gameActive && !this.checkAllPathsBlocked()) {
+                            this.checkGameState();
+                        }
+                        
+                        // Re-enable roll button after police turn completes
+                        setTimeout(() => {
+                            const rollBtn = document.getElementById('rollBtn');
+                            rollBtn.disabled = false;
+                        }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
+                    }, 800); // Increased delay to let highlighting show longer
                 }
             }
 
@@ -1962,6 +2447,271 @@
         let game = null;
         let isMusicPlaying = false;
         let backgroundMusic = null;
+        let mapEditor = null;
+        let selectedMap = 'default';
+        
+        // Map Editor Class
+        class MapEditor {
+            constructor() {
+                this.gridSize = { width: 16, height: 28 };
+                this.cellSize = 24; // Fixed size for editor
+                this.currentTool = 'road-vertical';
+                this.editorMap = [];
+                this.isDrawing = false;
+                
+                this.initializeEditor();
+            }
+            
+            initializeEditor() {
+                // Initialize empty map with vertical roads as default
+                this.editorMap = new Array(this.gridSize.height).fill(null)
+                    .map(() => new Array(this.gridSize.width).fill('road-vertical'));
+                
+                this.createEditorGrid();
+            }
+            
+            createEditorGrid() {
+                const grid = document.getElementById('editorGrid');
+                grid.innerHTML = '';
+                grid.style.gridTemplateColumns = `repeat(${this.gridSize.width}, ${this.cellSize}px)`;
+                grid.style.gridTemplateRows = `repeat(${this.gridSize.height}, ${this.cellSize}px)`;
+                
+                for (let y = 0; y < this.gridSize.height; y++) {
+                    for (let x = 0; x < this.gridSize.width; x++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'editor-cell';
+                        cell.dataset.x = x;
+                        cell.dataset.y = y;
+                        cell.style.width = `${this.cellSize}px`;
+                        cell.style.height = `${this.cellSize}px`;
+                        
+                        // Mouse events for drawing
+                        cell.addEventListener('mousedown', (e) => {
+                            this.isDrawing = true;
+                            this.paintCell(x, y);
+                            e.preventDefault();
+                        });
+                        
+                        cell.addEventListener('mouseover', (e) => {
+                            if (this.isDrawing) {
+                                this.paintCell(x, y);
+                            }
+                        });
+                        
+                        cell.addEventListener('mouseup', () => {
+                            this.isDrawing = false;
+                        });
+                        
+                        // Touch events for mobile
+                        cell.addEventListener('touchstart', (e) => {
+                            this.isDrawing = true;
+                            this.paintCell(x, y);
+                            e.preventDefault();
+                        });
+                        
+                        cell.addEventListener('touchmove', (e) => {
+                            if (this.isDrawing) {
+                                const touch = e.touches[0];
+                                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                                if (element && element.dataset.x && element.dataset.y) {
+                                    this.paintCell(parseInt(element.dataset.x), parseInt(element.dataset.y));
+                                }
+                            }
+                            e.preventDefault();
+                        });
+                        
+                        cell.addEventListener('touchend', () => {
+                            this.isDrawing = false;
+                        });
+                        
+                        this.updateCellAppearance(cell, x, y);
+                        grid.appendChild(cell);
+                    }
+                }
+                
+                // Global mouse up to stop drawing
+                document.addEventListener('mouseup', () => {
+                    this.isDrawing = false;
+                });
+            }
+            
+            paintCell(x, y) {
+                if (x >= 0 && x < this.gridSize.width && y >= 0 && y < this.gridSize.height) {
+                    this.editorMap[y][x] = this.currentTool;
+                    const cell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+                    if (cell) {
+                        this.updateCellAppearance(cell, x, y);
+                    }
+                }
+            }
+            
+            updateCellAppearance(cell, x, y) {
+                const terrain = this.editorMap[y][x];
+                
+                // Remove all terrain classes and content
+                cell.className = 'editor-cell';
+                cell.innerHTML = '';
+                
+                // Add appropriate terrain class and styling
+                if (terrain === 'road-vertical') {
+                    // Explicit vertical road
+                    cell.classList.add('road', 'road-vertical');
+                } else if (terrain === 'road-horizontal') {
+                    // Explicit horizontal road
+                    cell.classList.add('road', 'road-horizontal');
+                } else if (terrain === 'intersection') {
+                    // Intersection without traffic light
+                    cell.classList.add('intersection');
+                } else if (terrain === 'intersection-light') {
+                    // Intersection with traffic light
+                    cell.classList.add('intersection');
+                    const light = document.createElement('div');
+                    light.className = `traffic-light ${Math.random() > 0.5 ? 'red-light' : 'green-light'}`;
+                    cell.appendChild(light);
+                } else {
+                    // Land terrain types
+                    cell.classList.add(terrain);
+                    
+                    // Add terrain features for non-lake terrains
+                    if (terrain !== 'lake' && terrain !== 'land-brown' && terrain !== 'land-desert') {
+                        this.addTerrainFeatures(cell, terrain, x, y);
+                    }
+                }
+            }
+            
+            addTerrainFeatures(cell, terrain, x, y) {
+                const featureChance = Math.random();
+                
+                if (terrain === 'land-dark') {
+                    // Industrial areas
+                    if (featureChance > 0.70) {
+                        cell.innerHTML = '🏭';
+                        cell.style.fontSize = `${this.cellSize * 0.55}px`;
+                    } else if (featureChance > 0.60) {
+                        cell.innerHTML = '🏢';
+                        cell.style.fontSize = `${this.cellSize * 0.55}px`;
+                    }
+                } else if (terrain === 'land-grass') {
+                    // Residential areas - increased greenery
+                    if (featureChance > 0.65) { // Increased from 0.75
+                        cell.innerHTML = '🏠';
+                        cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                    } else if (featureChance > 0.45) { // Increased from 0.65
+                        cell.innerHTML = '🌳';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    } else if (featureChance > 0.25) { // Increased from 0.58
+                        cell.innerHTML = '🌲';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    }
+                } else if (terrain === 'land') {
+                    // Mixed urban areas
+                    if (featureChance > 0.78) {
+                        cell.innerHTML = '🏢';
+                        cell.style.fontSize = `${this.cellSize * 0.55}px`;
+                    } else if (featureChance > 0.68) {
+                        cell.innerHTML = '🏠';
+                        cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                    } else if (featureChance > 0.60) {
+                        cell.innerHTML = '🌳';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    }
+                } else if (terrain === 'land-rocky') {
+                    // Rocky terrain - sparse features
+                    if (featureChance > 0.85) {
+                        cell.innerHTML = '🌳';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    }
+                }
+            }
+            
+            clearMap() {
+                for (let y = 0; y < this.gridSize.height; y++) {
+                    for (let x = 0; x < this.gridSize.width; x++) {
+                        this.editorMap[y][x] = 'road-vertical';
+                        const cell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+                        if (cell) {
+                            this.updateCellAppearance(cell, x, y);
+                        }
+                    }
+                }
+            }
+            
+            saveMap() {
+                const mapName = prompt('Enter map name:');
+                if (mapName && mapName.trim()) {
+                    const mapData = {
+                        name: mapName.trim(),
+                        width: this.gridSize.width,
+                        height: this.gridSize.height,
+                        terrain: this.editorMap,
+                        created: new Date().toLocaleDateString()
+                    };
+                    
+                    // Save to localStorage
+                    const savedMaps = JSON.parse(localStorage.getItem('copChase_maps') || '{}');
+                    savedMaps[mapName.trim()] = mapData;
+                    localStorage.setItem('copChase_maps', JSON.stringify(savedMaps));
+                    
+                    alert('Map saved successfully!');
+                    this.updateMapList();
+                } else {
+                    alert('Please enter a valid map name.');
+                }
+            }
+            
+            loadMap(mapName) {
+                const savedMaps = JSON.parse(localStorage.getItem('copChase_maps') || '{}');
+                if (savedMaps[mapName]) {
+                    const mapData = savedMaps[mapName];
+                    this.editorMap = mapData.terrain;
+                    
+                    // Update grid appearance
+                    for (let y = 0; y < this.gridSize.height; y++) {
+                        for (let x = 0; x < this.gridSize.width; x++) {
+                            const cell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+                            if (cell) {
+                                this.updateCellAppearance(cell, x, y);
+                            }
+                        }
+                    }
+                    
+                    return true;
+                }
+                return false;
+            }
+            
+            updateMapList() {
+                const mapList = document.getElementById('mapList');
+                const savedMaps = JSON.parse(localStorage.getItem('copChase_maps') || '{}');
+                
+                // Clear existing custom maps (keep default)
+                const defaultMap = mapList.children[0];
+                mapList.innerHTML = '';
+                mapList.appendChild(defaultMap);
+                
+                // Add saved maps
+                Object.keys(savedMaps).forEach(mapName => {
+                    const mapData = savedMaps[mapName];
+                    const mapItem = document.createElement('div');
+                    mapItem.className = 'map-item';
+                    mapItem.onclick = () => selectMap(mapName);
+                    
+                    mapItem.innerHTML = `
+                        <div class="map-info">
+                            <div class="map-name">${mapData.name}</div>
+                            <div class="map-size">${mapData.width}x${mapData.height} - Custom (${mapData.created})</div>
+                        </div>
+                        <div class="map-actions">
+                            <button class="map-action-btn" onclick="event.stopPropagation(); selectMap('${mapName}')">Select</button>
+                            <button class="map-action-btn" onclick="event.stopPropagation(); editMap('${mapName}')">Edit</button>
+                            <button class="map-action-btn delete" onclick="event.stopPropagation(); deleteMap('${mapName}')">Delete</button>
+                        </div>
+                    `;
+                    
+                    mapList.appendChild(mapItem);
+                });
+            }
+        }
 
         // Initialize music when page loads
         window.addEventListener('DOMContentLoaded', function() {
@@ -2017,14 +2767,19 @@
         }
 
         function startGame() {
+            console.log('Starting game with selected map:', selectedMap);
+            
             // Clear any existing game state
             if (game) {
                 game.gameActive = false;
+                game = null;
             }
             
-            // Hide menu and game over screens
+            // Hide menu and other screens
             document.getElementById('menu').style.display = 'none';
             document.getElementById('gameOver').style.display = 'none';
+            document.getElementById('mapEditor').style.display = 'none';
+            document.getElementById('mapSelection').style.display = 'none';
             document.getElementById('directionControls').style.display = 'none';
             document.querySelector('.dice-container').style.display = 'none';
             document.getElementById('gameUI').style.display = 'flex';
@@ -2035,9 +2790,181 @@
             // Start background music
             startMusic();
             
-            // Create new game instance
-            game = new CityChaseGame();
-            game.gameActive = true;
+            // Get custom map data if selected
+            let customMapData = null;
+            if (selectedMap !== 'default') {
+                const savedMaps = JSON.parse(localStorage.getItem('copChase_maps') || '{}');
+                if (savedMaps[selectedMap]) {
+                    customMapData = savedMaps[selectedMap];
+                    console.log('Custom map data loaded:', customMapData);
+                } else {
+                    console.error('Selected map not found:', selectedMap);
+                    alert('Selected map not found, using default map instead.');
+                    selectedMap = 'default';
+                }
+            }
+            
+            // Enhanced delay for complex custom maps
+            const delay = customMapData ? 100 : 50;
+            setTimeout(() => {
+                console.log('Creating game instance...');
+                // Create new game instance with custom map data
+                game = new CityChaseGame(customMapData);
+                game.gameActive = true;
+                console.log('Game instance created and activated');
+                
+                // Additional verification for custom maps
+                if (customMapData) {
+                    setTimeout(() => {
+                        console.log('Verifying custom map entities...');
+                        const playerElements = document.querySelectorAll('.player');
+                        const policeElements = document.querySelectorAll('.police');
+                        
+                        if (playerElements.length === 0 || policeElements.length === 0) {
+                            console.warn('Entities not found, forcing display update...');
+                            game.updateDisplay();
+                        }
+                    }, 200);
+                }
+            }, delay);
+        }
+        
+        function showMapEditor() {
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('mapSelection').style.display = 'none';
+            document.getElementById('mapEditor').style.display = 'flex';
+            
+            if (!mapEditor) {
+                mapEditor = new MapEditor();
+            }
+            mapEditor.updateMapList();
+        }
+        
+        function showMapSelection() {
+            document.getElementById('mapSelection').style.display = 'flex';
+            if (mapEditor) {
+                mapEditor.updateMapList();
+            }
+        }
+        
+        function closeMapSelection() {
+            document.getElementById('mapSelection').style.display = 'none';
+        }
+        
+        function selectMap(mapName) {
+            selectedMap = mapName;
+            closeMapSelection();
+            console.log(`Map selected: ${mapName}`);
+            
+            // Force update map list to ensure proper state
+            if (mapEditor) {
+                mapEditor.updateMapList();
+            }
+            
+            alert(`Selected map: ${mapName === 'default' ? 'Default Map' : mapName}`);
+        }
+        
+        function editMap(mapName) {
+            showMapEditor();
+            if (mapEditor && mapEditor.loadMap(mapName)) {
+                alert(`Loaded map: ${mapName}`);
+            }
+        }
+        
+        function deleteMap(mapName) {
+            if (confirm(`Are you sure you want to delete map "${mapName}"?`)) {
+                const savedMaps = JSON.parse(localStorage.getItem('copChase_maps') || '{}');
+                delete savedMaps[mapName];
+                localStorage.setItem('copChase_maps', JSON.stringify(savedMaps));
+                
+                if (mapEditor) {
+                    mapEditor.updateMapList();
+                }
+                
+                // Reset to default if deleted map was selected
+                if (selectedMap === mapName) {
+                    selectedMap = 'default';
+                }
+                
+                alert('Map deleted successfully!');
+            }
+        }
+        
+        function selectTool(tool) {
+            if (mapEditor) {
+                mapEditor.currentTool = tool;
+                
+                // Update tool button states
+                document.querySelectorAll('.tool-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-tool="${tool}"]`).classList.add('active');
+            }
+        }
+        
+        function clearEditor() {
+            if (mapEditor && confirm('Are you sure you want to clear the map?')) {
+                mapEditor.clearMap();
+            }
+        }
+        
+        function saveMap() {
+            if (mapEditor) {
+                mapEditor.saveMap();
+            }
+        }
+        
+        function testMap() {
+            if (mapEditor) {
+                // Create test map data directly
+                const testMapData = {
+                    name: 'Test Map',
+                    width: mapEditor.gridSize.width,
+                    height: mapEditor.gridSize.height,
+                    terrain: mapEditor.editorMap,
+                    created: new Date().toLocaleDateString()
+                };
+                
+                console.log('Testing map with data:', testMapData);
+                
+                // Clear any existing game state
+                if (game) {
+                    game.gameActive = false;
+                    game = null;
+                }
+                
+                // Hide editor and show game
+                document.getElementById('mapEditor').style.display = 'none';
+                document.getElementById('gameUI').style.display = 'flex';
+                document.getElementById('rollBtn').style.display = 'block';
+                document.getElementById('directionControls').style.display = 'none';
+                document.querySelector('.dice-container').style.display = 'none';
+                
+                // Start background music
+                startMusic();
+                
+                // Create game with test map data with proper timing
+                setTimeout(() => {
+                    console.log('Creating test game instance...');
+                    game = new CityChaseGame(testMapData);
+                    game.gameActive = true;
+                    console.log('Test game instance created');
+                    
+                    // Additional verification for test maps
+                    setTimeout(() => {
+                        console.log('Verifying test map entities...');
+                        const playerElements = document.querySelectorAll('.player');
+                        const policeElements = document.querySelectorAll('.police');
+                        
+                        console.log(`Test verification: ${playerElements.length} player, ${policeElements.length} police`);
+                        
+                        if (playerElements.length === 0 || policeElements.length === 0) {
+                            console.warn('Test map entities not found, forcing display update...');
+                            game.updateDisplay();
+                        }
+                    }, 200);
+                }, 100);
+            }
         }
 
         function returnToMenu() {
@@ -2052,10 +2979,12 @@
             
             // Close any open popups
             document.getElementById('directionControls').style.display = 'none';
+            document.getElementById('mapSelection').style.display = 'none';
             
             // Show menu, hide other screens
             document.getElementById('gameUI').style.display = 'none';
             document.getElementById('gameOver').style.display = 'none';
+            document.getElementById('mapEditor').style.display = 'none';
             document.getElementById('menu').style.display = 'block';
         }
 
@@ -2081,6 +3010,66 @@
 
         function closeInstructions() {
             document.getElementById('instructionsPopup').style.display = 'none';
+        }
+        
+        // Debug function to test display update
+        function testDisplayUpdate() {
+            if (game) {
+                console.log('=== Manual Display Update Test ===');
+                console.log('Game state:', {
+                    active: game.gameActive,
+                    playerPos: game.playerPos,
+                    policeCount: game.policePos.length,
+                    policePos: game.policePos
+                });
+                
+                // Check DOM state
+                const totalCells = document.querySelectorAll('#cityGrid .cell').length;
+                const playerElements = document.querySelectorAll('.player').length;
+                const policeElements = document.querySelectorAll('.police').length;
+                const grassElements = document.querySelectorAll('.land-grass').length;
+                
+                console.log('DOM state:', {
+                    totalCells,
+                    playerElements,
+                    policeElements,
+                    grassElements
+                });
+                
+                // Force display update
+                game.updateDisplay();
+                
+                // Test highlighting
+                if (game.playerPos) {
+                    game.highlightMovement(game.playerPos);
+                    console.log('Movement highlighting tested at:', game.playerPos);
+                }
+                
+                // Verify after update
+                setTimeout(() => {
+                    const newPlayerElements = document.querySelectorAll('.player').length;
+                    const newPoliceElements = document.querySelectorAll('.police').length;
+                    const highlightElements = document.querySelectorAll('.movement-highlight').length;
+                    console.log('After update:', {
+                        playerElements: newPlayerElements,
+                        policeElements: newPoliceElements,
+                        highlightElements
+                    });
+                    console.log('=== Test Complete ===');
+                }, 100);
+            } else {
+                console.log('No game instance found');
+            }
+        }
+        
+        // Force entity respawn function
+        function forceEntityRespawn() {
+            if (game) {
+                console.log('Forcing entity respawn...');
+                game.findValidPlayerStart();
+                game.spawnPolice();
+                game.updateDisplay();
+            }
         }
 
     </script>
