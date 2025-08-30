@@ -1,6 +1,6 @@
 # 🚗 Cop Chase Game
 
-A thrilling dice-rolling chase game where you must escape from the police in a procedurally generated city! Built with vanilla HTML5, CSS3, and JavaScript.
+A thrilling dice-rolling chase game where you must escape from the police in a procedurally generated city! Built with vanilla HTML5, CSS3, and JavaScript with enhanced mobile optimization.
 
 ![Game Preview](https://via.placeholder.com/800x400/1a1a2e/ffffff?text=Cop+Chase+Game+Preview)
 
@@ -8,12 +8,12 @@ A thrilling dice-rolling chase game where you must escape from the police in a p
 
 - **🎲 Dice-Based Movement**: Roll dice to move your car through the city
 - **🚔 Smart Police AI**: Police cars that chase you using intelligent pathfinding
-- **🏙️ Procedural City Generation**: Each game features a unique city layout
+- **🏙️ Procedural City Generation**: Each game features a unique city layout with optimized grid size
 - **🚦 Traffic Light System**: Red lights stop players but police ignore them
-- **📱 Mobile Optimized**: Fully responsive design with touch controls
-- **🗺️ Map Editor**: Create and test your own custom maps
+- **📱 Mobile Optimized**: Enhanced responsive design with centered controls and improved touch targets
+- **🗺️ Map Editor**: Create and test your own custom maps with mobile-friendly interface
 - **🎵 Background Music**: Immersive audio experience
-- **🌟 Modern UI**: Beautiful glassmorphism design with smooth animations
+- **🌟 Modern UI**: Beautiful glassmorphism design with enhanced blur effects and smooth animations
 
 ## 🚀 How to Play
 
@@ -33,6 +33,8 @@ A thrilling dice-rolling chase game where you must escape from the police in a p
 ### Mobile
 - **Touch**: Tap dice button to roll, tap direction buttons to navigate
 - **Portrait Mode**: Optimized for mobile portrait orientation
+- **Enhanced Controls**: Larger, centered direction buttons with improved touch targets
+- **Glassmorphism UI**: Enhanced blur effects matching desktop version for better visual hierarchy
 
 ## 🗺️ Map Editor
 
@@ -106,11 +108,12 @@ cop-chase-game/
 - Game ends if they catch the player
 
 ### Map Generation
-- 16×28 grid optimized for mobile portrait mode
+- 14×24 grid optimized for mobile performance and visibility
 - Procedural road network with perimeter roads
 - Internal road grid every 3×5 cells
 - Random terrain features (lakes, buildings, trees)
 - Traffic lights at major intersections
+- Enhanced mobile rendering with optimized cell sizes
 
 ## 🎨 Technical Features
 
@@ -161,11 +164,12 @@ git push origin feature/your-feature-name
 
 ## 📊 Game Statistics
 
-- **Grid Size**: 16×28 cells (optimized for mobile)
-- **Cell Size**: Dynamic (18-28px based on screen size)
+- **Grid Size**: 14×24 cells (optimized for mobile performance and visibility)
+- **Cell Size**: Dynamic (16-24px based on screen size for better mobile performance)
 - **Police Count**: 2 AI-controlled units
 - **Terrain Types**: 11 different terrain types
 - **Traffic Lights**: 40% spawn rate at internal intersections
+- **Mobile Optimization**: Enhanced touch targets and centered control positioning
 
 ## 🎵 Audio
 
@@ -177,11 +181,14 @@ The game includes optional background music. To add audio:
 
 ## 📱 Mobile Optimization
 
-- **Responsive Design**: Adapts to all screen sizes
-- **Touch Controls**: Optimized for finger navigation
-- **Portrait Mode**: Best experience in portrait orientation
-- **Performance**: Smooth 60fps animations on mobile devices
-- **Battery Friendly**: Efficient resource usage
+- **Enhanced Responsive Design**: Adapts to all screen sizes with optimized grid dimensions
+- **Centered Touch Controls**: Direction buttons positioned at screen center for better accessibility
+- **Improved Touch Targets**: Larger buttons (110px minimum width) with increased padding for easier interaction
+- **Glassmorphism Consistency**: Enhanced blur effects (25px backdrop-filter) matching desktop version
+- **Portrait Mode**: Optimized 14×24 grid for better performance in portrait orientation
+- **Performance**: Smooth 60fps animations on mobile devices with reduced grid complexity
+- **Battery Friendly**: Efficient resource usage with optimized cell count
+- **Enhanced Visual Hierarchy**: Consistent blur effects and transparency across all UI elements
 
 ## 🏆 High Score System
 
@@ -207,8 +214,12 @@ Currently, the game tracks:
 - [ ] Multiplayer support
 - [ ] Achievement system
 - [ ] Custom car selection
+- [ ] Advanced mobile gestures support
 
 ### Version 1.5 (In Progress)
+- [x] Enhanced mobile UI with centered controls
+- [x] Improved glassmorphism effects
+- [x] Optimized grid size for better mobile performance
 - [ ] Enhanced AI for police
 - [ ] More terrain types
 - [ ] Sound effects
@@ -229,7 +240,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **🐛 Bug Reports**: [Open an Issue](https://github.com/Pijamka88/cop-chase-game/issues)
 - **💬 Discussions**: [GitHub Discussions](https://github.com/Pijamka88/cop-chase-game/discussions)
-- **📧 Contact**: barek88@gmail.com
+- **📧 Contact**: your.email@example.com
 
 ---
 
