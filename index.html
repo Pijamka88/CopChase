@@ -234,26 +234,7 @@
             animation: roll 1s ease-in-out;
         }
 
-        /* Skip Turn Button */
-        #skipBtn {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 16px;
-            font-size: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
-        }
-        
-        #skipBtn:hover {
-            transform: translateY(-1px);
-            background: linear-gradient(135deg, #ee5a24 0%, #c44025 100%);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-        }
+
         
         .dice.rolling {
             animation: roll 1s ease-in-out;
@@ -766,6 +747,12 @@
             -webkit-backdrop-filter: blur(20px);
         }
         
+        .editor-actions .menu-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+        
         .tool-btn:hover {
             transform: translateY(-1px);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
@@ -1037,10 +1024,10 @@
             }
             
             .menu-btn {
-                padding: 2px 3px; /* Further reduced for better mobile fit */
-                font-size: 7px; /* Further reduced for better mobile fit */
-                min-width: 24px; /* Further reduced from 28px */
-                border-radius: 3px;
+                padding: 1px 2px; /* Further reduced for mobile */
+                font-size: 6px; /* Further reduced for mobile */
+                min-width: 20px; /* Further reduced for mobile */
+                border-radius: 2px;
                 line-height: 1;
                 height: auto;
                 display: flex;
@@ -1104,8 +1091,13 @@
                 border-radius: 4px; /* Further reduced */
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
-                display: inline-block;
+                display: block;
                 min-width: 40px; /* Further reduced */
+                text-align: center;
+            }
+            
+            .direction-controls {
+                text-align: center;
             }
             
             .dice-roll-btn {
@@ -1275,7 +1267,7 @@
                 </div>
                 <div class="controls">
                     <button class="btn menu-btn" id="musicBtn" onclick="toggleMusic()">🔊</button>
-                    <button class="btn menu-btn" id="skipBtn" onclick="skipTurn()" style="display: none;">⏭️ Skip</button>
+
                     <button class="btn menu-btn" onclick="returnToMenu()">Menu</button>
                 </div>
             </div>
@@ -1339,7 +1331,6 @@
                     🚦 <strong>Red lights</strong> stop you (police ignore them)<br>
                     🚔 <strong>Avoid police</strong> - they chase you!<br>
                     🛣️ <strong>Stay on roads</strong> - can't drive on land<br>
-                    ⏭️ <strong>Skip turn</strong> if all paths are blocked<br>
                     ❌ <strong>Game over</strong> if caught or blocked<br><br>
                     🎯 <strong>Goal:</strong> Survive as long as possible!<br>
                     📱 <strong>Best played</strong> in portrait mode
@@ -2420,23 +2411,6 @@
                     return;
                 }
                 
-                // Check if any path is blocked by police to show skip button
-                const allDirections = [0, 1, 2, 3]; // up, right, down, left
-                const policeBockedDirections = allDirections.filter(dir => {
-                    const nextPos = this.getNextPosition(this.playerPos, dir);
-                    return this.policePos.some(police => 
-                        police.x === nextPos.x && police.y === nextPos.y
-                    );
-                });
-                
-                // Show skip button if there are police-blocked directions
-                const skipBtn = document.getElementById('skipBtn');
-                if (policeBockedDirections.length > 0) {
-                    skipBtn.style.display = 'inline-block';
-                } else {
-                    skipBtn.style.display = 'none';
-                }
-                
                 this.waitingForDirection = true;
                 document.getElementById('directionControls').style.display = 'block';
                 // Hide the Roll button when direction controls appear
@@ -2445,7 +2419,6 @@
 
             chooseDirection(direction) {
                 document.getElementById('directionControls').style.display = 'none';
-                document.getElementById('skipBtn').style.display = 'none'; // Hide skip button
                 // Show the Roll button again when direction controls are hidden
                 document.getElementById('rollBtn').style.display = 'block';
                 this.waitingForDirection = false;
@@ -2512,44 +2485,7 @@
                 }
             }
 
-            skipTurn() {
-                // Hide direction controls and skip button
-                document.getElementById('directionControls').style.display = 'none';
-                document.getElementById('skipBtn').style.display = 'none';
-                document.getElementById('rollBtn').style.display = 'block';
-                this.waitingForDirection = false;
-                
-                // Consume all remaining moves
-                this.movesLeft = 0;
-                
-                // Update status
-                setTimeout(() => {
-                    document.getElementById('gameStatus').textContent = 'Turn skipped - path blocked';
-                }, 300);
-                
-                // Clear movement highlights with delay
-                setTimeout(() => {
-                    this.clearMovementHighlights();
-                    // Police moves after player skips turn
-                    this.movePolice();
-                    
-                    // Check game state including blocked paths
-                    if (this.gameActive && !this.checkAllPathsBlocked()) {
-                        this.checkGameState();
-                    }
-                    
-                    // Re-enable roll button after police turn completes
-                    setTimeout(() => {
-                        const rollBtn = document.getElementById('rollBtn');
-                        rollBtn.disabled = false;
-                        
-                        // Reset status after a delay
-                        setTimeout(() => {
-                            document.getElementById('gameStatus').textContent = 'Running';
-                        }, 1000);
-                    }, this.policePos.length * 150 + 300);
-                }, 800);
-            }
+
 
             movePolice() {
                 // Display police movement status with delay
@@ -3090,9 +3026,8 @@
             document.querySelector('.dice-container').style.display = 'none';
             document.getElementById('gameUI').style.display = 'flex';
             
-            // Ensure Roll button is visible and skip button is hidden
+            // Ensure Roll button is visible
             document.getElementById('rollBtn').style.display = 'block';
-            document.getElementById('skipBtn').style.display = 'none';
             
             // Start background music
             startMusic();
@@ -3239,7 +3174,6 @@
                 document.getElementById('cellTypePopup').style.display = 'none';
                 document.getElementById('gameUI').style.display = 'flex';
                 document.getElementById('rollBtn').style.display = 'block';
-                document.getElementById('skipBtn').style.display = 'none';
                 document.getElementById('directionControls').style.display = 'none';
                 document.querySelector('.dice-container').style.display = 'none';
                 
@@ -3284,7 +3218,6 @@
             document.getElementById('directionControls').style.display = 'none';
             document.getElementById('mapSelection').style.display = 'none';
             document.getElementById('cellTypePopup').style.display = 'none';
-            document.getElementById('skipBtn').style.display = 'none';
             
             // Show menu, hide other screens
             document.getElementById('gameUI').style.display = 'none';
@@ -3305,11 +3238,7 @@
             }
         }
 
-        function skipTurn() {
-            if (game) {
-                game.skipTurn();
-            }
-        }
+
         
         function showCellTypePopup() {
             document.getElementById('cellTypePopup').style.display = 'flex';
