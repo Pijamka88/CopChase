@@ -1012,6 +1012,69 @@
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
         }
         @media (max-width: 480px) {
+            /* Mobile Map Editor Optimizations */
+            .editor-panel {
+                padding: 8px 12px;
+                min-height: 50px;
+                gap: 4px;
+            }
+            
+            .editor-tools {
+                gap: 4px;
+            }
+            
+            .tool-btn {
+                padding: 3px 6px;
+                font-size: 9px;
+                border-radius: 5px;
+                /* Ensure cell type popup button is easily tappable on mobile */
+                min-height: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .cell-type-popup {
+                /* Ensure popup is properly accessible on mobile */
+                z-index: 5000;
+            }
+            
+            .cell-type-content {
+                padding: 15px 10px;
+                max-width: 95vw;
+                max-height: 85vh;
+                border-radius: 12px;
+            }
+            
+            .cell-type-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+            
+            .cell-type-option {
+                padding: 8px 4px;
+                min-height: 55px;
+                border-radius: 6px;
+                gap: 4px;
+                /* Ensure touch-friendly size */
+                min-width: 70px;
+            }
+            
+            .cell-type-icon {
+                font-size: 16px;
+            }
+            
+            .cell-type-name {
+                font-size: 8px;
+                line-height: 1.1;
+            }
+            
+            .cell-type-close {
+                padding: 8px 16px;
+                font-size: 11px;
+                border-radius: 8px;
+            }
             .top-panel {
                 flex-direction: row;
                 gap: 6px; /* Increased from 4px */
@@ -1037,10 +1100,10 @@
             }
             
             .menu-btn {
-                padding: 3px 6px; /* Reduced from 4px 8px */
-                font-size: 9px; /* Reduced from 10px */
-                min-width: 32px; /* Reduced from 40px */
-                border-radius: 6px;
+                padding: 2px 5px; /* Further reduced for mobile */
+                font-size: 8px; /* Further reduced */
+                min-width: 28px; /* Further reduced */
+                border-radius: 5px;
                 line-height: 1;
                 height: auto;
                 display: flex;
@@ -1050,10 +1113,10 @@
             }
             
             .controls {
-                gap: 2px;
-                background: rgba(0,0,0,0.15);
-                border-radius: 12px;
-                padding: 4px 8px;
+                gap: 3px;
+                background: rgba(0,0,0,0.2); /* Darker background for better visibility */
+                border-radius: 15px; /* Increased border radius */
+                padding: 6px 12px; /* Increased padding for wider background */
             }
             
             .game-board {
@@ -1098,14 +1161,15 @@
             }
             
             .direction-btn {
-                padding: 4px 8px;
+                padding: 3px 6px; /* Reduced button size */
                 margin: 1px;
-                font-size: 10px;
+                font-size: 9px; /* Reduced font size */
                 border-radius: 6px;
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
                 display: inline-block;
-                min-width: 60px;
+                min-width: 50px; /* Reduced minimum width */
+                background: rgba(0,0,0,0.25); /* Wider darker background */
             }
             
             .dice-roll-btn {
@@ -1180,11 +1244,28 @@
                 font-size: 1.6em;
             }
             
-            /* Mobile optimizations for cell type popup */
-            .cell-type-content {
-                padding: 20px 15px;
-                max-width: 95vw;
-                border-radius: 16px;
+            /* Mobile optimizations for map editor */
+            .editor-tools {
+                display: flex;
+                gap: 6px; /* Reduced gap */
+                flex-wrap: wrap;
+                align-items: center;
+            }
+            
+            .tool-btn {
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                padding: 4px 8px; /* Reduced padding for mobile */
+                font-size: 10px; /* Reduced font size for mobile */
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                /* Add mobile touch optimization */
+                -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+                touch-action: manipulation;
             }
             
             .cell-type-content h3 {
@@ -1797,8 +1878,8 @@
                 
                 // Generate terrain blocks for urban variety
                 let totalLandCells = 0;
-                const maxLandCells = 12; // Reduced from 24 to reduce land generation
-                const maxAttempts = 25;
+                const maxLandCells = 6; // Further reduced from 12 to minimize land generation
+                const maxAttempts = 20;
                 
                 // Significantly increased probability of grass terrain
                 const terrainTypes = ['land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass'];
