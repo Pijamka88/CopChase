@@ -229,7 +229,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **🐛 Bug Reports**: [Open an Issue](https://github.com/Pijamka88/cop-chase-game/issues)
 - **💬 Discussions**: [GitHub Discussions](https://github.com/Pijamka88/cop-chase-game/discussions)
-- **📧 Contact**: your.email@example.com
+- **📧 Contact**: barek88@gmail.com
 
 ---
 
