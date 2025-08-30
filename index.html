@@ -390,16 +390,9 @@
         .movement-highlight {
             background: rgba(255, 255, 0, 0.7) !important;
             border: 3px solid #ffd700 !important;
-            animation: pulse 0.8s ease-in-out infinite;
             z-index: 15;
             transform: scale(1.05);
             box-shadow: 0 0 12px rgba(255, 215, 0, 0.8) !important;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1.05); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1.05); }
         }
 
         .road {
@@ -1079,14 +1072,14 @@
             
             .direction-controls {
                 position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 85%;
-                max-width: 320px;
-                padding: 15px;
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                width: calc(100vw - 20px);
+                max-width: none;
+                padding: 10px;
                 margin: 0;
-                border-radius: 16px;
+                border-radius: 12px;
                 display: none;
                 z-index: 3000;
                 background: rgba(0,0,0,0.4);
@@ -1097,20 +1090,25 @@
             }
             
             .direction-btn {
-                padding: 4px 8px; /* Reduced padding for smaller buttons */
-                margin: 1px;
-                font-size: 10px; /* Smaller font size */
-                border-radius: 6px; /* Smaller border radius */
+                padding: 8px 4px;
+                margin: 2px;
+                font-size: 9px;
+                border-radius: 6px;
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
-                display: block;
-                min-width: auto; /* Remove fixed min-width, use auto like tool-btn */
+                display: inline-block;
+                min-width: auto;
                 text-align: center;
-                max-width: 80px; /* Limit maximum width */
+                width: calc(33.33% - 4px);
+                box-sizing: border-box;
             }
             
             .direction-controls {
                 text-align: center;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: nowrap;
             }
             
             .dice-roll-btn {
@@ -1399,6 +1397,10 @@
                     <div class="cell-type-option" onclick="selectCellType('lake')">
                         <div class="cell-type-icon">💧</div>
                         <div class="cell-type-name">Lake</div>
+                    </div>
+                    <div class="cell-type-option" onclick="selectCellType('shop')">
+                        <div class="cell-type-icon">🏪</div>
+                        <div class="cell-type-name">Shop</div>
                     </div>
                 </div>
                 <button class="cell-type-close" onclick="closeCellTypePopup()">Close</button>
@@ -1791,43 +1793,51 @@
             }
             
             generateTerrainFeatures() {
-                // Generate 3-5 small lakes for more water features
-                const numLakes = Math.floor(Math.random() * 3) + 3;
+                // Generate 4-7 small lakes for more water features
+                const numLakes = Math.floor(Math.random() * 4) + 4;
                 for (let lake = 0; lake < numLakes; lake++) {
                     const lakeSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells per lake
                     this.generateLake(lakeSize);
                 }
                 
+                // Generate 3-6 shops scattered around the city
+                const numShops = Math.floor(Math.random() * 4) + 3;
+                for (let shop = 0; shop < numShops; shop++) {
+                    this.generateShop();
+                }
+                
                 // Generate terrain blocks for urban variety with much more diversity
                 let totalLandCells = 0;
-                const maxLandCells = 16; // Increased from 8 to allow much more diverse areas
-                const maxAttempts = 40; // Increased attempts for better coverage
+                const maxLandCells = 20; // Increased from 16 to allow even more diverse areas
+                const maxAttempts = 50; // Increased attempts for better coverage
                 
                 // Much better balance of terrain types with significantly more variety
                 const terrainTypes = [
-                    'land-brown', 'land-brown', 'land-brown', // Brown soil areas
-                    'land-dark', 'land-dark', 'land-dark', // Industrial areas
-                    'land-desert', 'land-desert', 'land-desert', // Desert areas
-                    'land-rocky', 'land-rocky', 'land-rocky', // Rocky/mountain areas
-                    'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass' // More green residential areas
+                    'land-brown', 'land-brown', 'land-brown', 'land-brown', // More brown soil areas
+                    'land-dark', 'land-dark', 'land-dark', 'land-dark', // More industrial areas
+                    'land-desert', 'land-desert', 'land-desert', 'land-desert', // More desert areas
+                    'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', // More rocky/mountain areas
+                    'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass' // Even more green residential areas
                 ];
                 
                 for (let attempt = 0; attempt < maxAttempts && totalLandCells < maxLandCells; attempt++) {
                     const remainingCells = maxLandCells - totalLandCells;
                     
-                    // Varied cluster sizes for better city appearance
+                    // More varied cluster sizes for better city appearance
                     let clusterSize;
-                    if (remainingCells >= 12) {
-                        clusterSize = Math.floor(Math.random() * 6) + 4; // 4-9 cells for larger areas
-                    } else if (remainingCells >= 8) {
+                    if (remainingCells >= 15) {
+                        clusterSize = Math.floor(Math.random() * 8) + 5; // 5-12 cells for larger areas
+                    } else if (remainingCells >= 10) {
+                        clusterSize = Math.floor(Math.random() * 6) + 4; // 4-9 cells
+                    } else if (remainingCells >= 6) {
                         clusterSize = Math.floor(Math.random() * 4) + 3; // 3-6 cells
-                    } else if (remainingCells >= 4) {
+                    } else if (remainingCells >= 3) {
                         clusterSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells
                     } else {
                         clusterSize = Math.floor(Math.random() * 2) + 1; // 1-2 cells
                     }
                     
-                    clusterSize = Math.min(clusterSize, remainingCells, 9); // Max 9 cells per cluster
+                    clusterSize = Math.min(clusterSize, remainingCells, 12); // Max 12 cells per cluster
                     
                     if (clusterSize <= 0) break;
                     
@@ -1835,9 +1845,9 @@
                     
                     // Find suitable position away from roads
                     let placed = false;
-                    for (let placementAttempt = 0; placementAttempt < 25 && !placed; placementAttempt++) {
-                        const startX = Math.floor(Math.random() * (this.gridSize.width - 5)) + 2;
-                        const startY = Math.floor(Math.random() * (this.gridSize.height - 5)) + 2;
+                    for (let placementAttempt = 0; placementAttempt < 30 && !placed; placementAttempt++) {
+                        const startX = Math.floor(Math.random() * (this.gridSize.width - 6)) + 2;
+                        const startY = Math.floor(Math.random() * (this.gridSize.height - 6)) + 2;
                         
                         // Check if area is clear of roads
                         if (this.terrainMap[startY][startX] === 'land' && 
@@ -1848,13 +1858,13 @@
                             let cellsPlaced = 0;
                             
                             // Generate positions for cluster in a more spread-out pattern
-                            for (let dy = 0; dy < 4 && cellsPlaced < clusterSize; dy++) {
-                                for (let dx = 0; dx < 4 && cellsPlaced < clusterSize; dx++) {
+                            for (let dy = 0; dy < 5 && cellsPlaced < clusterSize; dy++) {
+                                for (let dx = 0; dx < 5 && cellsPlaced < clusterSize; dx++) {
                                     const placeX = startX + dx;
                                     const placeY = startY + dy;
                                     
-                                    // Add some randomness to create more organic shapes
-                                    if (Math.random() > 0.3 && // 70% chance to place each cell
+                                    // Add more randomness to create more organic shapes
+                                    if (Math.random() > 0.25 && // 75% chance to place each cell
                                         placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 &&
                                         this.terrainMap[placeY][placeX] === 'land' &&
                                         placeX % 3 !== 0 && placeY % 5 !== 0) {
@@ -1876,7 +1886,7 @@
                     }
                 }
                 
-                console.log(`Enhanced terrain generation complete: ${totalLandCells}/${maxLandCells} terrain cells, ${numLakes} lakes`);
+                console.log(`Enhanced terrain generation complete: ${totalLandCells}/${maxLandCells} terrain cells, ${numLakes} lakes, ${numShops} shops`);
             }
             
             generateLake(lakeSize) {
@@ -1922,6 +1932,36 @@
                                 this.terrainMap[pos.y][pos.x] = 'lake';
                             });
                             return; // Lake successfully placed
+                        }
+                    }
+                }
+            }
+            
+            generateShop() {
+                const maxAttempts = 25;
+                
+                for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                    // Choose shop position away from roads but accessible
+                    const shopX = Math.floor(Math.random() * (this.gridSize.width - 4)) + 2;
+                    const shopY = Math.floor(Math.random() * (this.gridSize.height - 4)) + 2;
+                    
+                    // Make sure shop is not on a road but adjacent to one for accessibility
+                    if (shopX % 3 !== 0 && shopY % 5 !== 0 && this.terrainMap[shopY][shopX] === 'land') {
+                        // Check if adjacent to a road for accessibility
+                        const adjacentToRoad = [
+                            {x: shopX - 1, y: shopY}, {x: shopX + 1, y: shopY},
+                            {x: shopX, y: shopY - 1}, {x: shopX, y: shopY + 1}
+                        ].some(pos => {
+                            if (pos.x >= 0 && pos.x < this.gridSize.width && 
+                                pos.y >= 0 && pos.y < this.gridSize.height) {
+                                return pos.x % 3 === 0 || pos.y % 5 === 0; // Road position
+                            }
+                            return false;
+                        });
+                        
+                        if (adjacentToRoad) {
+                            this.terrainMap[shopY][shopX] = 'shop';
+                            return; // Shop successfully placed
                         }
                     }
                 }
@@ -2839,8 +2879,11 @@
                     // Land terrain types
                     cell.classList.add(terrain);
                     
-                    // Add terrain features for non-lake terrains
-                    if (terrain !== 'lake' && terrain !== 'land-brown' && terrain !== 'land-desert') {
+                    // Add terrain features for non-lake terrains and shops
+                    if (terrain === 'shop') {
+                        cell.innerHTML = '🏪';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    } else if (terrain !== 'lake' && terrain !== 'land-brown' && terrain !== 'land-desert') {
                         this.addTerrainFeatures(cell, terrain, x, y);
                     }
                 }
@@ -3244,7 +3287,8 @@
                     'land-brown': { name: 'Brown Soil', icon: '🟤' },
                     'land-desert': { name: 'Desert', icon: '🟨' },
                     'land-rocky': { name: 'Rocky', icon: '⛰️' },
-                    'lake': { name: 'Lake', icon: '💧' }
+                    'lake': { name: 'Lake', icon: '💧' },
+                    'shop': { name: 'Shop', icon: '🏪' }
                 };
                 
                 const tool = toolData[cellType] || { name: cellType, icon: '❓' };
