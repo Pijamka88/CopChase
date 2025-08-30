@@ -576,7 +576,7 @@
             }
         }
 
-        /* Direction Controls - centered on screen */
+        /* Direction Controls - centered on screen with no background */
         .direction-controls {
             display: none;
             position: fixed;
@@ -585,20 +585,14 @@
             transform: translate(-50%, -50%);
             text-align: center;
             padding: 20px;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-radius: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
             z-index: 3000;
             min-width: 320px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
         }
 
         .direction-btn {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-            margin: 4px;
-            padding: 18px 36px;
+            margin: 1px;
+            padding: 10px 20px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 16px;
             color: white;
@@ -610,12 +604,6 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
-            display: inline-block;
-            text-align: center;
-            font-size: 1.4em;
-            line-height: 1.2;
-            -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
-            touch-action: manipulation;
         }
 
         /* Remove old color-coded borders for unified style */
@@ -1095,51 +1083,46 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                width: calc(100vw - 30px);
-                max-width: 380px;
-                padding: 20px 15px;
+                width: calc(100vw - 40px);
+                max-width: 400px;
+                padding: 25px 15px;
                 margin: 0;
                 border-radius: 20px;
                 display: none;
                 z-index: 9999;
-                background: rgba(0,0,0,0.4);
-                backdrop-filter: blur(25px);
-                -webkit-backdrop-filter: blur(25px);
-                border: 2px solid rgba(255,255,255,0.3);
-                box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-                text-align: center;
-                justify-content: center;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 8px;
             }
             
             .direction-btn {
-                background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-                margin: 4px;
-                padding: 12px 20px;
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                border-radius: 12px;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+                margin: 5px;
+                padding: 16px 12px;
+                border: 2px solid rgba(255, 255, 255, 0.4);
+                border-radius: 16px;
                 color: white;
-                font-weight: 500;
+                font-weight: 600;
                 cursor: pointer;
-                transition: all 0.2s ease;
+                transition: all 0.3s ease;
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.2);
                 position: relative;
                 overflow: hidden;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
+                display: inline-block;
                 min-width: 100px;
-                width: calc(30% - 8px);
+                text-align: center;
+                width: calc(33.33% - 20px);
                 box-sizing: border-box;
-                font-size: 1.1em;
-                line-height: 1.2;
-                -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
-                touch-action: manipulation;
+                font-size: 13px;
+                line-height: 1.3;
+            }
+            
+            .direction-controls {
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 10px;
             }
             
             .dice-roll-btn {
@@ -1444,13 +1427,13 @@
                 this.gridSize = { width: 16, height: 28 };
                 
                 // Calculate cell size based on available screen space optimized for mobile
-                const availableWidth = Math.min(window.innerWidth - 20, 380); // Further reduced for mobile optimization
+                const availableWidth = Math.min(window.innerWidth - 20, 420); // Reduced for mobile
                 const availableHeight = window.innerHeight - 140; // Reduced UI reserve
                 
                 // Calculate cell size to fit the grid with smaller cells for mobile
                 const cellSizeByWidth = Math.floor(availableWidth / this.gridSize.width);
                 const cellSizeByHeight = Math.floor(availableHeight / this.gridSize.height);
-                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 24), 16); // Min 16px, max 24px per cell for better mobile optimization
+                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 28), 18); // Min 18px, max 28px per cell
                 
                 this.playerPos = { x: Math.floor(this.gridSize.width / 2), y: Math.floor(this.gridSize.height / 2) };
                 this.policePos = [];
@@ -2775,8 +2758,8 @@
         // Map Editor Class
         class MapEditor {
             constructor() {
-                this.gridSize = { width: 16, height: 28 };
-                this.cellSize = 24; // Fixed size for editor
+                this.gridSize = { width: 14, height: 22 };
+                this.cellSize = 20; // Optimized smaller size for mobile editor
                 this.currentTool = 'road-vertical';
                 this.editorMap = [];
                 this.isDrawing = false;
