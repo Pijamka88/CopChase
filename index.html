@@ -1090,9 +1090,9 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                width: calc(100vw - 20px);
-                max-width: 400px;
-                padding: 30px 20px;
+                width: calc(100vw - 40px);
+                max-width: 320px;
+                padding: 40px 30px;
                 margin: 0;
                 border-radius: 24px;
                 display: none;
@@ -1103,42 +1103,40 @@
                 border: 1px solid rgba(255, 255, 255, 0.2);
                 box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
                 text-align: center;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 10px;
-                flex-direction: row;
             }
             
             .direction-btn {
                 background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-                margin: 4px;
-                padding: 12px 20px;
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                border-radius: 12px;
                 color: white;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                padding: 18px 36px;
+                font-size: 1.4em;
                 font-weight: 500;
+                border-radius: 16px;
                 cursor: pointer;
                 transition: all 0.2s ease;
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
+                margin: 12px;
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
                 position: relative;
                 overflow: hidden;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                flex: 1;
-                min-width: 80px;
-                max-width: 120px;
-                box-sizing: border-box;
-                font-size: 1.1em;
-                line-height: 1.3;
-                text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
                 touch-action: manipulation;
+                -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+                display: block;
+                width: 100%;
+                max-width: 220px;
+                margin: 12px auto;
+                text-align: center;
+            }
+            
+            .direction-controls {
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                gap: 0;
             }
             
             .dice-roll-btn {
@@ -1443,13 +1441,13 @@
                 this.gridSize = { width: 14, height: 24 };
                 
                 // Calculate cell size based on available screen space optimized for mobile
-                const availableWidth = Math.min(window.innerWidth - 16, 380); // Further reduced for mobile
-                const availableHeight = window.innerHeight - 120; // Reduced UI reserve
+                const availableWidth = Math.min(window.innerWidth - 20, 350); // Optimized for mobile
+                const availableHeight = window.innerHeight - 140; // Optimized UI reserve
                 
                 // Calculate cell size to fit the grid with smaller cells optimized for mobile performance
                 const cellSizeByWidth = Math.floor(availableWidth / this.gridSize.width);
                 const cellSizeByHeight = Math.floor(availableHeight / this.gridSize.height);
-                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 24), 16); // Min 16px, max 24px per cell
+                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 20), 14); // Min 14px, max 20px per cell
                 
                 this.playerPos = { x: Math.floor(this.gridSize.width / 2), y: Math.floor(this.gridSize.height / 2) };
                 this.policePos = [];
