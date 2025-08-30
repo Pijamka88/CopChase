@@ -151,9 +151,16 @@
         /* Status integrated into top panel */
 
         .menu-btn {
-            padding: 3px 6px;
-            font-size: 9px;
-            min-width: 32px;
+            padding: 6px 12px;
+            font-size: 12px;
+            min-width: auto;
+            border-radius: 8px;
+            line-height: 1;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
         .stat {
@@ -381,18 +388,18 @@
         }
 
         .movement-highlight {
-            background: rgba(255, 255, 0, 0.4) !important;
-            border: 2px solid #ffd700 !important;
-            animation: pulse 0.6s ease-in-out infinite;
-            z-index: 5;
-            transform: scale(1.02);
-            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3) !important;
+            background: rgba(255, 255, 0, 0.7) !important;
+            border: 3px solid #ffd700 !important;
+            animation: pulse 0.8s ease-in-out infinite;
+            z-index: 15;
+            transform: scale(1.05);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.8) !important;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1.05); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1.05); }
         }
 
         .road {
@@ -1262,13 +1269,12 @@
         <div id="gameUI" class="game-ui">
             <div class="top-panel">
                 <div class="top-panel-left">
-                    <div class="stat">🎲 Moves: <span id="moveCount">0</span></div>
-                    <div class="stat">🏃 Status: <span id="gameStatus">Running</span></div>
+                    <div class="stat">Moves: <span id="moveCount">0</span></div>
+                    <div class="stat">Status: <span id="gameStatus">Running</span></div>
                 </div>
                 <div class="controls">
-                    <button class="btn menu-btn" id="musicBtn" onclick="toggleMusic()">🔊</button>
-
-                    <button class="btn menu-btn" onclick="returnToMenu()">Menu</button>
+                    <button class="btn menu-btn" id="musicBtn" onclick="toggleMusic()" style="font-size: 10px;">Music</button>
+                    <button class="btn menu-btn" onclick="returnToMenu()" style="font-size: 10px;">Menu</button>
                 </div>
             </div>
 
@@ -2249,12 +2255,18 @@
             }
 
             highlightMovement(pos) {
+                console.log('Adding movement highlight at:', pos);
                 const cell = document.querySelector(`[data-x="${pos.x}"][data-y="${pos.y}"]`);
                 if (cell) {
+                    // Remove any existing highlights first
+                    cell.classList.remove('movement-highlight');
                     // Add highlighting with small delay to ensure it shows
                     setTimeout(() => {
                         cell.classList.add('movement-highlight');
-                    }, 50);
+                        console.log('Movement highlight added to cell:', cell);
+                    }, 100);
+                } else {
+                    console.error('Cell not found for highlighting at:', pos);
                 }
             }
 
@@ -3002,7 +3014,7 @@
         function updateMusicButton() {
             const musicBtn = document.getElementById('musicBtn');
             if (musicBtn) {
-                musicBtn.innerHTML = isMusicPlaying ? '🔊' : '🔇';
+                musicBtn.innerHTML = isMusicPlaying ? 'Music On' : 'Music Off';
                 musicBtn.title = isMusicPlaying ? 'Mute Music' : 'Unmute Music';
             }
         }
