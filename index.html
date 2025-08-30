@@ -388,35 +388,20 @@
         }
 
         .movement-highlight {
-            background: rgba(255, 255, 0, 0.8) !important;
-            border: 4px solid #ffd700 !important;
-            z-index: 100 !important;
-            transform: scale(1.1) !important;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 1) !important;
-            animation: highlightPulse 0.5s ease-in-out infinite alternate !important;
-            position: relative !important;
-        }
-        
-        .movement-highlight::before {
-            content: '' !important;
-            position: absolute !important;
-            top: -4px !important;
-            left: -4px !important;
-            right: -4px !important;
-            bottom: -4px !important;
-            background: rgba(255, 255, 0, 0.4) !important;
-            border-radius: 4px !important;
-            z-index: -1 !important;
+            background: rgba(255, 255, 0, 0.25) !important;
+            border: 2px solid #ffd700 !important;
+            z-index: 20 !important;
+            transform: scale(1.02) !important;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4) !important;
+            animation: highlightPulse 0.4s ease-in-out infinite alternate !important;
         }
         
         @keyframes highlightPulse {
             0% {
-                box-shadow: 0 0 20px rgba(255, 215, 0, 1), inset 0 0 15px rgba(255, 255, 0, 0.4);
-                background: rgba(255, 255, 0, 0.8);
+                box-shadow: 0 0 8px rgba(255, 215, 0, 0.4), inset 0 0 5px rgba(255, 255, 0, 0.15);
             }
             100% {
-                box-shadow: 0 0 30px rgba(255, 215, 0, 1.2), inset 0 0 25px rgba(255, 255, 0, 0.6);
-                background: rgba(255, 255, 0, 0.9);
+                box-shadow: 0 0 12px rgba(255, 215, 0, 0.6), inset 0 0 8px rgba(255, 255, 0, 0.25);
             }
         }
 
@@ -632,11 +617,11 @@
             display: inline-block;
             min-width: 100px;
             text-align: center;
-            /* Distribute buttons in a 2x2 grid layout for mobile */
-            width: calc(50% - 8px);
+            /* Distribute buttons evenly in a row */
+            width: calc(33.33% - 16px);
             box-sizing: border-box;
-            font-size: 11px;
-            line-height: 1.2;
+            font-size: 13px;
+            line-height: 1.3;
         }
 
         /* Remove old color-coded borders for unified style */
@@ -644,19 +629,6 @@
         .direction-btn:hover {
             transform: translateY(-2px) scale(1.02);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-        
-        .skip-turn-btn {
-            background: linear-gradient(135deg, rgba(255, 100, 100, 0.3) 0%, rgba(255, 100, 100, 0.2) 100%) !important;
-            border-color: rgba(255, 100, 100, 0.5) !important;
-            color: #fff !important;
-        }
-        
-        .skip-turn-btn:hover {
-            background: linear-gradient(135deg, rgba(255, 120, 120, 0.4) 0%, rgba(255, 120, 120, 0.3) 100%) !important;
-            border-color: rgba(255, 120, 120, 0.6) !important;
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(255, 100, 100, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
         }
 
         /* Game Over */
@@ -829,6 +801,17 @@
             position: relative;
             box-shadow: 0 8px 32px rgba(0,0,0,0.4);
             cursor: crosshair;
+        }
+        
+        /* Mobile optimization for editor grid */
+        @media (max-width: 480px) {
+            .editor-grid {
+                padding: 4px;
+                border-radius: 8px;
+                border-width: 2px;
+                transform: scale(1.1);
+                transform-origin: center;
+            }
         }
         
         .editor-cell {
@@ -1160,18 +1143,13 @@
                 position: relative;
                 overflow: hidden;
                 display: inline-block;
-                min-width: 80px;
+                min-width: 100px;
                 text-align: center;
-                /* Responsive width for skip button */
-                width: calc(25% - 8px);
+                /* Distribute buttons evenly in a row */
+                width: calc(33.33% - 16px);
                 box-sizing: border-box;
-                font-size: 11px;
-                line-height: 1.2;
-            }
-            
-            .skip-turn-btn {
-                width: calc(50% - 8px) !important;
-                font-size: 10px !important;
+                font-size: 13px;
+                line-height: 1.3;
             }
             
             .dice-roll-btn {
@@ -1284,18 +1262,6 @@
                 font-size: 11px;
                 border-radius: 8px;
             }
-            
-            /* Mobile map editor - larger grid for better editing */
-            .editor-board {
-                padding: 5px;
-            }
-            
-            .editor-grid {
-                padding: 4px;
-                transform: scale(1.4);
-                transform-origin: center;
-                margin: 30px auto;
-            }
         }
         
     </style>
@@ -1372,7 +1338,9 @@
                     <button class="btn direction-btn" onclick="chooseDirection('straight')">⬆️ Straight</button>
                     <button class="btn direction-btn" onclick="chooseDirection('left')">⬅️ Left</button>
                     <button class="btn direction-btn" onclick="chooseDirection('right')">➡️ Right</button>
-                    <button class="btn direction-btn skip-turn-btn" onclick="skipTurn()">⏭️ Skip Turn</button>
+                </div>
+                <div style="margin-top: 15px; text-align: center;">
+                    <button class="btn direction-btn" onclick="skipTurn()" style="background: linear-gradient(135deg, rgba(255, 100, 100, 0.3) 0%, rgba(255, 100, 100, 0.2) 100%); border-color: rgba(255, 100, 100, 0.5); width: auto; min-width: 120px;">⏭️ Skip Turn</button>
                 </div>
             </div>
         </div>
@@ -2403,7 +2371,7 @@
                 if (this.movesLeft > 0) {
                     setTimeout(() => this.movePlayer(), 450);
                 } else {
-                    // Clear movement highlights after completing moves with much longer delay
+                    // Clear movement highlights after completing moves with shorter delay
                     setTimeout(() => {
                         this.clearMovementHighlights();
                         // Police moves after player completes all moves
@@ -2419,7 +2387,7 @@
                             const rollBtn = document.getElementById('rollBtn');
                             rollBtn.disabled = false;
                         }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
-                    }, 2500); // Increased delay to let highlighting show even longer
+                    }, 1200); // Reduced delay for faster gameplay
                 }
             }
 
@@ -2441,20 +2409,15 @@
                     }
                     this.highlightedCells.add(cell);
                     
-                    // Force higher z-index and ensure visibility in center
-                    cell.style.zIndex = '1000';
-                    cell.style.position = 'relative';
-                    
-                    // Additional visual emphasis - ensure highlighting is persistent
+                    // Additional visual emphasis - ensure highlighting is persistent but shorter
                     setTimeout(() => {
                         if (cell.classList.contains('movement-highlight')) {
                             // Re-add the highlight to ensure it stays visible
                             cell.classList.remove('movement-highlight');
                             cell.offsetHeight; // Force reflow
                             cell.classList.add('movement-highlight');
-                            cell.style.zIndex = '1000';
                         }
-                    }, 200);
+                    }, 150);
                 } else {
                     console.error('Cell not found for highlighting at:', pos);
                 }
@@ -2466,8 +2429,6 @@
                     console.log('Clearing movement highlights after turn completion');
                     document.querySelectorAll('.movement-highlight').forEach(cell => {
                         cell.classList.remove('movement-highlight');
-                        cell.style.zIndex = '';
-                        cell.style.position = '';
                     });
                     // Clear the tracked highlighted cells
                     if (this.highlightedCells) {
@@ -2641,7 +2602,7 @@
                 // Show the Roll button again when direction controls are hidden
                 document.getElementById('rollBtn').style.display = 'block';
                 this.waitingForDirection = false;
-                
+    
                 // Calculate new direction
                 let newDirection = this.playerDirection;
                 if (direction === 'straight') {
@@ -2651,18 +2612,18 @@
                 } else if (direction === 'right') {
                     newDirection = (this.playerDirection + 1) % 4; // Turn right
                 }
-                
+    
                 // Check if the chosen direction is valid (includes police collision detection)
                 const nextPos = this.getNextPosition(this.playerPos, newDirection);
                 console.log('Direction choice - checking move to:', nextPos, 'Police positions:', this.policePos);
-                
+    
                 if (!this.isValidMove(nextPos)) {
                     const blockedByPolice = this.policePos.some(police => 
                         police.x === nextPos.x && police.y === nextPos.y
                     );
-                    
+        
                     console.log('Direction blocked. By police:', blockedByPolice);
-                    
+        
                     if (blockedByPolice) {
                         setTimeout(() => {
                             document.getElementById('gameStatus').textContent = 'That direction is blocked by police!';
@@ -2675,7 +2636,7 @@
                     this.showDirectionChoice();
                     return;
                 }
-                
+    
                 // Update player direction
                 this.playerDirection = newDirection;
 
@@ -2688,27 +2649,58 @@
                 if (this.movesLeft > 0) {
                     setTimeout(() => this.movePlayer(), 450);
                 } else {
-                    // Clear movement highlights with much longer delay
+                    // Clear movement highlights with shorter delay
                     setTimeout(() => {
                         this.clearMovementHighlights();
                         // Police moves after player completes all moves
                         this.movePolice();
-                        
+            
                         // Check game state including blocked paths
                         if (this.gameActive && !this.checkAllPathsBlocked()) {
                             this.checkGameState();
                         }
-                        
+            
                         // Re-enable roll button after police turn completes
                         setTimeout(() => {
                             const rollBtn = document.getElementById('rollBtn');
                             rollBtn.disabled = false;
                         }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
-                    }, 2500); // Increased delay to let highlighting show even longer
+                    }, 1200); // Reduced delay for faster gameplay
                 }
             }
 
-
+            skipTurn() {
+                // Hide direction controls and show roll button
+                document.getElementById('directionControls').style.display = 'none';
+                document.getElementById('rollBtn').style.display = 'block';
+                this.waitingForDirection = false;
+    
+                // End the player's turn immediately without moving
+                this.movesLeft = 0;
+    
+                // Show skip message
+                setTimeout(() => {
+                    document.getElementById('gameStatus').textContent = 'Turn Skipped';
+                }, 300);
+    
+                // Clear movement highlights and proceed to police turn
+                setTimeout(() => {
+                    this.clearMovementHighlights();
+                    // Police moves after player skips turn
+                    this.movePolice();
+        
+                    // Check game state including blocked paths
+                    if (this.gameActive && !this.checkAllPathsBlocked()) {
+                        this.checkGameState();
+                    }
+        
+                    // Re-enable roll button after police turn completes
+                    setTimeout(() => {
+                        const rollBtn = document.getElementById('rollBtn');
+                        rollBtn.disabled = false;
+                    }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
+                }, 1200); // Same delay as normal turn completion
+            }
 
             movePolice() {
                 // Display police movement status with delay
@@ -2901,8 +2893,8 @@
         class MapEditor {
             constructor() {
                 this.gridSize = { width: 14, height: 22 };
-                // Larger cell size for mobile editing - improved visibility
-                this.cellSize = window.innerWidth <= 480 ? 28 : 20; 
+                // Larger cell size for mobile editor to make map more visible
+                this.cellSize = window.innerWidth <= 480 ? 24 : 20;
                 this.currentTool = 'road-vertical';
                 this.editorMap = [];
                 this.isDrawing = false;
@@ -3465,38 +3457,8 @@
         }
         
         function skipTurn() {
-            if (game && game.waitingForDirection) {
-                // Hide direction controls
-                document.getElementById('directionControls').style.display = 'none';
-                // Show the Roll button again
-                document.getElementById('rollBtn').style.display = 'block';
-                game.waitingForDirection = false;
-                
-                // End current turn and start police turn
-                game.movesLeft = 0;
-                
-                // Update status
-                setTimeout(() => {
-                    document.getElementById('gameStatus').textContent = 'Turn skipped';
-                }, 300);
-                
-                // Clear movement highlights after brief delay
-                setTimeout(() => {
-                    game.clearMovementHighlights();
-                    // Police moves after player skips turn
-                    game.movePolice();
-                    
-                    // Check game state
-                    if (game.gameActive && !game.checkAllPathsBlocked()) {
-                        game.checkGameState();
-                    }
-                    
-                    // Re-enable roll button after police turn completes
-                    setTimeout(() => {
-                        const rollBtn = document.getElementById('rollBtn');
-                        rollBtn.disabled = false;
-                    }, game.policePos.length * 150 + 300);
-                }, 1000);
+            if (game) {
+                game.skipTurn();
             }
         }
 
