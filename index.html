@@ -583,22 +583,23 @@
             }
         }
 
-        /* Direction Controls - centered on city grid with absolute positioning */
+        /* Direction Controls - centered on screen */
         .direction-controls {
             display: none;
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            padding: 12px;
-            background: rgba(0,0,0,0.25);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 2500;
-            min-width: 300px;
+            padding: 20px;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            z-index: 3000;
+            min-width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .direction-btn {
@@ -1074,21 +1075,22 @@
             }
             
             .direction-controls {
-                position: absolute;
+                position: fixed;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
                 width: 85%;
-                max-width: 280px;
-                padding: 8px;
+                max-width: 320px;
+                padding: 15px;
                 margin: 0;
-                border-radius: 12px;
+                border-radius: 16px;
                 display: none;
                 z-index: 3000;
-                background: rgba(0,0,0,0.3);
+                background: rgba(0,0,0,0.4);
                 backdrop-filter: blur(25px);
                 -webkit-backdrop-filter: blur(25px);
-                border: 1px solid rgba(255,255,255,0.3);
+                border: 2px solid rgba(255,255,255,0.3);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             }
             
             .direction-btn {
@@ -1256,7 +1258,7 @@
                 <div class="editor-actions">
                     <button class="btn menu-btn" onclick="clearEditor()">Clear</button>
                     <button class="btn menu-btn" onclick="saveMap()">Save</button>
-                    <button class="btn menu-btn" onclick="testMap()">Test</button>
+
                     <button class="btn menu-btn" onclick="returnToMenu()">Menu</button>
                 </div>
             </div>
@@ -2970,6 +2972,7 @@
         window.addEventListener('DOMContentLoaded', function() {
             backgroundMusic = document.getElementById('backgroundMusic');
             backgroundMusic.volume = 0.3; // Set volume to 30%
+            isMusicPlaying = false; // Default state is off
             updateMusicButton(); // Initialize button display
         });
 
@@ -3014,8 +3017,8 @@
         function updateMusicButton() {
             const musicBtn = document.getElementById('musicBtn');
             if (musicBtn) {
-                musicBtn.innerHTML = isMusicPlaying ? 'Music On' : 'Music Off';
-                musicBtn.title = isMusicPlaying ? 'Mute Music' : 'Unmute Music';
+                musicBtn.textContent = isMusicPlaying ? 'Music On' : 'Music Off';
+                musicBtn.title = isMusicPlaying ? 'Turn Off Music' : 'Turn On Music';
             }
         }
 
@@ -3162,59 +3165,7 @@
             }
         }
         
-        function testMap() {
-            if (mapEditor) {
-                // Create test map data directly
-                const testMapData = {
-                    name: 'Test Map',
-                    width: mapEditor.gridSize.width,
-                    height: mapEditor.gridSize.height,
-                    terrain: mapEditor.editorMap,
-                    created: new Date().toLocaleDateString()
-                };
-                
-                console.log('Testing map with data:', testMapData);
-                
-                // Clear any existing game state
-                if (game) {
-                    game.gameActive = false;
-                    game = null;
-                }
-                
-                // Hide editor and show game
-                document.getElementById('mapEditor').style.display = 'none';
-                document.getElementById('cellTypePopup').style.display = 'none';
-                document.getElementById('gameUI').style.display = 'flex';
-                document.getElementById('rollBtn').style.display = 'block';
-                document.getElementById('directionControls').style.display = 'none';
-                document.querySelector('.dice-container').style.display = 'none';
-                
-                // Start background music
-                startMusic();
-                
-                // Create game with test map data with proper timing
-                setTimeout(() => {
-                    console.log('Creating test game instance...');
-                    game = new CityChaseGame(testMapData);
-                    game.gameActive = true;
-                    console.log('Test game instance created');
-                    
-                    // Additional verification for test maps
-                    setTimeout(() => {
-                        console.log('Verifying test map entities...');
-                        const playerElements = document.querySelectorAll('.player');
-                        const policeElements = document.querySelectorAll('.police');
-                        
-                        console.log(`Test verification: ${playerElements.length} player, ${policeElements.length} police`);
-                        
-                        if (playerElements.length === 0 || policeElements.length === 0) {
-                            console.warn('Test map entities not found, forcing display update...');
-                            game.updateDisplay();
-                        }
-                    }, 200);
-                }, 100);
-            }
-        }
+
 
         function returnToMenu() {
             // Clear any active timers and reset game state
@@ -3301,65 +3252,7 @@
             document.getElementById('instructionsPopup').style.display = 'none';
         }
         
-        // Debug function to test display update
-        function testDisplayUpdate() {
-            if (game) {
-                console.log('=== Manual Display Update Test ===');
-                console.log('Game state:', {
-                    active: game.gameActive,
-                    playerPos: game.playerPos,
-                    policeCount: game.policePos.length,
-                    policePos: game.policePos
-                });
-                
-                // Check DOM state
-                const totalCells = document.querySelectorAll('#cityGrid .cell').length;
-                const playerElements = document.querySelectorAll('.player').length;
-                const policeElements = document.querySelectorAll('.police').length;
-                const grassElements = document.querySelectorAll('.land-grass').length;
-                
-                console.log('DOM state:', {
-                    totalCells,
-                    playerElements,
-                    policeElements,
-                    grassElements
-                });
-                
-                // Force display update
-                game.updateDisplay();
-                
-                // Test highlighting
-                if (game.playerPos) {
-                    game.highlightMovement(game.playerPos);
-                    console.log('Movement highlighting tested at:', game.playerPos);
-                }
-                
-                // Verify after update
-                setTimeout(() => {
-                    const newPlayerElements = document.querySelectorAll('.player').length;
-                    const newPoliceElements = document.querySelectorAll('.police').length;
-                    const highlightElements = document.querySelectorAll('.movement-highlight').length;
-                    console.log('After update:', {
-                        playerElements: newPlayerElements,
-                        policeElements: newPoliceElements,
-                        highlightElements
-                    });
-                    console.log('=== Test Complete ===');
-                }, 100);
-            } else {
-                console.log('No game instance found');
-            }
-        }
-        
-        // Force entity respawn function
-        function forceEntityRespawn() {
-            if (game) {
-                console.log('Forcing entity respawn...');
-                game.findValidPlayerStart();
-                game.spawnPolice();
-                game.updateDisplay();
-            }
-        }
+
 
     </script>
 </body>
