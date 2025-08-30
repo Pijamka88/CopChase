@@ -388,20 +388,23 @@
         }
 
         .movement-highlight {
-            background: rgba(255, 255, 0, 0.5) !important;
-            border: 3px solid #ffd700 !important;
-            z-index: 20 !important;
-            transform: scale(1.05) !important;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8) !important;
-            animation: highlightPulse 0.6s ease-in-out infinite alternate !important;
+            background: rgba(255, 255, 0, 0.8) !important;
+            border: 4px solid #ffd700 !important;
+            z-index: 100 !important;
+            position: relative !important;
+            transform: scale(1.1) !important;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 1), inset 0 0 15px rgba(255, 255, 0, 0.6) !important;
+            animation: highlightPulse 0.8s ease-in-out infinite alternate !important;
         }
         
         @keyframes highlightPulse {
             0% {
-                box-shadow: 0 0 15px rgba(255, 215, 0, 0.8), inset 0 0 10px rgba(255, 255, 0, 0.3);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 1), inset 0 0 15px rgba(255, 255, 0, 0.6);
+                background: rgba(255, 255, 0, 0.8);
             }
             100% {
-                box-shadow: 0 0 25px rgba(255, 215, 0, 1), inset 0 0 20px rgba(255, 255, 0, 0.5);
+                box-shadow: 0 0 30px rgba(255, 215, 0, 1), inset 0 0 25px rgba(255, 255, 0, 0.8);
+                background: rgba(255, 255, 0, 0.9);
             }
         }
 
@@ -2267,13 +2270,13 @@
 
             movePlayer() {
                 if (this.movesLeft <= 0) {
-                    // Clear movement highlights with longer delay
+                    // Clear movement highlights with MUCH longer delay
                     setTimeout(() => {
                         this.clearMovementHighlights();
                         // Police moves again after player completes all moves
                         this.movePolice();
                         this.checkGameState();
-                    }, 1200);
+                    }, 2500); // Increased to 2.5 seconds to let highlighting show much longer
                     return;
                 }
 
@@ -2285,25 +2288,25 @@
                 // Get next position based on current direction
                 const nextPos = this.getNextPosition(this.playerPos, this.playerDirection);
                 
-                // Check if move is valid (includes police collision detection)
+                // ENHANCED police collision detection - check BEFORE any movement
+                const blockedByPolice = this.policePos.some(police => 
+                    police.x === nextPos.x && police.y === nextPos.y
+                );
+                
+                if (blockedByPolice) {
+                    console.log('Player movement blocked by police at:', nextPos);
+                    setTimeout(() => {
+                        document.getElementById('gameStatus').textContent = 'Blocked by police!';
+                    }, 300);
+                    this.showDirectionChoice();
+                    return;
+                }
+                
+                // Check if move is valid (terrain and boundaries)
                 if (!this.isValidMove(nextPos)) {
-                    // Check if blocked specifically by police
-                    const blockedByPolice = this.policePos.some(police => 
-                        police.x === nextPos.x && police.y === nextPos.y
-                    );
-                    
-                    if (blockedByPolice) {
-                        // Blocked by police - show direction choice
-                        setTimeout(() => {
-                            document.getElementById('gameStatus').textContent = 'Blocked by police!';
-                        }, 300);
-                        this.showDirectionChoice();
-                        return;
-                    } else {
-                        // Blocked by boundary or terrain - show direction choice
-                        this.showDirectionChoice();
-                        return;
-                    }
+                    // Blocked by boundary or terrain - show direction choice
+                    this.showDirectionChoice();
+                    return;
                 }
                 
                 // Move player
@@ -2340,7 +2343,7 @@
                 if (this.movesLeft > 0) {
                     setTimeout(() => this.movePlayer(), 450);
                 } else {
-                    // Clear movement highlights after completing moves with much longer delay
+                    // Clear movement highlights after completing moves with MUCH longer delay
                     setTimeout(() => {
                         this.clearMovementHighlights();
                         // Police moves after player completes all moves
@@ -2356,7 +2359,7 @@
                             const rollBtn = document.getElementById('rollBtn');
                             rollBtn.disabled = false;
                         }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
-                    }, 1500); // Significantly increased delay to let highlighting show much longer
+                    }, 2500); // Increased to 2.5 seconds to let highlighting show much longer
                 }
             }
 
@@ -2372,6 +2375,10 @@
                     cell.classList.add('movement-highlight');
                     console.log('Movement highlight added to cell:', cell);
                     
+                    // Set cell to highest z-index to ensure visibility
+                    cell.style.zIndex = '100';
+                    cell.style.position = 'relative';
+                    
                     // Additional visual emphasis - ensure highlighting is persistent
                     setTimeout(() => {
                         if (cell.classList.contains('movement-highlight')) {
@@ -2379,8 +2386,22 @@
                             cell.classList.remove('movement-highlight');
                             cell.offsetHeight; // Force reflow
                             cell.classList.add('movement-highlight');
+                            cell.style.zIndex = '100';
+                            cell.style.position = 'relative';
                         }
                     }, 200);
+                    
+                    // Ensure highlighting persists for longer duration
+                    setTimeout(() => {
+                        if (cell.classList.contains('movement-highlight')) {
+                            // Re-apply highlighting one more time to combat any CSS resets
+                            cell.classList.remove('movement-highlight');
+                            cell.offsetHeight;
+                            cell.classList.add('movement-highlight');
+                            cell.style.zIndex = '100';
+                            cell.style.position = 'relative';
+                        }
+                    }, 500);
                 } else {
                     console.error('Cell not found for highlighting at:', pos);
                 }
@@ -2389,6 +2410,9 @@
             clearMovementHighlights() {
                 document.querySelectorAll('.movement-highlight').forEach(cell => {
                     cell.classList.remove('movement-highlight');
+                    // Reset z-index after highlighting
+                    cell.style.zIndex = '';
+                    cell.style.position = '';
                 });
             }
 
@@ -2419,12 +2443,13 @@
                     return false;
                 }
                 
-                // Check if position is occupied by police - player cannot pass through police
+                // STRICT police collision detection - player absolutely cannot pass through police
                 const blockedByPolice = this.policePos.some(police => 
                     police.x === pos.x && police.y === pos.y
                 );
                 
                 if (blockedByPolice) {
+                    console.log('Move blocked by police at:', pos);
                     return false;
                 }
                 
@@ -2561,22 +2586,27 @@
                     newDirection = (this.playerDirection + 1) % 4; // Turn right
                 }
                 
-                // Check if the chosen direction is valid (includes police collision detection)
+                // STRICT collision checking - player cannot move into police position
                 const nextPos = this.getNextPosition(this.playerPos, newDirection);
+                
+                // Double-check for police collision with enhanced detection
+                const blockedByPolice = this.policePos.some(police => 
+                    police.x === nextPos.x && police.y === nextPos.y
+                );
+                
+                if (blockedByPolice) {
+                    console.log('Direction blocked by police at:', nextPos);
+                    setTimeout(() => {
+                        document.getElementById('gameStatus').textContent = 'That direction is blocked by police!';
+                    }, 300);
+                    this.showDirectionChoice();
+                    return;
+                }
+                
                 if (!this.isValidMove(nextPos)) {
-                    const blockedByPolice = this.policePos.some(police => 
-                        police.x === nextPos.x && police.y === nextPos.y
-                    );
-                    
-                    if (blockedByPolice) {
-                        setTimeout(() => {
-                            document.getElementById('gameStatus').textContent = 'That direction is blocked by police!';
-                        }, 300);
-                    } else {
-                        setTimeout(() => {
-                            document.getElementById('gameStatus').textContent = 'That direction is blocked!';
-                        }, 300);
-                    }
+                    setTimeout(() => {
+                        document.getElementById('gameStatus').textContent = 'That direction is blocked!';
+                    }, 300);
                     this.showDirectionChoice();
                     return;
                 }
@@ -2593,7 +2623,7 @@
                 if (this.movesLeft > 0) {
                     setTimeout(() => this.movePlayer(), 450);
                 } else {
-                    // Clear movement highlights with much longer delay
+                    // Clear movement highlights with MUCH longer delay
                     setTimeout(() => {
                         this.clearMovementHighlights();
                         // Police moves after player completes all moves
@@ -2609,7 +2639,7 @@
                             const rollBtn = document.getElementById('rollBtn');
                             rollBtn.disabled = false;
                         }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
-                    }, 1500); // Significantly increased delay to let highlighting show much longer
+                    }, 2500); // Increased to 2.5 seconds to let highlighting show much longer
                 }
             }
 
