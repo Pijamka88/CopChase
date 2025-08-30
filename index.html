@@ -576,7 +576,7 @@
             }
         }
 
-        /* Direction Controls - centered on screen */
+        /* Direction Controls - centered on screen with enhanced blur */
         .direction-controls {
             display: none;
             position: fixed;
@@ -584,15 +584,16 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            padding: 20px;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 25px 20px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             z-index: 3000;
-            min-width: 320px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            min-width: 340px;
+            max-width: 90vw;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
         .direction-btn {
@@ -1089,42 +1090,43 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                width: calc(100vw - 40px);
-                max-width: 400px;
-                padding: 25px 15px;
+                width: calc(100vw - 30px);
+                max-width: 360px;
+                padding: 30px 20px;
                 margin: 0;
-                border-radius: 20px;
+                border-radius: 24px;
                 display: none;
                 z-index: 9999;
-                background: rgba(0,0,0,0.8);
-                backdrop-filter: blur(25px);
-                -webkit-backdrop-filter: blur(25px);
-                border: 2px solid rgba(255,255,255,0.3);
-                box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+                background: rgba(0,0,0,0.25);
+                backdrop-filter: blur(30px);
+                -webkit-backdrop-filter: blur(30px);
+                border: 2px solid rgba(255,255,255,0.2);
+                box-shadow: 0 25px 80px rgba(0,0,0,0.8), inset 0 2px 0 rgba(255,255,255,0.1);
             }
             
             .direction-btn {
-                background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-                margin: 3px;
-                padding: 12px 8px;
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                border-radius: 16px;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+                margin: 8px 4px;
+                padding: 18px 14px;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-radius: 18px;
                 color: white;
-                font-weight: 500;
+                font-weight: 600;
                 cursor: pointer;
-                transition: all 0.2s ease;
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                transition: all 0.3s ease;
+                backdrop-filter: blur(25px);
+                -webkit-backdrop-filter: blur(25px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.2);
                 position: relative;
                 overflow: hidden;
                 display: inline-block;
-                min-width: 80px;
+                min-width: 90px;
                 text-align: center;
                 width: calc(33.33% - 16px);
                 box-sizing: border-box;
-                font-size: 12px;
-                line-height: 1.2;
+                font-size: 14px;
+                line-height: 1.4;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.5);
             }
             
             .direction-controls {
@@ -1245,59 +1247,6 @@
                 padding: 8px 14px;
                 font-size: 11px;
                 border-radius: 8px;
-            }
-            
-            /* Map Editor Mobile Optimizations */
-            .editor-panel {
-                padding: 6px 10px;
-                min-height: 50px;
-                flex-wrap: nowrap;
-            }
-            
-            .editor-tools {
-                gap: 2px;
-            }
-            
-            .tool-btn {
-                padding: 4px 8px;
-                font-size: 10px;
-                border-radius: 6px;
-            }
-            
-            .editor-actions {
-                gap: 2px;
-            }
-            
-            .editor-actions .menu-btn {
-                padding: 4px 8px;
-                font-size: 10px;
-                border-radius: 6px;
-            }
-            
-            .editor-board {
-                padding: 5px;
-                overflow: auto;
-            }
-            
-            .editor-grid {
-                padding: 4px;
-                border-radius: 8px;
-                border-width: 2px;
-                margin: 0 auto;
-                max-width: calc(100vw - 20px);
-                max-height: calc(100vh - 80px);
-                overflow: auto;
-            }
-            
-            .editor-cell {
-                min-width: 12px;
-                min-height: 12px;
-                border-radius: 1px;
-            }
-            
-            .editor-cell:hover {
-                transform: scale(1.05);
-                border: 1px solid #ffd700;
             }
         }
         
@@ -1487,17 +1436,17 @@
     <script>
         class CityChaseGame {
             constructor(customMapData = null) {
-                // Portrait mode optimized: 16 width x 28 height for optimal mobile viewing
-                this.gridSize = { width: 16, height: 28 };
+                // Mobile-optimized grid size: smaller for better performance and visibility
+                this.gridSize = { width: 14, height: 24 };
                 
                 // Calculate cell size based on available screen space optimized for mobile
-                const availableWidth = Math.min(window.innerWidth - 20, 420); // Reduced for mobile
-                const availableHeight = window.innerHeight - 140; // Reduced UI reserve
+                const availableWidth = Math.min(window.innerWidth - 16, 380); // Further reduced for mobile
+                const availableHeight = window.innerHeight - 120; // Reduced UI reserve
                 
-                // Calculate cell size to fit the grid with smaller cells for mobile
+                // Calculate cell size to fit the grid with smaller cells optimized for mobile performance
                 const cellSizeByWidth = Math.floor(availableWidth / this.gridSize.width);
                 const cellSizeByHeight = Math.floor(availableHeight / this.gridSize.height);
-                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 28), 18); // Min 18px, max 28px per cell
+                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 24), 16); // Min 16px, max 24px per cell
                 
                 this.playerPos = { x: Math.floor(this.gridSize.width / 2), y: Math.floor(this.gridSize.height / 2) };
                 this.policePos = [];
@@ -2822,22 +2771,8 @@
         // Map Editor Class
         class MapEditor {
             constructor() {
-                this.gridSize = { width: 16, height: 28 };
-                
-                // Calculate cell size based on available screen space for mobile optimization
-                const availableWidth = Math.min(window.innerWidth - 40, 420); // Account for mobile padding
-                const availableHeight = window.innerHeight - 120; // Account for editor panel
-                
-                // Calculate cell size to fit the grid with mobile optimization
-                const cellSizeByWidth = Math.floor(availableWidth / this.gridSize.width);
-                const cellSizeByHeight = Math.floor(availableHeight / this.gridSize.height);
-                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 24), 10); // Min 10px, max 24px per cell
-                
-                // On very small screens, ensure minimum usability
-                if (window.innerWidth <= 480) {
-                    this.cellSize = Math.max(this.cellSize, 12); // Minimum 12px on mobile
-                }
-                
+                this.gridSize = { width: 14, height: 24 }; // Updated to match game grid
+                this.cellSize = 24; // Fixed size for editor
                 this.currentTool = 'road-vertical';
                 this.editorMap = [];
                 this.isDrawing = false;
