@@ -388,11 +388,21 @@
         }
 
         .movement-highlight {
-            background: rgba(255, 255, 0, 0.3) !important;
-            border: 2px solid #ffd700 !important;
-            z-index: 15;
-            transform: scale(1.02);
-            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4) !important;
+            background: rgba(255, 255, 0, 0.5) !important;
+            border: 3px solid #ffd700 !important;
+            z-index: 20 !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8) !important;
+            animation: highlightPulse 0.6s ease-in-out infinite alternate !important;
+        }
+        
+        @keyframes highlightPulse {
+            0% {
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.8), inset 0 0 10px rgba(255, 255, 0, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(255, 215, 0, 1), inset 0 0 20px rgba(255, 255, 0, 0.5);
+            }
         }
 
         .road {
@@ -1484,29 +1494,48 @@
                     const gridCells = document.querySelectorAll('#cityGrid .cell');
                     console.log(`DOM verification: ${gridCells.length} cells found`);
                     
-                    // Find a valid starting position for player
-                    this.findValidPlayerStart();
-                    console.log('Player positioned at:', this.playerPos);
+                    // Multiple attempts to ensure entities are placed
+                    let attempts = 0;
+                    const maxAttempts = 3;
                     
-                    // Respawn police
-                    this.spawnPolice();
-                    console.log('Police positioned at:', this.policePos);
-                    
-                    // Update display to show player and police
-                    this.updateDisplay();
-                    
-                    // Verify entities are placed
-                    setTimeout(() => {
-                        const playerElements = document.querySelectorAll('.player');
-                        const policeElements = document.querySelectorAll('.police');
-                        console.log(`Verification: ${playerElements.length} player, ${policeElements.length} police elements found`);
+                    const tryPlaceEntities = () => {
+                        attempts++;
+                        console.log(`Entity placement attempt ${attempts}/${maxAttempts}`);
                         
-                        if (playerElements.length === 0 || policeElements.length === 0) {
-                            console.error('Entities not properly placed, attempting recovery...');
-                            this.updateDisplay(); // Try again
-                        }
-                    }, 100);
-                }, 150); // Increased delay for better reliability
+                        // Find a valid starting position for player
+                        this.findValidPlayerStart();
+                        console.log('Player positioned at:', this.playerPos);
+                        
+                        // Respawn police
+                        this.spawnPolice();
+                        console.log('Police positioned at:', this.policePos);
+                        
+                        // Update display to show player and police
+                        this.updateDisplay();
+                        
+                        // Verify entities are placed after a brief delay
+                        setTimeout(() => {
+                            const playerElements = document.querySelectorAll('.player');
+                            const policeElements = document.querySelectorAll('.police');
+                            console.log(`Verification attempt ${attempts}: ${playerElements.length} player, ${policeElements.length} police elements found`);
+                            
+                            if ((playerElements.length === 0 || policeElements.length === 0) && attempts < maxAttempts) {
+                                console.error(`Entities not properly placed on attempt ${attempts}, retrying...`);
+                                tryPlaceEntities(); // Try again
+                            } else if (playerElements.length === 0 || policeElements.length === 0) {
+                                console.error('Failed to place entities after maximum attempts, forcing final update...');
+                                // Force one final update
+                                setTimeout(() => {
+                                    this.updateDisplay();
+                                }, 100);
+                            } else {
+                                console.log('Entities successfully placed!');
+                            }
+                        }, 150);
+                    };
+                    
+                    tryPlaceEntities();
+                }, 200); // Increased initial delay for better reliability
             }
             
             findValidPlayerStart() {
@@ -2230,13 +2259,13 @@
 
             movePlayer() {
                 if (this.movesLeft <= 0) {
-                    // Clear movement highlights with delay
+                    // Clear movement highlights with longer delay
                     setTimeout(() => {
                         this.clearMovementHighlights();
                         // Police moves again after player completes all moves
                         this.movePolice();
                         this.checkGameState();
-                    }, 600);
+                    }, 1200);
                     return;
                 }
 
@@ -2303,7 +2332,7 @@
                 if (this.movesLeft > 0) {
                     setTimeout(() => this.movePlayer(), 450);
                 } else {
-                    // Clear movement highlights after completing moves with delay
+                    // Clear movement highlights after completing moves with much longer delay
                     setTimeout(() => {
                         this.clearMovementHighlights();
                         // Police moves after player completes all moves
@@ -2319,7 +2348,7 @@
                             const rollBtn = document.getElementById('rollBtn');
                             rollBtn.disabled = false;
                         }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
-                    }, 800); // Increased delay to let highlighting show longer
+                    }, 1500); // Significantly increased delay to let highlighting show much longer
                 }
             }
 
@@ -2329,11 +2358,21 @@
                 if (cell) {
                     // Remove any existing highlights first
                     cell.classList.remove('movement-highlight');
-                    // Add highlighting with small delay to ensure it shows
+                    // Force reflow to ensure the class removal takes effect
+                    cell.offsetHeight;
+                    // Add highlighting immediately with stronger visual emphasis
+                    cell.classList.add('movement-highlight');
+                    console.log('Movement highlight added to cell:', cell);
+                    
+                    // Additional visual emphasis - ensure highlighting is persistent
                     setTimeout(() => {
-                        cell.classList.add('movement-highlight');
-                        console.log('Movement highlight added to cell:', cell);
-                    }, 100);
+                        if (cell.classList.contains('movement-highlight')) {
+                            // Re-add the highlight to ensure it stays visible
+                            cell.classList.remove('movement-highlight');
+                            cell.offsetHeight; // Force reflow
+                            cell.classList.add('movement-highlight');
+                        }
+                    }, 200);
                 } else {
                     console.error('Cell not found for highlighting at:', pos);
                 }
@@ -2546,7 +2585,7 @@
                 if (this.movesLeft > 0) {
                     setTimeout(() => this.movePlayer(), 450);
                 } else {
-                    // Clear movement highlights with delay
+                    // Clear movement highlights with much longer delay
                     setTimeout(() => {
                         this.clearMovementHighlights();
                         // Police moves after player completes all moves
@@ -2562,7 +2601,7 @@
                             const rollBtn = document.getElementById('rollBtn');
                             rollBtn.disabled = false;
                         }, this.policePos.length * 150 + 300); // Wait for all police moves plus buffer
-                    }, 800); // Increased delay to let highlighting show longer
+                    }, 1500); // Significantly increased delay to let highlighting show much longer
                 }
             }
 
@@ -3106,7 +3145,7 @@
             }
             
             // Enhanced delay for complex custom maps
-            const delay = customMapData ? 100 : 50;
+            const delay = customMapData ? 200 : 50;
             setTimeout(() => {
                 console.log('Creating game instance...');
                 // Create new game instance with custom map data
@@ -3114,18 +3153,37 @@
                 game.gameActive = true;
                 console.log('Game instance created and activated');
                 
-                // Additional verification for custom maps
+                // Enhanced verification for custom maps with multiple retry attempts
                 if (customMapData) {
-                    setTimeout(() => {
-                        console.log('Verifying custom map entities...');
-                        const playerElements = document.querySelectorAll('.player');
-                        const policeElements = document.querySelectorAll('.police');
+                    let verificationAttempts = 0;
+                    const maxVerificationAttempts = 5;
+                    
+                    const verifyEntities = () => {
+                        verificationAttempts++;
+                        console.log(`Verification attempt ${verificationAttempts}/${maxVerificationAttempts}`);
                         
-                        if (playerElements.length === 0 || policeElements.length === 0) {
-                            console.warn('Entities not found, forcing display update...');
-                            game.updateDisplay();
-                        }
-                    }, 200);
+                        setTimeout(() => {
+                            const playerElements = document.querySelectorAll('.player');
+                            const policeElements = document.querySelectorAll('.police');
+                            console.log(`Entities found: ${playerElements.length} player, ${policeElements.length} police`);
+                            
+                            if ((playerElements.length === 0 || policeElements.length === 0) && verificationAttempts < maxVerificationAttempts) {
+                                console.warn(`Entities missing on attempt ${verificationAttempts}, forcing display update...`);
+                                game.updateDisplay();
+                                verifyEntities(); // Try again
+                            } else if (playerElements.length === 0 || policeElements.length === 0) {
+                                console.error('Entities still missing after maximum attempts, trying emergency recovery...');
+                                // Emergency recovery - force re-initialization
+                                game.findValidPlayerStart();
+                                game.spawnPolice();
+                                game.updateDisplay();
+                            } else {
+                                console.log('All entities successfully verified and placed!');
+                            }
+                        }, 100 * verificationAttempts); // Increasing delay with each attempt
+                    };
+                    
+                    verifyEntities();
                 }
             }, delay);
         }
