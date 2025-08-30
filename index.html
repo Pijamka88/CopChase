@@ -388,20 +388,35 @@
         }
 
         .movement-highlight {
-            background: rgba(255, 255, 0, 0.5) !important;
-            border: 3px solid #ffd700 !important;
-            z-index: 20 !important;
-            transform: scale(1.05) !important;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8) !important;
-            animation: highlightPulse 0.6s ease-in-out infinite alternate !important;
+            background: rgba(255, 255, 0, 0.8) !important;
+            border: 4px solid #ffd700 !important;
+            z-index: 100 !important;
+            transform: scale(1.1) !important;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 1) !important;
+            animation: highlightPulse 0.5s ease-in-out infinite alternate !important;
+            position: relative !important;
+        }
+        
+        .movement-highlight::before {
+            content: '' !important;
+            position: absolute !important;
+            top: -4px !important;
+            left: -4px !important;
+            right: -4px !important;
+            bottom: -4px !important;
+            background: rgba(255, 255, 0, 0.4) !important;
+            border-radius: 4px !important;
+            z-index: -1 !important;
         }
         
         @keyframes highlightPulse {
             0% {
-                box-shadow: 0 0 15px rgba(255, 215, 0, 0.8), inset 0 0 10px rgba(255, 255, 0, 0.3);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 1), inset 0 0 15px rgba(255, 255, 0, 0.4);
+                background: rgba(255, 255, 0, 0.8);
             }
             100% {
-                box-shadow: 0 0 25px rgba(255, 215, 0, 1), inset 0 0 20px rgba(255, 255, 0, 0.5);
+                box-shadow: 0 0 30px rgba(255, 215, 0, 1.2), inset 0 0 25px rgba(255, 255, 0, 0.6);
+                background: rgba(255, 255, 0, 0.9);
             }
         }
 
@@ -617,11 +632,11 @@
             display: inline-block;
             min-width: 100px;
             text-align: center;
-            /* Distribute buttons evenly in a row */
-            width: calc(33.33% - 16px);
+            /* Distribute buttons in a 2x2 grid layout for mobile */
+            width: calc(50% - 8px);
             box-sizing: border-box;
-            font-size: 13px;
-            line-height: 1.3;
+            font-size: 11px;
+            line-height: 1.2;
         }
 
         /* Remove old color-coded borders for unified style */
@@ -629,6 +644,19 @@
         .direction-btn:hover {
             transform: translateY(-2px) scale(1.02);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .skip-turn-btn {
+            background: linear-gradient(135deg, rgba(255, 100, 100, 0.3) 0%, rgba(255, 100, 100, 0.2) 100%) !important;
+            border-color: rgba(255, 100, 100, 0.5) !important;
+            color: #fff !important;
+        }
+        
+        .skip-turn-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 120, 120, 0.4) 0%, rgba(255, 120, 120, 0.3) 100%) !important;
+            border-color: rgba(255, 120, 120, 0.6) !important;
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(255, 100, 100, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
         }
 
         /* Game Over */
@@ -1132,13 +1160,18 @@
                 position: relative;
                 overflow: hidden;
                 display: inline-block;
-                min-width: 100px;
+                min-width: 80px;
                 text-align: center;
-                /* Distribute buttons evenly in a row */
-                width: calc(33.33% - 16px);
+                /* Responsive width for skip button */
+                width: calc(25% - 8px);
                 box-sizing: border-box;
-                font-size: 13px;
-                line-height: 1.3;
+                font-size: 11px;
+                line-height: 1.2;
+            }
+            
+            .skip-turn-btn {
+                width: calc(50% - 8px) !important;
+                font-size: 10px !important;
             }
             
             .dice-roll-btn {
@@ -1251,6 +1284,18 @@
                 font-size: 11px;
                 border-radius: 8px;
             }
+            
+            /* Mobile map editor - larger grid for better editing */
+            .editor-board {
+                padding: 5px;
+            }
+            
+            .editor-grid {
+                padding: 4px;
+                transform: scale(1.4);
+                transform-origin: center;
+                margin: 30px auto;
+            }
         }
         
     </style>
@@ -1327,6 +1372,7 @@
                     <button class="btn direction-btn" onclick="chooseDirection('straight')">⬆️ Straight</button>
                     <button class="btn direction-btn" onclick="chooseDirection('left')">⬅️ Left</button>
                     <button class="btn direction-btn" onclick="chooseDirection('right')">➡️ Right</button>
+                    <button class="btn direction-btn skip-turn-btn" onclick="skipTurn()">⏭️ Skip Turn</button>
                 </div>
             </div>
         </div>
@@ -2395,6 +2441,10 @@
                     }
                     this.highlightedCells.add(cell);
                     
+                    // Force higher z-index and ensure visibility in center
+                    cell.style.zIndex = '1000';
+                    cell.style.position = 'relative';
+                    
                     // Additional visual emphasis - ensure highlighting is persistent
                     setTimeout(() => {
                         if (cell.classList.contains('movement-highlight')) {
@@ -2402,6 +2452,7 @@
                             cell.classList.remove('movement-highlight');
                             cell.offsetHeight; // Force reflow
                             cell.classList.add('movement-highlight');
+                            cell.style.zIndex = '1000';
                         }
                     }, 200);
                 } else {
@@ -2415,6 +2466,8 @@
                     console.log('Clearing movement highlights after turn completion');
                     document.querySelectorAll('.movement-highlight').forEach(cell => {
                         cell.classList.remove('movement-highlight');
+                        cell.style.zIndex = '';
+                        cell.style.position = '';
                     });
                     // Clear the tracked highlighted cells
                     if (this.highlightedCells) {
@@ -2848,7 +2901,8 @@
         class MapEditor {
             constructor() {
                 this.gridSize = { width: 14, height: 22 };
-                this.cellSize = 20; // Optimized smaller size for mobile editor
+                // Larger cell size for mobile editing - improved visibility
+                this.cellSize = window.innerWidth <= 480 ? 28 : 20; 
                 this.currentTool = 'road-vertical';
                 this.editorMap = [];
                 this.isDrawing = false;
@@ -3407,6 +3461,42 @@
         function chooseDirection(direction) {
             if (game) {
                 game.chooseDirection(direction);
+            }
+        }
+        
+        function skipTurn() {
+            if (game && game.waitingForDirection) {
+                // Hide direction controls
+                document.getElementById('directionControls').style.display = 'none';
+                // Show the Roll button again
+                document.getElementById('rollBtn').style.display = 'block';
+                game.waitingForDirection = false;
+                
+                // End current turn and start police turn
+                game.movesLeft = 0;
+                
+                // Update status
+                setTimeout(() => {
+                    document.getElementById('gameStatus').textContent = 'Turn skipped';
+                }, 300);
+                
+                // Clear movement highlights after brief delay
+                setTimeout(() => {
+                    game.clearMovementHighlights();
+                    // Police moves after player skips turn
+                    game.movePolice();
+                    
+                    // Check game state
+                    if (game.gameActive && !game.checkAllPathsBlocked()) {
+                        game.checkGameState();
+                    }
+                    
+                    // Re-enable roll button after police turn completes
+                    setTimeout(() => {
+                        const rollBtn = document.getElementById('rollBtn');
+                        rollBtn.disabled = false;
+                    }, game.policePos.length * 150 + 300);
+                }, 1000);
             }
         }
 
