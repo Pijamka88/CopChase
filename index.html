@@ -1023,7 +1023,7 @@
             .top-panel-left {
                 gap: 2px; /* Reduced from 4px */
                 flex-wrap: wrap;
-                background: rgba(0,0,0,0.15);
+                /* Background removed for mobile */
                 border-radius: 12px;
                 padding: 3px 6px;
             }
@@ -1035,12 +1035,12 @@
             }
             
             .menu-btn {
-                padding: 6px 12px;
-                font-size: 12px;
+                padding: 4px 8px; /* Reduced from 6px 12px */
+                font-size: 10px; /* Reduced from 12px */
                 min-width: auto;
-                border-radius: 8px;
+                border-radius: 6px; /* Reduced from 8px */
                 line-height: 1;
-                height: auto;
+                height: 28px; /* Fixed height for consistency */
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -1049,7 +1049,7 @@
             
             .controls {
                 gap: 1px; /* Reduced from 2px */
-                background: rgba(0,0,0,0.15);
+                /* Background removed for mobile */
                 border-radius: 12px;
                 padding: 3px 6px;
             }
@@ -1279,7 +1279,7 @@
                     <div class="stat">Status: <span id="gameStatus">Running</span></div>
                 </div>
                 <div class="controls">
-                    <button class="btn menu-btn" id="musicBtn" onclick="toggleMusic()" style="font-size: 10px;">Music</button>
+                    <button class="btn menu-btn" id="musicBtn" onclick="toggleMusic()" style="font-size: 10px;">ON</button>
                     <button class="btn menu-btn" onclick="returnToMenu()" style="font-size: 10px;">Menu</button>
                 </div>
             </div>
@@ -1791,27 +1791,35 @@
             }
             
             generateTerrainFeatures() {
-                // Generate 2-3 small lakes
-                const numLakes = Math.floor(Math.random() * 2) + 2;
+                // Generate 3-5 small lakes for more water features
+                const numLakes = Math.floor(Math.random() * 3) + 3;
                 for (let lake = 0; lake < numLakes; lake++) {
                     const lakeSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells per lake
                     this.generateLake(lakeSize);
                 }
                 
-                // Generate terrain blocks for urban variety with more grass areas
+                // Generate terrain blocks for urban variety with much more diversity
                 let totalLandCells = 0;
-                const maxLandCells = 8; // Increased from 4 to allow more green areas
-                const maxAttempts = 25; // Increased attempts for better coverage
+                const maxLandCells = 16; // Increased from 8 to allow much more diverse areas
+                const maxAttempts = 40; // Increased attempts for better coverage
                 
-                // Better balance of terrain types with more variety
-                const terrainTypes = ['land-brown', 'land-brown', 'land-dark', 'land-dark', 'land-desert', 'land-rocky', 'land-grass', 'land-grass', 'land-grass', 'land-grass'];
+                // Much better balance of terrain types with significantly more variety
+                const terrainTypes = [
+                    'land-brown', 'land-brown', 'land-brown', // Brown soil areas
+                    'land-dark', 'land-dark', 'land-dark', // Industrial areas
+                    'land-desert', 'land-desert', 'land-desert', // Desert areas
+                    'land-rocky', 'land-rocky', 'land-rocky', // Rocky/mountain areas
+                    'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass' // More green residential areas
+                ];
                 
                 for (let attempt = 0; attempt < maxAttempts && totalLandCells < maxLandCells; attempt++) {
                     const remainingCells = maxLandCells - totalLandCells;
                     
-                    // Smaller clusters for better city appearance
+                    // Varied cluster sizes for better city appearance
                     let clusterSize;
-                    if (remainingCells >= 8) {
+                    if (remainingCells >= 12) {
+                        clusterSize = Math.floor(Math.random() * 6) + 4; // 4-9 cells for larger areas
+                    } else if (remainingCells >= 8) {
                         clusterSize = Math.floor(Math.random() * 4) + 3; // 3-6 cells
                     } else if (remainingCells >= 4) {
                         clusterSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells
@@ -1819,7 +1827,7 @@
                         clusterSize = Math.floor(Math.random() * 2) + 1; // 1-2 cells
                     }
                     
-                    clusterSize = Math.min(clusterSize, remainingCells, 6); // Max 6 cells per cluster
+                    clusterSize = Math.min(clusterSize, remainingCells, 9); // Max 9 cells per cluster
                     
                     if (clusterSize <= 0) break;
                     
@@ -1827,25 +1835,27 @@
                     
                     // Find suitable position away from roads
                     let placed = false;
-                    for (let placementAttempt = 0; placementAttempt < 20 && !placed; placementAttempt++) {
-                        const startX = Math.floor(Math.random() * (this.gridSize.width - 4)) + 2;
-                        const startY = Math.floor(Math.random() * (this.gridSize.height - 4)) + 2;
+                    for (let placementAttempt = 0; placementAttempt < 25 && !placed; placementAttempt++) {
+                        const startX = Math.floor(Math.random() * (this.gridSize.width - 5)) + 2;
+                        const startY = Math.floor(Math.random() * (this.gridSize.height - 5)) + 2;
                         
                         // Check if area is clear of roads
                         if (this.terrainMap[startY][startX] === 'land' && 
                             startX % 3 !== 0 && startY % 5 !== 0) {
                             
-                            // Place cluster in a compact formation
+                            // Place cluster in a more organic formation
                             let cellsToPlace = [];
                             let cellsPlaced = 0;
                             
-                            // Generate positions for cluster
-                            for (let dy = 0; dy < 3 && cellsPlaced < clusterSize; dy++) {
-                                for (let dx = 0; dx < 3 && cellsPlaced < clusterSize; dx++) {
+                            // Generate positions for cluster in a more spread-out pattern
+                            for (let dy = 0; dy < 4 && cellsPlaced < clusterSize; dy++) {
+                                for (let dx = 0; dx < 4 && cellsPlaced < clusterSize; dx++) {
                                     const placeX = startX + dx;
                                     const placeY = startY + dy;
                                     
-                                    if (placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 &&
+                                    // Add some randomness to create more organic shapes
+                                    if (Math.random() > 0.3 && // 70% chance to place each cell
+                                        placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 &&
                                         this.terrainMap[placeY][placeX] === 'land' &&
                                         placeX % 3 !== 0 && placeY % 5 !== 0) {
                                         cellsToPlace.push({x: placeX, y: placeY});
@@ -1866,7 +1876,7 @@
                     }
                 }
                 
-                console.log(`Terrain generation complete: ${totalLandCells}/${maxLandCells} terrain cells, ${numLakes} lakes`);
+                console.log(`Enhanced terrain generation complete: ${totalLandCells}/${maxLandCells} terrain cells, ${numLakes} lakes`);
             }
             
             generateLake(lakeSize) {
@@ -2207,14 +2217,17 @@
                     }
                 }
                 
-                // ... existing code ...
-                
                 // Move player
                 this.playerPos = nextPos;
                 this.movesLeft--;
                 
-                // Highlight the movement AFTER moving
-                this.highlightMovement(this.playerPos);
+                // Update display first to show player in new position
+                this.updateDisplay();
+                
+                // Then highlight the movement cell
+                setTimeout(() => {
+                    this.highlightMovement(this.playerPos);
+                }, 100);
                 
                 // Check if at intersection - ALWAYS show direction choice at intersections
                 if (this.isIntersection(this.playerPos)) {
@@ -2234,8 +2247,6 @@
                     this.showDirectionChoice();
                     return;
                 }
-
-                this.updateDisplay();
                 
                 if (this.movesLeft > 0) {
                     setTimeout(() => this.movePlayer(), 450);
@@ -2975,8 +2986,10 @@
         // Initialize music when page loads
         window.addEventListener('DOMContentLoaded', function() {
             backgroundMusic = document.getElementById('backgroundMusic');
-            backgroundMusic.volume = 0.3; // Set volume to 30%
-            isMusicPlaying = false; // Default state is off
+            if (backgroundMusic) {
+                backgroundMusic.volume = 0.3; // Set volume to 30%
+            }
+            isMusicPlaying = true; // Default state is on
             updateMusicButton(); // Initialize button display
         });
 
@@ -3021,7 +3034,7 @@
         function updateMusicButton() {
             const musicBtn = document.getElementById('musicBtn');
             if (musicBtn) {
-                musicBtn.textContent = isMusicPlaying ? 'Music On' : 'Music Off';
+                musicBtn.textContent = isMusicPlaying ? 'ON' : 'OFF';
                 musicBtn.title = isMusicPlaying ? 'Turn Off Music' : 'Turn On Music';
             }
         }
