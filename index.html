@@ -218,7 +218,7 @@
             font-size: 2.2em;
             font-weight: bold;
             color: #333;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             text-align: center;
@@ -235,6 +235,52 @@
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+
+        /* Zoom Button */
+        .zoom-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 50%, #2c5aa0 100%);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4), inset 0 2px 0 rgba(255,255,255,0.3);
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .zoom-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(74, 144, 226, 0.5), inset 0 2px 0 rgba(255,255,255,0.4);
+            background: linear-gradient(135deg, #357abd 0%, #2c5aa0 50%, #1e3a6f 100%);
+        }
+
+        .zoom-btn.active {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 50%, #a93226 100%);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4), inset 0 2px 0 rgba(255,255,255,0.3);
+        }
+
+        .zoom-btn.active:hover {
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 50%, #922b21 100%);
+            box-shadow: 0 12px 35px rgba(231, 76, 60, 0.5), inset 0 2px 0 rgba(255,255,255,0.4);
+        }
+
+        /* Zoomed view styles */
+        .zoomed .city-grid {
+            transform: scale(2);
+            transform-origin: center;
         }
 
         .dice.rolling {
@@ -388,20 +434,23 @@
         }
 
         .movement-highlight {
-            background: rgba(255, 255, 0, 0.25) !important;
-            border: 2px solid #ffd700 !important;
-            z-index: 20 !important;
-            transform: scale(1.02) !important;
-            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4) !important;
-            animation: highlightPulse 0.4s ease-in-out infinite alternate !important;
+            background: rgba(255, 255, 0, 0.4) !important;
+            border: 3px solid #ffd700 !important;
+            z-index: 100 !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8) !important;
+            animation: highlightPulse 0.3s ease-in-out infinite alternate !important;
+            position: relative !important;
         }
         
         @keyframes highlightPulse {
             0% {
-                box-shadow: 0 0 8px rgba(255, 215, 0, 0.4), inset 0 0 5px rgba(255, 255, 0, 0.15);
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.8), inset 0 0 8px rgba(255, 255, 0, 0.3);
+                background: rgba(255, 255, 0, 0.4) !important;
             }
             100% {
-                box-shadow: 0 0 12px rgba(255, 215, 0, 0.6), inset 0 0 8px rgba(255, 255, 0, 0.25);
+                box-shadow: 0 0 25px rgba(255, 215, 0, 1.0), inset 0 0 12px rgba(255, 255, 0, 0.5);
+                background: rgba(255, 255, 0, 0.6) !important;
             }
         }
 
@@ -1161,6 +1210,15 @@
                 border-radius: 50px;
             }
             
+            .zoom-btn {
+                bottom: 8px;
+                left: 8px;
+                width: 80px;
+                height: 80px;
+                font-size: 1.2em;
+                border-radius: 40px;
+            }
+            
             .dice {
                 width: 60px;
                 height: 60px;
@@ -1332,6 +1390,9 @@
 
             <!-- Circular dice roll button positioned at bottom-right -->
             <button id="rollBtn" class="dice-roll-btn" onclick="rollDice()">🎲<br>Roll</button>
+            
+            <!-- Zoom button positioned at bottom-left -->
+            <button id="zoomBtn" class="zoom-btn" onclick="toggleZoom()" title="Toggle 2x Zoom">x2</button>
 
             <div id="directionControls" class="direction-controls">
                 <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 8px; width: 100%;">
@@ -1856,31 +1917,31 @@
             }
             
             generateTerrainFeatures() {
-                // Generate 4-7 small lakes for more water features
-                const numLakes = Math.floor(Math.random() * 4) + 4;
+                // Generate 5-8 small lakes for more water features
+                const numLakes = Math.floor(Math.random() * 4) + 5;
                 for (let lake = 0; lake < numLakes; lake++) {
                     const lakeSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells per lake
                     this.generateLake(lakeSize);
                 }
                 
-                // Generate 3-6 shops scattered around the city
-                const numShops = Math.floor(Math.random() * 4) + 3;
+                // Generate 4-8 shops scattered around the city
+                const numShops = Math.floor(Math.random() * 5) + 4;
                 for (let shop = 0; shop < numShops; shop++) {
                     this.generateShop();
                 }
                 
-                // Generate terrain blocks for urban variety with much more diversity
+                // Generate terrain blocks for urban variety with maximum diversity
                 let totalLandCells = 0;
-                const maxLandCells = 20; // Increased from 16 to allow even more diverse areas
-                const maxAttempts = 50; // Increased attempts for better coverage
+                const maxLandCells = 28; // Increased from 20 for much more diversity
+                const maxAttempts = 80; // Increased attempts for better coverage
                 
-                // Much better balance of terrain types with significantly more variety
+                // Enhanced balance of terrain types with significantly more variety
                 const terrainTypes = [
-                    'land-brown', 'land-brown', 'land-brown', 'land-brown', // More brown soil areas
-                    'land-dark', 'land-dark', 'land-dark', 'land-dark', // More industrial areas
-                    'land-desert', 'land-desert', 'land-desert', 'land-desert', // More desert areas
-                    'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', // More rocky/mountain areas
-                    'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass' // Even more green residential areas
+                    'land-brown', 'land-brown', 'land-brown', 'land-brown', 'land-brown', // More brown soil areas
+                    'land-dark', 'land-dark', 'land-dark', 'land-dark', 'land-dark', // More industrial areas
+                    'land-desert', 'land-desert', 'land-desert', 'land-desert', 'land-desert', // More desert areas
+                    'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', // More rocky/mountain areas
+                    'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass' // Even more green residential areas
                 ];
                 
                 for (let attempt = 0; attempt < maxAttempts && totalLandCells < maxLandCells; attempt++) {
@@ -1888,8 +1949,10 @@
                     
                     // More varied cluster sizes for better city appearance
                     let clusterSize;
-                    if (remainingCells >= 15) {
-                        clusterSize = Math.floor(Math.random() * 8) + 5; // 5-12 cells for larger areas
+                    if (remainingCells >= 20) {
+                        clusterSize = Math.floor(Math.random() * 10) + 6; // 6-15 cells for larger areas
+                    } else if (remainingCells >= 15) {
+                        clusterSize = Math.floor(Math.random() * 8) + 5; // 5-12 cells
                     } else if (remainingCells >= 10) {
                         clusterSize = Math.floor(Math.random() * 6) + 4; // 4-9 cells
                     } else if (remainingCells >= 6) {
@@ -1900,7 +1963,7 @@
                         clusterSize = Math.floor(Math.random() * 2) + 1; // 1-2 cells
                     }
                     
-                    clusterSize = Math.min(clusterSize, remainingCells, 12); // Max 12 cells per cluster
+                    clusterSize = Math.min(clusterSize, remainingCells, 15); // Max 15 cells per cluster
                     
                     if (clusterSize <= 0) break;
                     
@@ -1908,9 +1971,9 @@
                     
                     // Find suitable position away from roads
                     let placed = false;
-                    for (let placementAttempt = 0; placementAttempt < 30 && !placed; placementAttempt++) {
-                        const startX = Math.floor(Math.random() * (this.gridSize.width - 6)) + 2;
-                        const startY = Math.floor(Math.random() * (this.gridSize.height - 6)) + 2;
+                    for (let placementAttempt = 0; placementAttempt < 40 && !placed; placementAttempt++) {
+                        const startX = Math.floor(Math.random() * (this.gridSize.width - 8)) + 3;
+                        const startY = Math.floor(Math.random() * (this.gridSize.height - 8)) + 3;
                         
                         // Check if area is clear of roads
                         if (this.terrainMap[startY][startX] === 'land' && 
@@ -1921,13 +1984,13 @@
                             let cellsPlaced = 0;
                             
                             // Generate positions for cluster in a more spread-out pattern
-                            for (let dy = 0; dy < 5 && cellsPlaced < clusterSize; dy++) {
-                                for (let dx = 0; dx < 5 && cellsPlaced < clusterSize; dx++) {
+                            for (let dy = 0; dy < 7 && cellsPlaced < clusterSize; dy++) {
+                                for (let dx = 0; dx < 7 && cellsPlaced < clusterSize; dx++) {
                                     const placeX = startX + dx;
                                     const placeY = startY + dy;
                                     
                                     // Add more randomness to create more organic shapes
-                                    if (Math.random() > 0.25 && // 75% chance to place each cell
+                                    if (Math.random() > 0.2 && // 80% chance to place each cell
                                         placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 &&
                                         this.terrainMap[placeY][placeX] === 'land' &&
                                         placeX % 3 !== 0 && placeY % 5 !== 0) {
@@ -2219,6 +2282,11 @@
                 // Update UI
                 document.getElementById('moveCount').textContent = this.moveCount;
                 
+                // Center camera on player if zoomed
+                if (typeof centerCameraOnPlayer === 'function') {
+                    centerCameraOnPlayer();
+                }
+                
                 // Final verification
                 setTimeout(() => {
                     const finalPlayerCount = document.querySelectorAll('.player').length;
@@ -2409,7 +2477,19 @@
                     }
                     this.highlightedCells.add(cell);
                     
-                    // Additional visual emphasis - ensure highlighting is persistent but shorter
+                    // Force the highlight to stay visible with stronger emphasis
+                    setTimeout(() => {
+                        if (cell.classList.contains('movement-highlight')) {
+                            // Ensure the highlight is visible by forcing a style update
+                            cell.style.background = 'rgba(255, 255, 0, 0.6) !important';
+                            cell.style.border = '3px solid #ffd700 !important';
+                            cell.style.zIndex = '100 !important';
+                            cell.style.transform = 'scale(1.05) !important';
+                            cell.style.boxShadow = '0 0 20px rgba(255, 215, 0, 1.0) !important';
+                        }
+                    }, 50);
+                    
+                    // Additional visual emphasis - ensure highlighting is persistent
                     setTimeout(() => {
                         if (cell.classList.contains('movement-highlight')) {
                             // Re-add the highlight to ensure it stays visible
@@ -2429,6 +2509,12 @@
                     console.log('Clearing movement highlights after turn completion');
                     document.querySelectorAll('.movement-highlight').forEach(cell => {
                         cell.classList.remove('movement-highlight');
+                        // Also clear any inline styles that were forced
+                        cell.style.background = '';
+                        cell.style.border = '';
+                        cell.style.zIndex = '';
+                        cell.style.transform = '';
+                        cell.style.boxShadow = '';
                     });
                     // Clear the tracked highlighted cells
                     if (this.highlightedCells) {
@@ -2600,7 +2686,7 @@
             chooseDirection(direction) {
                 document.getElementById('directionControls').style.display = 'none';
                 // Show the Roll button again when direction controls are hidden
-                document.getElementById('rollBtn').style.display = 'block';
+                document.getElementById('rollBtn').style.display = 'flex';
                 this.waitingForDirection = false;
     
                 // Calculate new direction
@@ -2672,7 +2758,7 @@
             skipTurn() {
                 // Hide direction controls and show roll button
                 document.getElementById('directionControls').style.display = 'none';
-                document.getElementById('rollBtn').style.display = 'block';
+                document.getElementById('rollBtn').style.display = 'flex';
                 this.waitingForDirection = false;
     
                 // End the player's turn immediately without moving
@@ -2888,6 +2974,7 @@
         let backgroundMusic = null;
         let mapEditor = null;
         let selectedMap = 'default';
+        let isZoomed = false;
         
         // Map Editor Class
         class MapEditor {
@@ -3238,8 +3325,9 @@
             document.querySelector('.dice-container').style.display = 'none';
             document.getElementById('gameUI').style.display = 'flex';
             
-            // Ensure Roll button is visible
-            document.getElementById('rollBtn').style.display = 'block';
+            // Ensure Roll button and zoom button are visible
+            document.getElementById('rollBtn').style.display = 'flex';
+            document.getElementById('zoomBtn').style.display = 'flex';
             
             // Start background music - enhanced for first game entry
             if (backgroundMusic) {
@@ -3429,6 +3517,24 @@
                 game = null;
             }
             
+            // Reset zoom state
+            if (isZoomed) {
+                const gameBoard = document.querySelector('.game-board');
+                const zoomBtn = document.getElementById('zoomBtn');
+                gameBoard.classList.remove('zoomed');
+                zoomBtn.classList.remove('active');
+                zoomBtn.textContent = 'x2';
+                zoomBtn.title = 'Toggle 2x Zoom';
+                isZoomed = false;
+                
+                // Reset any transform on city grid
+                const cityGrid = document.getElementById('cityGrid');
+                if (cityGrid) {
+                    cityGrid.style.transform = '';
+                    cityGrid.style.transformOrigin = '';
+                }
+            }
+            
             // Stop background music
             stopMusic();
             
@@ -3442,6 +3548,10 @@
             document.getElementById('gameOver').style.display = 'none';
             document.getElementById('mapEditor').style.display = 'none';
             document.getElementById('menu').style.display = 'block';
+            
+            // Hide game-specific buttons
+            document.getElementById('rollBtn').style.display = 'none';
+            document.getElementById('zoomBtn').style.display = 'none';
         }
 
         function rollDice() {
@@ -3507,6 +3617,56 @@
 
         function closeInstructions() {
             document.getElementById('instructionsPopup').style.display = 'none';
+        }
+
+        function toggleZoom() {
+            const gameBoard = document.querySelector('.game-board');
+            const zoomBtn = document.getElementById('zoomBtn');
+            
+            isZoomed = !isZoomed;
+            
+            if (isZoomed) {
+                gameBoard.classList.add('zoomed');
+                zoomBtn.classList.add('active');
+                zoomBtn.textContent = '1x';
+                zoomBtn.title = 'Return to Normal View';
+                
+                // Center on player when zooming in
+                if (game && game.playerPos) {
+                    centerCameraOnPlayer();
+                }
+            } else {
+                gameBoard.classList.remove('zoomed');
+                zoomBtn.classList.remove('active');
+                zoomBtn.textContent = 'x2';
+                zoomBtn.title = 'Toggle 2x Zoom';
+            }
+        }
+        
+        function centerCameraOnPlayer() {
+            if (!game || !game.playerPos || !isZoomed) return;
+            
+            const cityGrid = document.getElementById('cityGrid');
+            const gameBoard = document.querySelector('.game-board');
+            
+            if (cityGrid && gameBoard) {
+                const cellSize = game.cellSize;
+                const gridWidth = game.gridSize.width * cellSize;
+                const gridHeight = game.gridSize.height * cellSize;
+                
+                // Calculate player position in pixels
+                const playerPixelX = game.playerPos.x * cellSize + cellSize / 2;
+                const playerPixelY = game.playerPos.y * cellSize + cellSize / 2;
+                
+                // Calculate offset to center player (accounting for 2x zoom)
+                const boardRect = gameBoard.getBoundingClientRect();
+                const offsetX = boardRect.width / 2 - playerPixelX * 2;
+                const offsetY = boardRect.height / 2 - playerPixelY * 2;
+                
+                // Apply transform to center on player
+                cityGrid.style.transformOrigin = 'center';
+                cityGrid.style.transform = `scale(2) translate(${offsetX / 2}px, ${offsetY / 2}px)`;
+            }
         }
         
 
