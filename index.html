@@ -600,20 +600,28 @@
         }
 
         .direction-btn {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-            margin: 1px;
-            padding: 10px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+            margin: 4px;
+            padding: 16px 12px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
             border-radius: 16px;
             color: white;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
+            display: inline-block;
+            min-width: 100px;
+            text-align: center;
+            /* Distribute buttons evenly in a row */
+            width: calc(33.33% - 16px);
+            box-sizing: border-box;
+            font-size: 13px;
+            line-height: 1.3;
         }
 
         /* Remove old color-coded borders for unified style */
@@ -1100,22 +1108,18 @@
                 border-radius: 20px;
                 display: none;
                 z-index: 9999;
-            }
-            
-            .direction-controls {
+                /* Center the buttons horizontally */
                 text-align: center;
-                display: flex;
                 justify-content: center;
                 align-items: center;
                 flex-wrap: wrap;
-                gap: 15px;
-                width: 100%;
+                gap: 8px;
             }
             
             .direction-btn {
                 background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
-                margin: 3px;
-                padding: 14px 10px;
+                margin: 4px;
+                padding: 16px 12px;
                 border: 2px solid rgba(255, 255, 255, 0.4);
                 border-radius: 16px;
                 color: white;
@@ -1128,13 +1132,13 @@
                 position: relative;
                 overflow: hidden;
                 display: inline-block;
-                min-width: 90px;
+                min-width: 100px;
                 text-align: center;
-                flex: 1;
-                max-width: 120px;
+                /* Distribute buttons evenly in a row */
+                width: calc(33.33% - 16px);
                 box-sizing: border-box;
-                font-size: 12px;
-                line-height: 1.2;
+                font-size: 13px;
+                line-height: 1.3;
             }
             
             .dice-roll-btn {
@@ -1319,9 +1323,11 @@
             <button id="rollBtn" class="dice-roll-btn" onclick="rollDice()">🎲<br>Roll</button>
 
             <div id="directionControls" class="direction-controls">
-                <button class="btn direction-btn" onclick="chooseDirection('left')">⬅️ Left</button>
-                <button class="btn direction-btn" onclick="chooseDirection('straight')">⬆️ Straight</button>
-                <button class="btn direction-btn" onclick="chooseDirection('right')">➡️ Right</button>
+                <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 8px; width: 100%;">
+                    <button class="btn direction-btn" onclick="chooseDirection('straight')">⬆️ Straight</button>
+                    <button class="btn direction-btn" onclick="chooseDirection('left')">⬅️ Left</button>
+                    <button class="btn direction-btn" onclick="chooseDirection('right')">➡️ Right</button>
+                </div>
             </div>
         </div>
 
@@ -3085,79 +3091,35 @@
             if (backgroundMusic) {
                 backgroundMusic.volume = 0.3; // Set volume to 30%
             }
-            isMusicPlaying = false; // Start with music off until user interaction
-            
-            // Add click listener to document to enable music on first interaction
-            document.addEventListener('click', enableMusicOnFirstClick, { once: true });
-            document.addEventListener('touchstart', enableMusicOnFirstClick, { once: true });
+            isMusicPlaying = true; // Default state is on
         });
-        
-        function enableMusicOnFirstClick() {
-            console.log('First user interaction detected, enabling music...');
-            if (backgroundMusic && !isMusicPlaying) {
-                backgroundMusic.play().then(() => {
-                    isMusicPlaying = true;
-                    console.log('Background music started');
-                    // Show a brief music indicator
-                    showMusicStartedIndicator();
-                }).catch(error => {
-                    console.log('Could not start music:', error);
-                });
-            }
-        }
-        
-        function showMusicStartedIndicator() {
-            // Create a temporary indicator that music has started
-            const indicator = document.createElement('div');
-            indicator.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: rgba(0, 255, 0, 0.8);
-                color: white;
-                padding: 8px 16px;
-                border-radius: 20px;
-                font-size: 14px;
-                z-index: 10000;
-                animation: fadeInOut 2s ease-in-out;
-            `;
-            indicator.textContent = '🎵 Music Started';
-            
-            // Add fade animation
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes fadeInOut {
-                    0% { opacity: 0; transform: translateY(-10px); }
-                    20%, 80% { opacity: 1; transform: translateY(0); }
-                    100% { opacity: 0; transform: translateY(-10px); }
-                }
-            `;
-            document.head.appendChild(style);
-            document.body.appendChild(indicator);
-            
-            // Remove after animation
-            setTimeout(() => {
-                if (indicator.parentNode) {
-                    indicator.parentNode.removeChild(indicator);
-                }
-                if (style.parentNode) {
-                    style.parentNode.removeChild(style);
-                }
-            }, 2000);
-        }
 
         function startMusic() {
-            console.log('startMusic called, current state:', isMusicPlaying);
-            if (backgroundMusic) {
-                backgroundMusic.play().then(() => {
-                    isMusicPlaying = true;
-                    console.log('Music started successfully');
-                }).catch(error => {
-                    console.log('Music autoplay prevented, will start on user interaction:', error);
-                    // Add interaction listeners if not already added
-                    document.addEventListener('click', enableMusicOnFirstClick, { once: true });
-                    document.addEventListener('touchstart', enableMusicOnFirstClick, { once: true });
-                });
+            if (backgroundMusic && !isMusicPlaying) {
+                // Try to play music
+                const playPromise = backgroundMusic.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        isMusicPlaying = true;
+                        console.log('Music started successfully');
+                    }).catch(error => {
+                        console.log('Music autoplay prevented:', error);
+                        // Set up one-time click handler to start music
+                        const startOnInteraction = () => {
+                            backgroundMusic.play().then(() => {
+                                isMusicPlaying = true;
+                                console.log('Music started after user interaction');
+                            }).catch(e => {
+                                console.log('Music failed to start:', e);
+                            });
+                            // Remove event listeners after first interaction
+                            document.removeEventListener('click', startOnInteraction);
+                            document.removeEventListener('touchstart', startOnInteraction);
+                        };
+                        document.addEventListener('click', startOnInteraction, { once: true });
+                        document.addEventListener('touchstart', startOnInteraction, { once: true });
+                    });
+                }
             }
         }
 
@@ -3191,9 +3153,47 @@
             // Ensure Roll button is visible
             document.getElementById('rollBtn').style.display = 'block';
             
-            // Start background music - try to play immediately
-            console.log('Attempting to start music from startGame...');
-            startMusic();
+            // Start background music - enhanced for first game entry
+            if (backgroundMusic) {
+                backgroundMusic.volume = 0.3; // Set volume to 30%
+                // Force attempt to play music on first game start
+                const playPromise = backgroundMusic.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        isMusicPlaying = true;
+                        console.log('Music started successfully on game start');
+                    }).catch(error => {
+                        console.log('Music autoplay prevented on first game:', error);
+                        // Set up enhanced interaction handlers for music
+                        const startMusicOnInteraction = (event) => {
+                            console.log('User interaction detected, starting music');
+                            backgroundMusic.play().then(() => {
+                                isMusicPlaying = true;
+                                console.log('Music started after user interaction');
+                            }).catch(e => {
+                                console.log('Music failed to start:', e);
+                            });
+                            // Remove all event listeners after music starts
+                            document.removeEventListener('click', startMusicOnInteraction);
+                            document.removeEventListener('touchstart', startMusicOnInteraction);
+                            document.removeEventListener('touchend', startMusicOnInteraction);
+                            document.removeEventListener('keydown', startMusicOnInteraction);
+                        };
+                        
+                        // Add multiple event types to catch any user interaction
+                        document.addEventListener('click', startMusicOnInteraction, { once: true });
+                        document.addEventListener('touchstart', startMusicOnInteraction, { once: true });
+                        document.addEventListener('touchend', startMusicOnInteraction, { once: true });
+                        document.addEventListener('keydown', startMusicOnInteraction, { once: true });
+                        
+                        // Also try on next dice roll or button click
+                        const rollBtn = document.getElementById('rollBtn');
+                        if (rollBtn) {
+                            rollBtn.addEventListener('click', startMusicOnInteraction, { once: true });
+                        }
+                    });
+                }
+            }
             
             // Get custom map data if selected
             let customMapData = null;
