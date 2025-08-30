@@ -963,11 +963,25 @@
             min-height: 60px;
         }
         
+        .cell-type-option.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border-color: #f39c12;
+            color: #333;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+        
         .cell-type-option:hover {
             transform: translateY(-2px) scale(1.02);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
             border-color: #ffd700;
             box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        }
+        
+        .cell-type-option.active:hover {
+            background: linear-gradient(135deg, #ffed4e 0%, #f39c12 100%);
+            border-color: #e67e22;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
         }
         
         .cell-type-icon {
@@ -1072,12 +1086,12 @@
             
             .direction-controls {
                 position: fixed;
-                bottom: 10px;
-                left: 10px;
-                right: 10px;
-                width: calc(100vw - 20px);
+                bottom: 5px;
+                left: 5px;
+                right: 5px;
+                width: calc(100vw - 10px);
                 max-width: none;
-                padding: 10px;
+                padding: 8px;
                 margin: 0;
                 border-radius: 12px;
                 display: none;
@@ -1092,16 +1106,16 @@
             .direction-btn {
                 background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
                 margin: 1px;
-                padding: 10px 20px;
+                padding: 12px 8px;
                 border: 1px solid rgba(255, 255, 255, 0.3);
-                border-radius: 16px;
+                border-radius: 12px;
                 color: white;
                 font-weight: 500;
                 cursor: pointer;
                 transition: all 0.2s ease;
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
                 position: relative;
                 overflow: hidden;
                 display: inline-block;
@@ -1109,7 +1123,8 @@
                 text-align: center;
                 width: calc(33.33% - 4px);
                 box-sizing: border-box;
-                font-size: 12px;
+                font-size: 11px;
+                line-height: 1.2;
             }
             
             .direction-controls {
@@ -1264,7 +1279,6 @@
             <div class="editor-panel">
                 <div class="editor-tools">
                     <button class="tool-btn active" id="currentTool" onclick="showCellTypePopup()">🎨 Select Tool</button>
-                    <span style="color: #ffd700; font-size: 12px; margin-left: 10px;">Current: <span id="currentToolIcon">🔄</span> <span id="currentToolName">Vertical Road</span></span>
                 </div>
                 <div class="editor-actions">
                     <button class="btn menu-btn" onclick="clearEditor()">Clear</button>
@@ -3137,8 +3151,8 @@
             mapEditor.updateMapList();
             
             // Initialize tool display
-            document.getElementById('currentToolName').textContent = 'Vertical Road';
-            document.getElementById('currentToolIcon').textContent = '🔄';
+            // Set initial active state for default tool
+            document.querySelector('.cell-type-option[onclick*="road-vertical"]')?.classList.add('active');
         }
         
         function showMapSelection() {
@@ -3255,25 +3269,20 @@
             if (mapEditor) {
                 mapEditor.currentTool = cellType;
                 
-                // Update current tool display with both icon and name
-                const toolData = {
-                    'road-vertical': { name: 'Vertical Road', icon: '🔄' },
-                    'road-horizontal': { name: 'Horizontal Road', icon: '↔️' },
-                    'intersection': { name: 'Intersection', icon: '✕' },
-                    'intersection-light': { name: 'Traffic Light', icon: '🚦' },
-                    'land': { name: 'Land', icon: '🟫' },
-                    'land-grass': { name: 'Grass', icon: '🟩' },
-                    'land-dark': { name: 'Industrial', icon: '🟫' },
-                    'land-brown': { name: 'Brown Soil', icon: '🟤' },
-                    'land-desert': { name: 'Desert', icon: '🟨' },
-                    'land-rocky': { name: 'Rocky', icon: '⛰️' },
-                    'lake': { name: 'Lake', icon: '💧' },
-                    'shop': { name: 'Shop', icon: '🏪' }
-                };
+                // Remove active class from all options
+                document.querySelectorAll('.cell-type-option').forEach(option => {
+                    option.classList.remove('active');
+                });
                 
-                const tool = toolData[cellType] || { name: cellType, icon: '❓' };
-                document.getElementById('currentToolName').textContent = tool.name;
-                document.getElementById('currentToolIcon').textContent = tool.icon;
+                // Add active class to selected option
+                const selectedOption = Array.from(document.querySelectorAll('.cell-type-option')).find(option => {
+                    const onclick = option.getAttribute('onclick');
+                    return onclick && onclick.includes(`'${cellType}'`);
+                });
+                
+                if (selectedOption) {
+                    selectedOption.classList.add('active');
+                }
                 
                 // If we have a target cell from mobile selection, paint it
                 if (window.targetCell && window.innerWidth <= 480) {
