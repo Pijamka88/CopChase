@@ -234,6 +234,31 @@
             animation: roll 1s ease-in-out;
         }
 
+        /* Skip Turn Button */
+        #skipBtn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            font-size: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+        }
+        
+        #skipBtn:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, #ee5a24 0%, #c44025 100%);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        .dice.rolling {
+            animation: roll 1s ease-in-out;
+        }
+
         @keyframes roll {
             0%, 100% { transform: rotate(0deg); }
             25% { transform: rotate(90deg); }
@@ -895,19 +920,114 @@
         .map-action-btn.delete:hover {
             background: rgba(255, 68, 68, 0.5);
         }
+        
+        /* Cell Type Selection Popup */
+        .cell-type-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 4000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .cell-type-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: center;
+        }
+        
+        .cell-type-content h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .cell-type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .cell-type-option {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-height: 80px;
+        }
+        
+        .cell-type-option:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+            border-color: #ffd700;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        }
+        
+        .cell-type-icon {
+            font-size: 24px;
+            line-height: 1;
+        }
+        
+        .cell-type-name {
+            font-size: 11px;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .cell-type-close {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            font-size: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .cell-type-close:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+        }
         @media (max-width: 480px) {
             .top-panel {
                 flex-direction: row;
-                gap: 4px;
-                padding: 4px 8px;
+                gap: 6px; /* Increased from 4px */
+                padding: 6px 12px; /* Increased padding */
                 height: auto;
-                min-height: 40px;
+                min-height: 48px; /* Increased from 40px */
                 justify-content: space-between;
+                background: rgba(0,0,0,0.25); /* Darker background for better visibility */
             }
             
             .top-panel-left {
-                gap: 2px;
+                gap: 4px; /* Increased from 2px */
                 flex-wrap: wrap;
+                background: rgba(0,0,0,0.15);
+                border-radius: 12px;
+                padding: 4px 8px;
             }
             
             .stat {
@@ -917,9 +1037,9 @@
             }
             
             .menu-btn {
-                padding: 4px 8px;
-                font-size: 10px;
-                min-width: 40px;
+                padding: 3px 6px; /* Reduced from 4px 8px */
+                font-size: 9px; /* Reduced from 10px */
+                min-width: 32px; /* Reduced from 40px */
                 border-radius: 6px;
                 line-height: 1;
                 height: auto;
@@ -931,6 +1051,9 @@
             
             .controls {
                 gap: 2px;
+                background: rgba(0,0,0,0.15);
+                border-radius: 12px;
+                padding: 4px 8px;
             }
             
             .game-board {
@@ -1056,6 +1179,45 @@
             .game-over h2 {
                 font-size: 1.6em;
             }
+            
+            /* Mobile optimizations for cell type popup */
+            .cell-type-content {
+                padding: 20px 15px;
+                max-width: 95vw;
+                border-radius: 16px;
+            }
+            
+            .cell-type-content h3 {
+                font-size: 1.1em;
+                margin-bottom: 15px;
+            }
+            
+            .cell-type-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+            
+            .cell-type-option {
+                padding: 10px 6px;
+                min-height: 65px;
+                border-radius: 8px;
+                gap: 5px;
+            }
+            
+            .cell-type-icon {
+                font-size: 18px;
+            }
+            
+            .cell-type-name {
+                font-size: 9px;
+            }
+            
+            .cell-type-close {
+                padding: 10px 18px;
+                font-size: 12px;
+                border-radius: 10px;
+            }
         }
         
     </style>
@@ -1089,17 +1251,8 @@
         <div id="mapEditor" class="map-editor">
             <div class="editor-panel">
                 <div class="editor-tools">
-                    <button class="tool-btn active" data-tool="road-vertical" onclick="selectTool('road-vertical')">🔄 Vertical Road</button>
-                    <button class="tool-btn" data-tool="road-horizontal" onclick="selectTool('road-horizontal')">↔️ Horizontal Road</button>
-                    <button class="tool-btn" data-tool="intersection" onclick="selectTool('intersection')">✕ Intersection</button>
-                    <button class="tool-btn" data-tool="intersection-light" onclick="selectTool('intersection-light')">🚦 Intersection + Light</button>
-                    <button class="tool-btn" data-tool="land" onclick="selectTool('land')">🟫 Land</button>
-                    <button class="tool-btn" data-tool="land-grass" onclick="selectTool('land-grass')">🟩 Grass</button>
-                    <button class="tool-btn" data-tool="land-dark" onclick="selectTool('land-dark')">🟫 Dark</button>
-                    <button class="tool-btn" data-tool="land-brown" onclick="selectTool('land-brown')">🟤 Brown</button>
-                    <button class="tool-btn" data-tool="land-desert" onclick="selectTool('land-desert')">🟨 Desert</button>
-                    <button class="tool-btn" data-tool="land-rocky" onclick="selectTool('land-rocky')">⬜ Rocky</button>
-                    <button class="tool-btn" data-tool="lake" onclick="selectTool('lake')">💧 Lake</button>
+                    <button class="tool-btn active" id="currentTool" onclick="showCellTypePopup()">🎨 Select Tool</button>
+                    <span style="color: #ffd700; font-size: 12px; margin-left: 10px;">Current: <span id="currentToolIcon">🔄</span> <span id="currentToolName">Vertical Road</span></span>
                 </div>
                 <div class="editor-actions">
                     <button class="btn menu-btn" onclick="clearEditor()">Clear</button>
@@ -1122,6 +1275,7 @@
                 </div>
                 <div class="controls">
                     <button class="btn menu-btn" id="musicBtn" onclick="toggleMusic()">🔊</button>
+                    <button class="btn menu-btn" id="skipBtn" onclick="skipTurn()" style="display: none;">⏭️ Skip</button>
                     <button class="btn menu-btn" onclick="returnToMenu()">Menu</button>
                 </div>
             </div>
@@ -1185,11 +1339,66 @@
                     🚦 <strong>Red lights</strong> stop you (police ignore them)<br>
                     🚔 <strong>Avoid police</strong> - they chase you!<br>
                     🛣️ <strong>Stay on roads</strong> - can't drive on land<br>
+                    ⏭️ <strong>Skip turn</strong> if all paths are blocked<br>
                     ❌ <strong>Game over</strong> if caught or blocked<br><br>
                     🎯 <strong>Goal:</strong> Survive as long as possible!<br>
                     📱 <strong>Best played</strong> in portrait mode
                 </p>
                 <button class="instructions-close" onclick="closeInstructions()">Got it!</button>
+            </div>
+        </div>
+        
+        <!-- Cell Type Selection Popup -->
+        <div id="cellTypePopup" class="cell-type-popup">
+            <div class="cell-type-content">
+                <h3>🎨 Select Cell Type</h3>
+                <div class="cell-type-grid">
+                    <div class="cell-type-option" onclick="selectCellType('road-vertical')">
+                        <div class="cell-type-icon">🔄</div>
+                        <div class="cell-type-name">Vertical Road</div>
+                    </div>
+                    <div class="cell-type-option" onclick="selectCellType('road-horizontal')">
+                        <div class="cell-type-icon">↔️</div>
+                        <div class="cell-type-name">Horizontal Road</div>
+                    </div>
+                    <div class="cell-type-option" onclick="selectCellType('intersection')">
+                        <div class="cell-type-icon">✕</div>
+                        <div class="cell-type-name">Intersection</div>
+                    </div>
+                    <div class="cell-type-option" onclick="selectCellType('intersection-light')">
+                        <div class="cell-type-icon">🚦</div>
+                        <div class="cell-type-name">Traffic Light</div>
+                    </div>
+                    <div class="cell-type-option" onclick="selectCellType('land')">
+                        <div class="cell-type-icon">🟫</div>
+                        <div class="cell-type-name">Land</div>
+                    </div>
+                    <div class="cell-type-option" onclick="selectCellType('land-grass')">
+                        <div class="cell-type-icon">🟩</div>
+                        <div class="cell-type-name">Grass</div>
+                    </div>
+                    <div class="cell-type-option" onclick="selectCellType('land-dark')">
+                        <div class="cell-type-icon">🟫</div>
+                        <div class="cell-type-name">Industrial</div>
+                    </div>
+                    <div class="cell-type-option" onclick="selectCellType('land-brown')">
+                        <div class="cell-type-icon">🟤</div>
+                        <div class="cell-type-name">Brown Soil</div>
+                    </div>
+                    <div class="cell-type-option" onclick="selectCellType('land-desert')">
+                        <div class="cell-type-icon">🟨</div>
+                        <div class="cell-type-name">Desert</div>
+                    </div>
+                    <div class="cell-type-option" onclick="selectCellType('land-rocky')">
+                        <div class="cell-type-icon">⛰️</div>
+                        <div class="cell-type-name">Rocky</div>
+                    </div>
+                    <div class="cell-type-option" onclick="selectCellType('lake')">
+                        <div class="cell-type-icon">💧</div>
+                        <div class="cell-type-name">Lake</div>
+                    </div>
+                </div>
+                <button class="cell-type-close" onclick="closeCellTypePopup()">Close</button>
             </div>
         </div>
     </div>
@@ -1588,11 +1797,11 @@
                 
                 // Generate terrain blocks for urban variety
                 let totalLandCells = 0;
-                const maxLandCells = 18; // Slightly increased to accommodate more grass
+                const maxLandCells = 12; // Reduced from 24 to reduce land generation
                 const maxAttempts = 25;
                 
-                // Increased probability of grass terrain
-                const terrainTypes = ['land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass', 'land-grass', 'land-grass'];
+                // Significantly increased probability of grass terrain
+                const terrainTypes = ['land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass'];
                 
                 for (let attempt = 0; attempt < maxAttempts && totalLandCells < maxLandCells; attempt++) {
                     const remainingCells = maxLandCells - totalLandCells;
@@ -2185,6 +2394,23 @@
                     return;
                 }
                 
+                // Check if any path is blocked by police to show skip button
+                const allDirections = [0, 1, 2, 3]; // up, right, down, left
+                const policeBockedDirections = allDirections.filter(dir => {
+                    const nextPos = this.getNextPosition(this.playerPos, dir);
+                    return this.policePos.some(police => 
+                        police.x === nextPos.x && police.y === nextPos.y
+                    );
+                });
+                
+                // Show skip button if there are police-blocked directions
+                const skipBtn = document.getElementById('skipBtn');
+                if (policeBockedDirections.length > 0) {
+                    skipBtn.style.display = 'inline-block';
+                } else {
+                    skipBtn.style.display = 'none';
+                }
+                
                 this.waitingForDirection = true;
                 document.getElementById('directionControls').style.display = 'block';
                 // Hide the Roll button when direction controls appear
@@ -2193,6 +2419,7 @@
 
             chooseDirection(direction) {
                 document.getElementById('directionControls').style.display = 'none';
+                document.getElementById('skipBtn').style.display = 'none'; // Hide skip button
                 // Show the Roll button again when direction controls are hidden
                 document.getElementById('rollBtn').style.display = 'block';
                 this.waitingForDirection = false;
@@ -2260,7 +2487,42 @@
             }
 
             skipTurn() {
-                // Skip turn functionality removed as per core game mechanics
+                // Hide direction controls and skip button
+                document.getElementById('directionControls').style.display = 'none';
+                document.getElementById('skipBtn').style.display = 'none';
+                document.getElementById('rollBtn').style.display = 'block';
+                this.waitingForDirection = false;
+                
+                // Consume all remaining moves
+                this.movesLeft = 0;
+                
+                // Update status
+                setTimeout(() => {
+                    document.getElementById('gameStatus').textContent = 'Turn skipped - path blocked';
+                }, 300);
+                
+                // Clear movement highlights with delay
+                setTimeout(() => {
+                    this.clearMovementHighlights();
+                    // Police moves after player skips turn
+                    this.movePolice();
+                    
+                    // Check game state including blocked paths
+                    if (this.gameActive && !this.checkAllPathsBlocked()) {
+                        this.checkGameState();
+                    }
+                    
+                    // Re-enable roll button after police turn completes
+                    setTimeout(() => {
+                        const rollBtn = document.getElementById('rollBtn');
+                        rollBtn.disabled = false;
+                        
+                        // Reset status after a delay
+                        setTimeout(() => {
+                            document.getElementById('gameStatus').textContent = 'Running';
+                        }, 1000);
+                    }, this.policePos.length * 150 + 300);
+                }, 800);
             }
 
             movePolice() {
@@ -2616,8 +2878,11 @@
                         cell.style.fontSize = `${this.cellSize * 0.6}px`;
                     }
                 } else if (terrain === 'land-rocky') {
-                    // Rocky terrain - sparse features
-                    if (featureChance > 0.85) {
+                    // Rocky terrain - add mountain emoji
+                    if (featureChance > 0.7) {
+                        cell.innerHTML = '⛰️';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    } else if (featureChance > 0.85) {
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.6}px`;
                     }
@@ -2781,11 +3046,13 @@
             document.getElementById('mapEditor').style.display = 'none';
             document.getElementById('mapSelection').style.display = 'none';
             document.getElementById('directionControls').style.display = 'none';
+            document.getElementById('cellTypePopup').style.display = 'none';
             document.querySelector('.dice-container').style.display = 'none';
             document.getElementById('gameUI').style.display = 'flex';
             
-            // Ensure Roll button is visible
+            // Ensure Roll button is visible and skip button is hidden
             document.getElementById('rollBtn').style.display = 'block';
+            document.getElementById('skipBtn').style.display = 'none';
             
             // Start background music
             startMusic();
@@ -2838,6 +3105,10 @@
                 mapEditor = new MapEditor();
             }
             mapEditor.updateMapList();
+            
+            // Initialize tool display
+            document.getElementById('currentToolName').textContent = 'Vertical Road';
+            document.getElementById('currentToolIcon').textContent = '🔄';
         }
         
         function showMapSelection() {
@@ -2890,17 +3161,7 @@
             }
         }
         
-        function selectTool(tool) {
-            if (mapEditor) {
-                mapEditor.currentTool = tool;
-                
-                // Update tool button states
-                document.querySelectorAll('.tool-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelector(`[data-tool="${tool}"]`).classList.add('active');
-            }
-        }
+
         
         function clearEditor() {
             if (mapEditor && confirm('Are you sure you want to clear the map?')) {
@@ -2935,8 +3196,10 @@
                 
                 // Hide editor and show game
                 document.getElementById('mapEditor').style.display = 'none';
+                document.getElementById('cellTypePopup').style.display = 'none';
                 document.getElementById('gameUI').style.display = 'flex';
                 document.getElementById('rollBtn').style.display = 'block';
+                document.getElementById('skipBtn').style.display = 'none';
                 document.getElementById('directionControls').style.display = 'none';
                 document.querySelector('.dice-container').style.display = 'none';
                 
@@ -2980,6 +3243,8 @@
             // Close any open popups
             document.getElementById('directionControls').style.display = 'none';
             document.getElementById('mapSelection').style.display = 'none';
+            document.getElementById('cellTypePopup').style.display = 'none';
+            document.getElementById('skipBtn').style.display = 'none';
             
             // Show menu, hide other screens
             document.getElementById('gameUI').style.display = 'none';
@@ -3001,7 +3266,44 @@
         }
 
         function skipTurn() {
-            // Skip turn functionality removed as per core game mechanics
+            if (game) {
+                game.skipTurn();
+            }
+        }
+        
+        function showCellTypePopup() {
+            document.getElementById('cellTypePopup').style.display = 'flex';
+        }
+        
+        function closeCellTypePopup() {
+            document.getElementById('cellTypePopup').style.display = 'none';
+        }
+        
+        function selectCellType(cellType) {
+            if (mapEditor) {
+                mapEditor.currentTool = cellType;
+                
+                // Update current tool display with both icon and name
+                const toolData = {
+                    'road-vertical': { name: 'Vertical Road', icon: '🔄' },
+                    'road-horizontal': { name: 'Horizontal Road', icon: '↔️' },
+                    'intersection': { name: 'Intersection', icon: '✕' },
+                    'intersection-light': { name: 'Traffic Light', icon: '🚦' },
+                    'land': { name: 'Land', icon: '🟫' },
+                    'land-grass': { name: 'Grass', icon: '🟩' },
+                    'land-dark': { name: 'Industrial', icon: '🟫' },
+                    'land-brown': { name: 'Brown Soil', icon: '🟤' },
+                    'land-desert': { name: 'Desert', icon: '🟨' },
+                    'land-rocky': { name: 'Rocky', icon: '⛰️' },
+                    'lake': { name: 'Lake', icon: '💧' }
+                };
+                
+                const tool = toolData[cellType] || { name: cellType, icon: '❓' };
+                document.getElementById('currentToolName').textContent = tool.name;
+                document.getElementById('currentToolIcon').textContent = tool.icon;
+                
+                closeCellTypePopup();
+            }
         }
 
         function showInstructions() {
