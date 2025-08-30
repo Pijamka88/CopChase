@@ -576,7 +576,7 @@
             }
         }
 
-        /* Direction Controls - centered on screen with enhanced blur */
+        /* Direction Controls - centered on screen */
         .direction-controls {
             display: none;
             position: fixed;
@@ -584,22 +584,21 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            padding: 30px 25px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+            padding: 20px;
+            background: rgba(0,0,0,0.4);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             z-index: 3000;
-            min-width: 360px;
-            max-width: 90vw;
+            min-width: 320px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
         }
 
         .direction-btn {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-            margin: 1px;
-            padding: 10px 20px;
+            margin: 4px;
+            padding: 18px 36px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 16px;
             color: white;
@@ -611,6 +610,12 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
+            display: inline-block;
+            text-align: center;
+            font-size: 1.4em;
+            line-height: 1.2;
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+            touch-action: manipulation;
         }
 
         /* Remove old color-coded borders for unified style */
@@ -1090,53 +1095,51 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                width: calc(100vw - 40px);
-                max-width: 320px;
-                padding: 40px 30px;
+                width: calc(100vw - 30px);
+                max-width: 380px;
+                padding: 20px 15px;
                 margin: 0;
-                border-radius: 24px;
+                border-radius: 20px;
                 display: none;
                 z-index: 9999;
-                background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+                background: rgba(0,0,0,0.4);
                 backdrop-filter: blur(25px);
                 -webkit-backdrop-filter: blur(25px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                border: 2px solid rgba(255,255,255,0.3);
+                box-shadow: 0 20px 60px rgba(0,0,0,0.7);
                 text-align: center;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 8px;
             }
             
             .direction-btn {
                 background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-                color: white;
+                margin: 4px;
+                padding: 12px 20px;
                 border: 1px solid rgba(255, 255, 255, 0.3);
-                padding: 18px 36px;
-                font-size: 1.4em;
+                border-radius: 12px;
+                color: white;
                 font-weight: 500;
-                border-radius: 16px;
                 cursor: pointer;
                 transition: all 0.2s ease;
-                margin: 12px;
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
                 position: relative;
                 overflow: hidden;
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                touch-action: manipulation;
-                -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
-                display: block;
-                width: 100%;
-                max-width: 220px;
-                margin: 12px auto;
-                text-align: center;
-            }
-            
-            .direction-controls {
-                text-align: center;
                 display: flex;
-                justify-content: center;
                 align-items: center;
-                flex-direction: column;
-                gap: 0;
+                justify-content: center;
+                text-align: center;
+                min-width: 100px;
+                width: calc(30% - 8px);
+                box-sizing: border-box;
+                font-size: 1.1em;
+                line-height: 1.2;
+                -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+                touch-action: manipulation;
             }
             
             .dice-roll-btn {
@@ -1437,17 +1440,17 @@
     <script>
         class CityChaseGame {
             constructor(customMapData = null) {
-                // Mobile-optimized grid size: smaller for better performance and visibility
-                this.gridSize = { width: 14, height: 24 };
+                // Portrait mode optimized: 16 width x 28 height for optimal mobile viewing
+                this.gridSize = { width: 16, height: 28 };
                 
                 // Calculate cell size based on available screen space optimized for mobile
-                const availableWidth = Math.min(window.innerWidth - 20, 350); // Optimized for mobile
-                const availableHeight = window.innerHeight - 140; // Optimized UI reserve
+                const availableWidth = Math.min(window.innerWidth - 20, 380); // Further reduced for mobile optimization
+                const availableHeight = window.innerHeight - 140; // Reduced UI reserve
                 
-                // Calculate cell size to fit the grid with smaller cells optimized for mobile performance
+                // Calculate cell size to fit the grid with smaller cells for mobile
                 const cellSizeByWidth = Math.floor(availableWidth / this.gridSize.width);
                 const cellSizeByHeight = Math.floor(availableHeight / this.gridSize.height);
-                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 20), 14); // Min 14px, max 20px per cell
+                this.cellSize = Math.max(Math.min(cellSizeByWidth, cellSizeByHeight, 24), 16); // Min 16px, max 24px per cell for better mobile optimization
                 
                 this.playerPos = { x: Math.floor(this.gridSize.width / 2), y: Math.floor(this.gridSize.height / 2) };
                 this.policePos = [];
@@ -2772,7 +2775,7 @@
         // Map Editor Class
         class MapEditor {
             constructor() {
-                this.gridSize = { width: 14, height: 24 }; // Updated to match game grid
+                this.gridSize = { width: 16, height: 28 };
                 this.cellSize = 24; // Fixed size for editor
                 this.currentTool = 'road-vertical';
                 this.editorMap = [];
