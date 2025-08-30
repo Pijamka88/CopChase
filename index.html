@@ -140,6 +140,11 @@
             flex-wrap: nowrap;
             position: relative;
             height: 60px;
+            width: 100vw;
+            margin-left: calc(-1 * env(safe-area-inset-left));
+            margin-right: calc(-1 * env(safe-area-inset-right));
+            padding-left: calc(12px + env(safe-area-inset-left));
+            padding-right: calc(12px + env(safe-area-inset-right));
         }
 
         .top-panel-left {
@@ -388,18 +393,28 @@
         }
 
         .movement-highlight {
-            background: rgba(255, 255, 0, 0.7) !important;
-            border: 3px solid #ffd700 !important;
+            background: rgba(255, 255, 0, 0.8) !important;
+            border: 2px solid #ffd700 !important;
             animation: pulse 0.8s ease-in-out infinite;
-            z-index: 15;
+            z-index: 15 !important;
+            position: relative !important;
             transform: scale(1.05);
-            box-shadow: 0 0 12px rgba(255, 215, 0, 0.8) !important;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.9) !important, inset 0 0 10px rgba(255, 255, 0, 0.5) !important;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1.05); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1.05); }
+            0% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.9), inset 0 0 10px rgba(255, 255, 0, 0.5);
+            }
+            50% { 
+                transform: scale(1.15);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 1.0), inset 0 0 15px rgba(255, 255, 0, 0.7);
+            }
+            100% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.9), inset 0 0 10px rgba(255, 255, 0, 0.5);
+            }
         }
 
         .road {
@@ -1015,6 +1030,11 @@
                 min-height: 48px;
                 justify-content: space-between;
                 background: rgba(0,0,0,0.25);
+                width: 100vw;
+                margin-left: calc(-1 * env(safe-area-inset-left));
+                margin-right: calc(-1 * env(safe-area-inset-right));
+                padding-left: calc(8px + env(safe-area-inset-left));
+                padding-right: calc(8px + env(safe-area-inset-right));
             }
             
             .top-panel-left {
@@ -1094,15 +1114,16 @@
             }
             
             .direction-btn {
-                padding: 6px 12px; /* Same as tool-btn for consistency */
+                padding: 4px 8px; /* Smaller padding for mobile */
                 margin: 1px;
-                font-size: 12px; /* Same as tool-btn for consistency */
-                border-radius: 8px; /* Same as tool-btn for consistency */
+                font-size: 11px; /* Smaller font for mobile */
+                border-radius: 6px; /* Smaller border radius */
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
                 display: block;
                 min-width: auto; /* Remove fixed min-width, use auto like tool-btn */
                 text-align: center;
+                max-width: 100px; /* Limit button width */
             }
             
             .direction-controls {
@@ -1275,7 +1296,7 @@
                     <div class="stat">Status: <span id="gameStatus">Running</span></div>
                 </div>
                 <div class="controls">
-                    <button class="btn menu-btn" id="musicBtn" onclick="toggleMusic()" style="font-size: 10px;">Music</button>
+                    <button class="btn menu-btn" id="musicBtn" onclick="toggleMusic()" style="font-size: 10px;">OFF</button>
                     <button class="btn menu-btn" onclick="returnToMenu()" style="font-size: 10px;">Menu</button>
                 </div>
             </div>
@@ -2258,23 +2279,50 @@
 
             highlightMovement(pos) {
                 console.log('Adding movement highlight at:', pos);
+                // Remove any existing highlights first
+                this.clearMovementHighlights();
+                
                 const cell = document.querySelector(`[data-x="${pos.x}"][data-y="${pos.y}"]`);
                 if (cell) {
-                    // Remove any existing highlights first
-                    cell.classList.remove('movement-highlight');
-                    // Add highlighting with small delay to ensure it shows
+                    // Force repaint to ensure highlighting shows
                     setTimeout(() => {
                         cell.classList.add('movement-highlight');
                         console.log('Movement highlight added to cell:', cell);
-                    }, 100);
+                        
+                        // Force a repaint on mobile
+                        if (window.innerWidth <= 480) {
+                            cell.style.zIndex = '20';
+                            cell.offsetHeight; // Trigger repaint
+                        }
+                    }, 50);
                 } else {
                     console.error('Cell not found for highlighting at:', pos);
+                    // Try alternative query method
+                    const allCells = document.querySelectorAll('#cityGrid .cell');
+                    for (let testCell of allCells) {
+                        if (testCell.dataset.x == pos.x && testCell.dataset.y == pos.y) {
+                            console.log('Found cell via alternative method for highlighting');
+                            setTimeout(() => {
+                                testCell.classList.add('movement-highlight');
+                                if (window.innerWidth <= 480) {
+                                    testCell.style.zIndex = '20';
+                                    testCell.offsetHeight; // Trigger repaint
+                                }
+                            }, 50);
+                            break;
+                        }
+                    }
                 }
             }
 
             clearMovementHighlights() {
+                console.log('Clearing movement highlights');
                 document.querySelectorAll('.movement-highlight').forEach(cell => {
                     cell.classList.remove('movement-highlight');
+                    // Reset z-index on mobile
+                    if (window.innerWidth <= 480) {
+                        cell.style.zIndex = '';
+                    }
                 });
             }
 
@@ -2973,7 +3021,11 @@
             backgroundMusic = document.getElementById('backgroundMusic');
             backgroundMusic.volume = 0.3; // Set volume to 30%
             isMusicPlaying = false; // Default state is off
-            updateMusicButton(); // Initialize button display
+            
+            // Wait for DOM to be fully ready before updating button
+            setTimeout(() => {
+                updateMusicButton(); // Initialize button display
+            }, 100);
         });
 
         function startMusic() {
@@ -3017,7 +3069,7 @@
         function updateMusicButton() {
             const musicBtn = document.getElementById('musicBtn');
             if (musicBtn) {
-                musicBtn.textContent = isMusicPlaying ? 'Music On' : 'Music Off';
+                musicBtn.textContent = isMusicPlaying ? 'ON' : 'OFF';
                 musicBtn.title = isMusicPlaying ? 'Turn Off Music' : 'Turn On Music';
             }
         }
