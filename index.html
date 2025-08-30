@@ -1024,10 +1024,10 @@
             }
             
             .menu-btn {
-                padding: 1px 2px; /* Further reduced for mobile */
-                font-size: 6px; /* Further reduced for mobile */
-                min-width: 20px; /* Further reduced for mobile */
-                border-radius: 2px;
+                padding: 6px 12px; /* Same as tool-btn for consistency */
+                font-size: 12px; /* Same as tool-btn for consistency */
+                min-width: auto; /* Remove fixed min-width */
+                border-radius: 8px; /* Same as tool-btn for consistency */
                 line-height: 1;
                 height: auto;
                 display: flex;
@@ -1085,14 +1085,14 @@
             }
             
             .direction-btn {
-                padding: 2px 4px; /* Further reduced for mobile */
+                padding: 6px 12px; /* Same as tool-btn for consistency */
                 margin: 1px;
-                font-size: 8px; /* Further reduced */
-                border-radius: 4px; /* Further reduced */
+                font-size: 12px; /* Same as tool-btn for consistency */
+                border-radius: 8px; /* Same as tool-btn for consistency */
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
                 display: block;
-                min-width: 40px; /* Further reduced */
+                min-width: auto; /* Remove fixed min-width, use auto like tool-btn */
                 text-align: center;
             }
             
@@ -1657,14 +1657,14 @@
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
                     }
                 } else if (terrainType === 'land-grass') {
-                    // Residential areas - increased greenery
-                    if (featureChance > 0.65) { // Increased from 0.75
+                    // Residential areas - dramatically increased greenery for more bright green
+                    if (featureChance > 0.55) { // Further increased for more houses
                         cell.innerHTML = '🏠';
                         cell.style.fontSize = `${this.cellSize * 0.5}px`;
-                    } else if (featureChance > 0.45) { // Increased from 0.65
+                    } else if (featureChance > 0.25) { // Much more trees for bright green effect
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.7}px`;
-                    } else if (featureChance > 0.25) { // Increased from 0.58
+                    } else if (featureChance > 0.05) { // Even more evergreen trees
                         cell.innerHTML = '🌲';
                         cell.style.fontSize = `${this.cellSize * 0.7}px`;
                     }
@@ -1786,13 +1786,13 @@
                     this.generateLake(lakeSize);
                 }
                 
-                // Generate terrain blocks for urban variety
+                // Generate terrain blocks for urban variety with more grass areas
                 let totalLandCells = 0;
-                const maxLandCells = 4; // Further reduced from 8 to minimize land generation
-                const maxAttempts = 20;
+                const maxLandCells = 8; // Increased from 4 to allow more green areas
+                const maxAttempts = 25; // Increased attempts for better coverage
                 
-                // Significantly increased probability of grass terrain
-                const terrainTypes = ['land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass'];
+                // Dramatically increased probability of grass terrain for more bright green
+                const terrainTypes = ['land-brown', 'land-dark', 'land-desert', 'land-rocky', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass'];
                 
                 for (let attempt = 0; attempt < maxAttempts && totalLandCells < maxLandCells; attempt++) {
                     const remainingCells = maxLandCells - totalLandCells;
@@ -2830,14 +2830,14 @@
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
                     }
                 } else if (terrain === 'land-grass') {
-                    // Residential areas - increased greenery
-                    if (featureChance > 0.65) { // Increased from 0.75
+                    // Residential areas - dramatically increased greenery for editor
+                    if (featureChance > 0.55) { // Further increased for more houses
                         cell.innerHTML = '🏠';
                         cell.style.fontSize = `${this.cellSize * 0.5}px`;
-                    } else if (featureChance > 0.45) { // Increased from 0.65
+                    } else if (featureChance > 0.25) { // Much more trees for bright green effect
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.6}px`;
-                    } else if (featureChance > 0.25) { // Increased from 0.58
+                    } else if (featureChance > 0.05) { // Even more evergreen trees
                         cell.innerHTML = '🌲';
                         cell.style.fontSize = `${this.cellSize * 0.6}px`;
                     }
