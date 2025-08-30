@@ -388,11 +388,11 @@
         }
 
         .movement-highlight {
-            background: rgba(255, 255, 0, 0.7) !important;
-            border: 3px solid #ffd700 !important;
+            background: rgba(255, 255, 0, 0.3) !important;
+            border: 2px solid #ffd700 !important;
             z-index: 15;
-            transform: scale(1.05);
-            box-shadow: 0 0 12px rgba(255, 215, 0, 0.8) !important;
+            transform: scale(1.02);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4) !important;
         }
 
         .road {
@@ -1090,17 +1090,26 @@
             }
             
             .direction-btn {
-                padding: 8px 4px;
-                margin: 2px;
-                font-size: 9px;
-                border-radius: 6px;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+                margin: 1px;
+                padding: 10px 20px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 16px;
+                color: white;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                position: relative;
+                overflow: hidden;
                 display: inline-block;
                 min-width: auto;
                 text-align: center;
                 width: calc(33.33% - 4px);
                 box-sizing: border-box;
+                font-size: 12px;
             }
             
             .direction-controls {
@@ -1277,7 +1286,6 @@
                     <div class="stat">Status: <span id="gameStatus">Running</span></div>
                 </div>
                 <div class="controls">
-                    <button class="btn menu-btn" id="musicBtn" onclick="toggleMusic()" style="font-size: 10px;">ON</button>
                     <button class="btn menu-btn" onclick="returnToMenu()" style="font-size: 10px;">Menu</button>
                 </div>
             </div>
@@ -3033,14 +3041,12 @@
                 backgroundMusic.volume = 0.3; // Set volume to 30%
             }
             isMusicPlaying = true; // Default state is on
-            updateMusicButton(); // Initialize button display
         });
 
         function startMusic() {
             if (backgroundMusic && !isMusicPlaying) {
                 backgroundMusic.play().then(() => {
                     isMusicPlaying = true;
-                    updateMusicButton();
                 }).catch(error => {
                     console.log('Music autoplay prevented:', error);
                     // Music will be started on first user interaction
@@ -3053,32 +3059,6 @@
                 backgroundMusic.pause();
                 backgroundMusic.currentTime = 0;
                 isMusicPlaying = false;
-                updateMusicButton();
-            }
-        }
-
-        function toggleMusic() {
-            if (backgroundMusic) {
-                if (isMusicPlaying) {
-                    backgroundMusic.pause();
-                    isMusicPlaying = false;
-                } else {
-                    backgroundMusic.play().then(() => {
-                        isMusicPlaying = true;
-                    }).catch(error => {
-                        console.log('Music play failed:', error);
-                        isMusicPlaying = false;
-                    });
-                }
-                updateMusicButton();
-            }
-        }
-
-        function updateMusicButton() {
-            const musicBtn = document.getElementById('musicBtn');
-            if (musicBtn) {
-                musicBtn.textContent = isMusicPlaying ? 'ON' : 'OFF';
-                musicBtn.title = isMusicPlaying ? 'Turn Off Music' : 'Turn On Music';
             }
         }
 
