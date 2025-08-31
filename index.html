@@ -138,8 +138,15 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: nowrap;
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 60px;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .top-panel-left {
@@ -325,7 +332,8 @@
             justify-content: center;
             align-items: center;
             height: calc(100vh - 60px);
-            padding-top: 0;
+            padding-top: 60px;
+            margin-top: 0;
         }
 
         .city-grid {
@@ -1115,6 +1123,11 @@
                 width: 100vw; /* Full width */
                 margin: 0;
                 box-sizing: border-box;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 2000;
             }
             
             .top-panel-left {
@@ -1153,13 +1166,13 @@
             
             .game-board {
                 padding: 0;
-                padding-top: 0;
+                padding-top: 60px;
                 height: calc(100vh - 60px);
                 padding-bottom: 0;
                 align-items: center;
                 justify-content: center;
-                position: fixed;
-                top: 30px;
+                position: relative;
+                top: 0;
                 left: 0;
                 right: 0;
                 overflow: hidden;
@@ -1808,41 +1821,84 @@
                 const featureChance = Math.random();
                 
                 if (terrainType === 'land-dark') {
-                    // Industrial areas
-                    if (featureChance > 0.70) {
+                    // Industrial areas - more variety
+                    if (featureChance > 0.65) {
                         cell.innerHTML = '🏭';
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
-                    } else if (featureChance > 0.60) {
+                    } else if (featureChance > 0.50) {
                         cell.innerHTML = '🏢';
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
+                    } else if (featureChance > 0.40) {
+                        cell.innerHTML = '🏗️';
+                        cell.style.fontSize = `${this.cellSize * 0.50}px`;
                     }
                 } else if (terrainType === 'land-grass') {
-                    // Residential areas - dramatically increased greenery for more bright green
-                    if (featureChance > 0.55) { // Further increased for more houses
+                    // Residential areas - massively increased greenery for vibrant green effect
+                    if (featureChance > 0.45) { // Much more houses for suburban feel
                         cell.innerHTML = '🏠';
                         cell.style.fontSize = `${this.cellSize * 0.5}px`;
-                    } else if (featureChance > 0.25) { // Much more trees for bright green effect
-                        cell.innerHTML = '🌳';
+                    } else if (featureChance > 0.15) { // Extremely high tree density for lush green
+                        const trees = ['🌳', '🌲', '🌴', '🎋'];
+                        cell.innerHTML = trees[Math.floor(Math.random() * trees.length)];
                         cell.style.fontSize = `${this.cellSize * 0.7}px`;
-                    } else if (featureChance > 0.05) { // Even more evergreen trees
-                        cell.innerHTML = '🌲';
-                        cell.style.fontSize = `${this.cellSize * 0.7}px`;
+                    } else if (featureChance > 0.05) { // Even more vegetation
+                        cell.innerHTML = '🌿';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    }
+                } else if (terrainType === 'land-rocky') {
+                    // Rocky terrain - mountains and rocks
+                    if (featureChance > 0.60) {
+                        cell.innerHTML = '⛰️';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    } else if (featureChance > 0.45) {
+                        cell.innerHTML = '🗻';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    } else if (featureChance > 0.35) {
+                        cell.innerHTML = '🪨';
+                        cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                    }
+                } else if (terrainType === 'land-brown') {
+                    // Brown soil - farmland features
+                    if (featureChance > 0.70) {
+                        cell.innerHTML = '🚜';
+                        cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                    } else if (featureChance > 0.55) {
+                        cell.innerHTML = '🌾';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    } else if (featureChance > 0.45) {
+                        cell.innerHTML = '🏚️';
+                        cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                    }
+                } else if (terrainType === 'land-desert') {
+                    // Desert features
+                    if (featureChance > 0.70) {
+                        cell.innerHTML = '🌵';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    } else if (featureChance > 0.60) {
+                        cell.innerHTML = '🏜️';
+                        cell.style.fontSize = `${this.cellSize * 0.5}px`;
+                    } else if (featureChance > 0.50) {
+                        cell.innerHTML = '🐪';
+                        cell.style.fontSize = `${this.cellSize * 0.5}px`;
                     }
                 } else if (terrainType === 'land') {
-                    // Mixed urban areas
-                    if (featureChance > 0.78) {
+                    // Mixed urban areas - more variety
+                    if (featureChance > 0.75) {
                         cell.innerHTML = '🏢';
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
-                    } else if (featureChance > 0.68) {
+                    } else if (featureChance > 0.60) {
                         cell.innerHTML = '🏠';
                         cell.style.fontSize = `${this.cellSize * 0.5}px`;
-                    } else if (featureChance > 0.60) {
+                    } else if (featureChance > 0.45) {
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.7}px`;
+                    } else if (featureChance > 0.35) {
+                        cell.innerHTML = '🏪';
+                        cell.style.fontSize = `${this.cellSize * 0.5}px`;
                     }
                 } else {
-                    // Other terrain types
-                    if (featureChance > 0.85) {
+                    // Other terrain types - general features
+                    if (featureChance > 0.80) {
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.7}px`;
                     }
@@ -1939,40 +1995,65 @@
             }
             
             generateTerrainFeatures() {
-                // Generate 8-12 small lakes for more water features
-                const numLakes = Math.floor(Math.random() * 5) + 8;
+                // Generate 12-18 small lakes for much more water features
+                const numLakes = Math.floor(Math.random() * 7) + 12;
                 for (let lake = 0; lake < numLakes; lake++) {
-                    const lakeSize = Math.floor(Math.random() * 4) + 2; // 2-5 cells per lake
+                    const lakeSize = Math.floor(Math.random() * 5) + 2; // 2-6 cells per lake
                     this.generateLake(lakeSize);
                 }
                 
-                // Generate 6-12 shops scattered around the city
-                const numShops = Math.floor(Math.random() * 7) + 6;
+                // Generate 10-18 shops scattered around the city
+                const numShops = Math.floor(Math.random() * 9) + 10;
                 for (let shop = 0; shop < numShops; shop++) {
                     this.generateShop();
                 }
                 
-                // Generate terrain blocks for urban variety with maximum diversity
+                // Generate terrain blocks for urban variety with MAXIMUM diversity
                 let totalLandCells = 0;
-                const maxLandCells = 45; // Significantly increased from 28 for much more diversity
-                const maxAttempts = 120; // Increased attempts for better coverage
+                const maxLandCells = 75; // Significantly increased from 45 for much more diversity
+                const maxAttempts = 180; // Increased attempts for better coverage
                 
-                // Enhanced balance of terrain types with significantly more variety
+                // Massively enhanced balance of terrain types with extreme variety
                 const terrainTypes = [
-                    'land-brown', 'land-brown', 'land-brown', 'land-brown', 'land-brown', 'land-brown', 'land-brown', // More brown soil areas
-                    'land-dark', 'land-dark', 'land-dark', 'land-dark', 'land-dark', 'land-dark', // More industrial areas
-                    'land-desert', 'land-desert', 'land-desert', 'land-desert', 'land-desert', 'land-desert', 'land-desert', // More desert areas
-                    'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', // More rocky/mountain areas
-                    'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass' // Even more green residential areas
+                    // Brown soil areas (farmland/industrial outskirts) - 15 instances
+                    'land-brown', 'land-brown', 'land-brown', 'land-brown', 'land-brown', 
+                    'land-brown', 'land-brown', 'land-brown', 'land-brown', 'land-brown',
+                    'land-brown', 'land-brown', 'land-brown', 'land-brown', 'land-brown',
+                    
+                    // Industrial areas - 12 instances
+                    'land-dark', 'land-dark', 'land-dark', 'land-dark', 'land-dark', 
+                    'land-dark', 'land-dark', 'land-dark', 'land-dark', 'land-dark',
+                    'land-dark', 'land-dark',
+                    
+                    // Desert areas - 18 instances  
+                    'land-desert', 'land-desert', 'land-desert', 'land-desert', 'land-desert', 
+                    'land-desert', 'land-desert', 'land-desert', 'land-desert', 'land-desert',
+                    'land-desert', 'land-desert', 'land-desert', 'land-desert', 'land-desert',
+                    'land-desert', 'land-desert', 'land-desert',
+                    
+                    // Rocky/mountain areas - 15 instances
+                    'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', 
+                    'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky',
+                    'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky', 'land-rocky',
+                    
+                    // Green residential areas - 20 instances (most common for cities)
+                    'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass', 
+                    'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass',
+                    'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass',
+                    'land-grass', 'land-grass', 'land-grass', 'land-grass', 'land-grass'
                 ];
                 
                 for (let attempt = 0; attempt < maxAttempts && totalLandCells < maxLandCells; attempt++) {
                     const remainingCells = maxLandCells - totalLandCells;
                     
-                    // More varied cluster sizes for better city appearance
+                    // Extremely varied cluster sizes for realistic terrain distribution
                     let clusterSize;
-                    if (remainingCells >= 25) {
-                        clusterSize = Math.floor(Math.random() * 12) + 8; // 8-19 cells for larger areas
+                    if (remainingCells >= 35) {
+                        clusterSize = Math.floor(Math.random() * 18) + 12; // 12-29 cells for large terrain features
+                    } else if (remainingCells >= 30) {
+                        clusterSize = Math.floor(Math.random() * 15) + 10; // 10-24 cells
+                    } else if (remainingCells >= 25) {
+                        clusterSize = Math.floor(Math.random() * 12) + 8; // 8-19 cells
                     } else if (remainingCells >= 20) {
                         clusterSize = Math.floor(Math.random() * 10) + 6; // 6-15 cells
                     } else if (remainingCells >= 15) {
@@ -1987,34 +2068,37 @@
                         clusterSize = Math.floor(Math.random() * 2) + 1; // 1-2 cells
                     }
                     
-                    clusterSize = Math.min(clusterSize, remainingCells, 20); // Max 20 cells per cluster
+                    clusterSize = Math.min(clusterSize, remainingCells, 30); // Max 30 cells per cluster
                     
                     if (clusterSize <= 0) break;
                     
                     const terrainType = terrainTypes[Math.floor(Math.random() * terrainTypes.length)];
                     
-                    // Find suitable position away from roads
+                    // Find suitable position away from roads with improved placement logic
                     let placed = false;
-                    for (let placementAttempt = 0; placementAttempt < 50 && !placed; placementAttempt++) {
-                        const startX = Math.floor(Math.random() * (this.gridSize.width - 10)) + 3;
-                        const startY = Math.floor(Math.random() * (this.gridSize.height - 10)) + 3;
+                    for (let placementAttempt = 0; placementAttempt < 60 && !placed; placementAttempt++) {
+                        const startX = Math.floor(Math.random() * (this.gridSize.width - 12)) + 4;
+                        const startY = Math.floor(Math.random() * (this.gridSize.height - 12)) + 4;
                         
                         // Check if area is clear of roads
                         if (this.terrainMap[startY][startX] === 'land' && 
                             startX % 3 !== 0 && startY % 5 !== 0) {
                             
-                            // Place cluster in a more organic formation
+                            // Place cluster in a much more organic and varied formation
                             let cellsToPlace = [];
                             let cellsPlaced = 0;
                             
-                            // Generate positions for cluster in a more spread-out pattern
-                            for (let dy = 0; dy < 9 && cellsPlaced < clusterSize; dy++) {
-                                for (let dx = 0; dx < 9 && cellsPlaced < clusterSize; dx++) {
+                            // Generate positions for cluster in organic, sprawling patterns
+                            for (let dy = 0; dy < 12 && cellsPlaced < clusterSize; dy++) {
+                                for (let dx = 0; dx < 12 && cellsPlaced < clusterSize; dx++) {
                                     const placeX = startX + dx;
                                     const placeY = startY + dy;
                                     
-                                    // Add more randomness to create more organic shapes
-                                    if (Math.random() > 0.15 && // 85% chance to place each cell
+                                    // Create more organic shapes with distance-based probability
+                                    const distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
+                                    const placementChance = Math.max(0.1, 0.95 - (distanceFromCenter * 0.08)); // Higher chance near center
+                                    
+                                    if (Math.random() < placementChance && 
                                         placeX < this.gridSize.width - 1 && placeY < this.gridSize.height - 1 &&
                                         this.terrainMap[placeY][placeX] === 'land' &&
                                         placeX % 3 !== 0 && placeY % 5 !== 0) {
@@ -2025,7 +2109,7 @@
                             }
                             
                             // Place the cluster if we have enough valid cells
-                            if (cellsToPlace.length >= Math.min(clusterSize, 2)) {
+                            if (cellsToPlace.length >= Math.min(clusterSize, 3)) {
                                 cellsToPlace.slice(0, clusterSize).forEach(pos => {
                                     this.terrainMap[pos.y][pos.x] = terrainType;
                                     totalLandCells++;
@@ -2036,35 +2120,56 @@
                     }
                 }
                 
-                console.log(`Enhanced terrain generation complete: ${totalLandCells}/${maxLandCells} terrain cells, ${numLakes} lakes, ${numShops} shops`);
+                console.log(`Massively enhanced terrain generation complete: ${totalLandCells}/${maxLandCells} terrain cells, ${numLakes} lakes, ${numShops} shops`);
             }
             
             generateLake(lakeSize) {
-                const maxAttempts = 20;
+                const maxAttempts = 25;
                 
                 for (let attempt = 0; attempt < maxAttempts; attempt++) {
                     // Choose lake position away from roads
-                    const centerX = Math.floor(Math.random() * (this.gridSize.width - 6)) + 3;
-                    const centerY = Math.floor(Math.random() * (this.gridSize.height - 6)) + 3;
+                    const centerX = Math.floor(Math.random() * (this.gridSize.width - 8)) + 4;
+                    const centerY = Math.floor(Math.random() * (this.gridSize.height - 8)) + 4;
                     
                     // Make sure lake center is not on a road
                     if (centerX % 3 !== 0 && centerY % 5 !== 0) {
                         const lakePositions = [];
                         
-                        // Generate lake shape (compact cluster)
-                        if (lakeSize === 2) {
-                            lakePositions.push({x: centerX, y: centerY}, {x: centerX + 1, y: centerY});
+                        // Generate more varied lake shapes
+                        if (lakeSize <= 2) {
+                            lakePositions.push({x: centerX, y: centerY});
+                            if (lakeSize === 2) {
+                                lakePositions.push({x: centerX + 1, y: centerY});
+                            }
                         } else if (lakeSize === 3) {
                             lakePositions.push(
                                 {x: centerX, y: centerY},
                                 {x: centerX + 1, y: centerY},
                                 {x: centerX, y: centerY + 1}
                             );
-                        } else { // 4 cells
+                        } else if (lakeSize === 4) {
                             lakePositions.push(
                                 {x: centerX, y: centerY},
                                 {x: centerX + 1, y: centerY},
                                 {x: centerX, y: centerY + 1},
+                                {x: centerX + 1, y: centerY + 1}
+                            );
+                        } else if (lakeSize === 5) {
+                            // L-shaped lake
+                            lakePositions.push(
+                                {x: centerX, y: centerY},
+                                {x: centerX + 1, y: centerY},
+                                {x: centerX + 2, y: centerY},
+                                {x: centerX, y: centerY + 1},
+                                {x: centerX, y: centerY + 2}
+                            );
+                        } else { // 6 cells - cross shape
+                            lakePositions.push(
+                                {x: centerX, y: centerY},
+                                {x: centerX + 1, y: centerY},
+                                {x: centerX - 1, y: centerY},
+                                {x: centerX, y: centerY + 1},
+                                {x: centerX, y: centerY - 1},
                                 {x: centerX + 1, y: centerY + 1}
                             );
                         }
