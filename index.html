@@ -289,12 +289,12 @@
 
         /* Zoomed view styles */
         .zoomed .city-grid {
-            transform: scale(2);
+            transform: scale(2) translateX(-50%);
             transform-origin: center center;
             position: absolute;
             left: 50%;
             top: 50%;
-            margin-left: -50%;
+            margin-left: 0;
             margin-top: -50%;
         }
         
@@ -346,6 +346,8 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.1);
             /* Ensure horizontal layout on mobile */
             min-width: fit-content;
+            /* Better centering for mobile */
+            margin: 0 auto;
         }
 
         .city-grid::before {
@@ -1180,14 +1182,25 @@
                 overflow: hidden;
                 z-index: 1;
                 box-sizing: border-box;
+                /* Ensure perfect centering */
+                display: flex;
             }
             
             .city-grid {
                 padding: 3px;
-                margin-bottom: 10px;
                 border-radius: 6px;
                 border-width: 2px;
+                /* Perfect centering for mobile */
                 margin: 0 auto;
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+                /* Ensure it fits on mobile screens */
+                max-width: calc(100vw - 20px);
+                max-height: calc(100vh - 120px);
+                /* Additional mobile-specific centering */
+                display: grid;
+                place-self: center;
             }
             
             .direction-controls {
