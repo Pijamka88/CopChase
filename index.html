@@ -242,16 +242,16 @@
             position: fixed;
             bottom: 30px;
             left: 30px;
-            width: 120px;
-            height: 120px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.7) 0%, rgba(53, 122, 189, 0.7) 50%, rgba(44, 90, 160, 0.7) 100%);
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.4) 0%, rgba(53, 122, 189, 0.4) 50%, rgba(44, 90, 160, 0.4) 100%);
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
             z-index: 1000;
-            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3), inset 0 2px 0 rgba(255,255,255,0.2);
-            font-size: 1.8em;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+            font-size: 1.2em;
             font-weight: bold;
             color: white;
             display: none;
@@ -259,30 +259,44 @@
             justify-content: center;
             text-align: center;
             line-height: 1.2;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            opacity: 0.7;
         }
 
         .zoom-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 12px 35px rgba(74, 144, 226, 0.4), inset 0 2px 0 rgba(255,255,255,0.3);
-            background: linear-gradient(135deg, rgba(53, 122, 189, 0.8) 0%, rgba(44, 90, 160, 0.8) 50%, rgba(30, 58, 111, 0.8) 100%);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+            background: linear-gradient(135deg, rgba(53, 122, 189, 0.5) 0%, rgba(44, 90, 160, 0.5) 50%, rgba(30, 58, 111, 0.5) 100%);
+            opacity: 0.9;
         }
 
         .zoom-btn.active {
-            background: linear-gradient(135deg, rgba(231, 76, 60, 0.7) 0%, rgba(192, 57, 43, 0.7) 50%, rgba(169, 50, 38, 0.7) 100%);
-            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3), inset 0 2px 0 rgba(255,255,255,0.2);
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.4) 0%, rgba(192, 57, 43, 0.4) 50%, rgba(169, 50, 38, 0.4) 100%);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
         .zoom-btn.active:hover {
-            background: linear-gradient(135deg, rgba(192, 57, 43, 0.8) 0%, rgba(169, 50, 38, 0.8) 50%, rgba(146, 43, 33, 0.8) 100%);
-            box-shadow: 0 12px 35px rgba(231, 76, 60, 0.4), inset 0 2px 0 rgba(255,255,255,0.3);
+            background: linear-gradient(135deg, rgba(192, 57, 43, 0.5) 0%, rgba(169, 50, 38, 0.5) 50%, rgba(146, 43, 33, 0.5) 100%);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
         }
 
         /* Zoomed view styles */
         .zoomed .city-grid {
             transform: scale(2);
-            transform-origin: center;
+            transform-origin: center center;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -50%;
+            margin-top: -50%;
+        }
+        
+        .zoomed .game-board {
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
         }
 
         .dice.rolling {
@@ -436,24 +450,24 @@
         }
 
         .movement-highlight {
-            background: rgba(255, 255, 0, 0.5) !important;
-            border: 3px solid #ffd700 !important;
+            background: rgba(255, 255, 0, 0.25) !important;
+            border: 2px solid #ffd700 !important;
             z-index: 1000 !important;
-            transform: scale(1.1) !important;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7) !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4) !important;
             animation: highlightPulse 0.4s ease-in-out infinite alternate !important;
             position: relative !important;
         }
         
         @keyframes highlightPulse {
             0% {
-                box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), inset 0 0 8px rgba(255, 255, 0, 0.3);
-                background: rgba(255, 255, 0, 0.5) !important;
+                box-shadow: 0 0 8px rgba(255, 215, 0, 0.4), inset 0 0 4px rgba(255, 255, 0, 0.2);
+                background: rgba(255, 255, 0, 0.25) !important;
                 border-color: #ffd700 !important;
             }
             100% {
-                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 12px rgba(255, 255, 0, 0.6), inset 0 0 12px rgba(255, 255, 0, 0.4);
-                background: rgba(255, 255, 0, 0.6) !important;
+                box-shadow: 0 0 12px rgba(255, 215, 0, 0.5), 0 0 6px rgba(255, 255, 0, 0.3), inset 0 0 6px rgba(255, 255, 0, 0.25);
+                background: rgba(255, 255, 0, 0.35) !important;
                 border-color: #ffed4e !important;
             }
         }
@@ -1217,13 +1231,14 @@
             .zoom-btn {
                 bottom: 8px;
                 left: 8px;
-                width: 80px;
-                height: 80px;
-                font-size: 1.2em;
-                border-radius: 40px;
-                background: linear-gradient(135deg, rgba(74, 144, 226, 0.6) 0%, rgba(53, 122, 189, 0.6) 50%, rgba(44, 90, 160, 0.6) 100%);
-                backdrop-filter: blur(8px);
-                -webkit-backdrop-filter: blur(8px);
+                width: 60px;
+                height: 60px;
+                font-size: 1.0em;
+                border-radius: 30px;
+                background: linear-gradient(135deg, rgba(74, 144, 226, 0.3) 0%, rgba(53, 122, 189, 0.3) 50%, rgba(44, 90, 160, 0.3) 100%);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                opacity: 0.6;
             }
             
             .dice {
@@ -2503,12 +2518,12 @@
                     
                     // Force immediate visual highlight with inline styles for maximum visibility (less bright)
                     setTimeout(() => {
-                        cell.style.background = 'rgba(255, 255, 0, 0.6)' + ' !important';
-                        cell.style.border = '3px solid #ffd700' + ' !important';
+                        cell.style.background = 'rgba(255, 255, 0, 0.3)' + ' !important';
+                        cell.style.border = '2px solid #ffd700' + ' !important';
                         cell.style.zIndex = '1000' + ' !important';
-                        cell.style.transform = 'scale(1.1)' + ' !important';
-                        cell.style.boxShadow = '0 0 18px rgba(255, 215, 0, 0.8), 0 0 12px rgba(255, 255, 0, 0.6)' + ' !important';
-                        cell.style.borderRadius = '4px' + ' !important';
+                        cell.style.transform = 'scale(1.05)' + ' !important';
+                        cell.style.boxShadow = '0 0 10px rgba(255, 215, 0, 0.5), 0 0 6px rgba(255, 255, 0, 0.4)' + ' !important';
+                        cell.style.borderRadius = '3px' + ' !important';
                         cell.style.position = 'relative' + ' !important';
                     }, 10);
                     
@@ -2516,9 +2531,9 @@
                     let pulseCount = 0;
                     const pulseInterval = setInterval(() => {
                         if (cell.classList.contains('movement-highlight') && pulseCount < 10) {
-                            const intensity = 0.5 + 0.15 * Math.sin(pulseCount * 0.5);
+                            const intensity = 0.25 + 0.1 * Math.sin(pulseCount * 0.5);
                             cell.style.background = `rgba(255, 255, 0, ${intensity}) !important`;
-                            cell.style.boxShadow = `0 0 ${15 + 8 * intensity}px rgba(255, 215, 0, ${intensity * 0.8}), 0 0 ${8 + 4 * intensity}px rgba(255, 255, 0, ${intensity * 0.6}) !important`;
+                            cell.style.boxShadow = `0 0 ${8 + 4 * intensity}px rgba(255, 215, 0, ${intensity * 0.6}), 0 0 ${4 + 2 * intensity}px rgba(255, 255, 0, ${intensity * 0.4}) !important`;
                             pulseCount++;
                         } else {
                             clearInterval(pulseInterval);
@@ -3034,9 +3049,9 @@
         // Map Editor Class
         class MapEditor {
             constructor() {
-                this.gridSize = { width: 14, height: 22 };
+                this.gridSize = { width: 16, height: 28 };
                 // Larger cell size for mobile editor to make map more visible
-                this.cellSize = window.innerWidth <= 480 ? 24 : 20;
+                this.cellSize = window.innerWidth <= 480 ? 20 : 18;
                 this.currentTool = 'road-vertical';
                 this.editorMap = [];
                 this.isDrawing = false;
