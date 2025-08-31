@@ -436,24 +436,24 @@
         }
 
         .movement-highlight {
-            background: rgba(255, 255, 0, 0.8) !important;
-            border: 4px solid #ffd700 !important;
+            background: rgba(255, 255, 0, 0.5) !important;
+            border: 3px solid #ffd700 !important;
             z-index: 1000 !important;
-            transform: scale(1.15) !important;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 1.0) !important;
+            transform: scale(1.1) !important;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7) !important;
             animation: highlightPulse 0.4s ease-in-out infinite alternate !important;
             position: relative !important;
         }
         
         @keyframes highlightPulse {
             0% {
-                box-shadow: 0 0 20px rgba(255, 215, 0, 1.0), inset 0 0 10px rgba(255, 255, 0, 0.5);
-                background: rgba(255, 255, 0, 0.8) !important;
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), inset 0 0 8px rgba(255, 255, 0, 0.3);
+                background: rgba(255, 255, 0, 0.5) !important;
                 border-color: #ffd700 !important;
             }
             100% {
-                box-shadow: 0 0 30px rgba(255, 215, 0, 1.0), 0 0 15px rgba(255, 255, 0, 0.9), inset 0 0 15px rgba(255, 255, 0, 0.7);
-                background: rgba(255, 255, 0, 0.9) !important;
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 12px rgba(255, 255, 0, 0.6), inset 0 0 12px rgba(255, 255, 0, 0.4);
+                background: rgba(255, 255, 0, 0.6) !important;
                 border-color: #ffed4e !important;
             }
         }
@@ -2470,14 +2470,28 @@
 
             highlightMovement(pos) {
                 console.log('Adding movement highlight at:', pos);
-                const cell = document.querySelector(`[data-x="${pos.x}"][data-y="${pos.y}"]`);
+                
+                // Try multiple query methods to ensure mobile compatibility
+                let cell = document.querySelector(`#cityGrid [data-x="${pos.x}"][data-y="${pos.y}"]`);
+                
+                if (!cell) {
+                    // Alternative search method for mobile
+                    const allCells = document.querySelectorAll('#cityGrid .cell');
+                    for (let c of allCells) {
+                        if (c.dataset.x == pos.x && c.dataset.y == pos.y) {
+                            cell = c;
+                            break;
+                        }
+                    }
+                }
+                
                 if (cell) {
                     // Remove any existing highlights first
                     cell.classList.remove('movement-highlight');
                     // Force reflow to ensure the class removal takes effect
                     cell.offsetHeight;
                     
-                    // Add highlighting immediately with stronger visual emphasis
+                    // Add highlighting immediately with less bright visual emphasis
                     cell.classList.add('movement-highlight');
                     console.log('Movement highlight added to cell:', cell);
                     
@@ -2487,24 +2501,24 @@
                     }
                     this.highlightedCells.add(cell);
                     
-                    // Force immediate visual highlight with inline styles for maximum visibility
+                    // Force immediate visual highlight with inline styles for maximum visibility (less bright)
                     setTimeout(() => {
-                        cell.style.background = 'rgba(255, 255, 0, 0.9)';
-                        cell.style.border = '4px solid #ffd700';
-                        cell.style.zIndex = '1000';
-                        cell.style.transform = 'scale(1.15)';
-                        cell.style.boxShadow = '0 0 25px rgba(255, 215, 0, 1.0), 0 0 15px rgba(255, 255, 0, 0.8)';
-                        cell.style.borderRadius = '4px';
-                        cell.style.position = 'relative';
+                        cell.style.background = 'rgba(255, 255, 0, 0.6)' + ' !important';
+                        cell.style.border = '3px solid #ffd700' + ' !important';
+                        cell.style.zIndex = '1000' + ' !important';
+                        cell.style.transform = 'scale(1.1)' + ' !important';
+                        cell.style.boxShadow = '0 0 18px rgba(255, 215, 0, 0.8), 0 0 12px rgba(255, 255, 0, 0.6)' + ' !important';
+                        cell.style.borderRadius = '4px' + ' !important';
+                        cell.style.position = 'relative' + ' !important';
                     }, 10);
                     
-                    // Additional visual emphasis - ensure highlighting persists with pulsing effect
+                    // Additional visual emphasis - ensure highlighting persists with pulsing effect (less intense)
                     let pulseCount = 0;
                     const pulseInterval = setInterval(() => {
                         if (cell.classList.contains('movement-highlight') && pulseCount < 10) {
-                            const intensity = 0.8 + 0.2 * Math.sin(pulseCount * 0.5);
-                            cell.style.background = `rgba(255, 255, 0, ${intensity})`;
-                            cell.style.boxShadow = `0 0 ${20 + 10 * intensity}px rgba(255, 215, 0, ${intensity}), 0 0 ${10 + 5 * intensity}px rgba(255, 255, 0, ${intensity * 0.8})`;
+                            const intensity = 0.5 + 0.15 * Math.sin(pulseCount * 0.5);
+                            cell.style.background = `rgba(255, 255, 0, ${intensity}) !important`;
+                            cell.style.boxShadow = `0 0 ${15 + 8 * intensity}px rgba(255, 215, 0, ${intensity * 0.8}), 0 0 ${8 + 4 * intensity}px rgba(255, 255, 0, ${intensity * 0.6}) !important`;
                             pulseCount++;
                         } else {
                             clearInterval(pulseInterval);
@@ -2513,6 +2527,9 @@
                     
                 } else {
                     console.error('Cell not found for highlighting at:', pos);
+                    // Additional debug info for mobile troubleshooting
+                    console.log('Total cells found:', document.querySelectorAll('#cityGrid .cell').length);
+                    console.log('Grid element exists:', !!document.getElementById('cityGrid'));
                 }
             }
 
@@ -2848,10 +2865,32 @@
                         // Update display after each police move
                         this.updateDisplay();
                         
+                        // Check for collision immediately after police move
+                        if (police.x === this.playerPos.x && police.y === this.playerPos.y) {
+                            console.log('COLLISION DETECTED: Police moved onto player position');
+                            setTimeout(() => {
+                                document.getElementById('gameStatus').textContent = 'Caught by police!';
+                            }, 300);
+                            setTimeout(() => this.endGame(false), 600);
+                            return;
+                        }
+                        
                         // Switch traffic lights and reset status after all police have moved
                         if (index === this.policePos.length - 1) {
                             setTimeout(() => {
                                 this.switchTrafficLights();
+                                
+                                // Final collision check after all police movements
+                                for (let policeCheck of this.policePos) {
+                                    if (policeCheck.x === this.playerPos.x && policeCheck.y === this.playerPos.y) {
+                                        console.log('FINAL COLLISION CHECK: Police on player position');
+                                        setTimeout(() => {
+                                            document.getElementById('gameStatus').textContent = 'Caught by police!';
+                                        }, 300);
+                                        setTimeout(() => this.endGame(false), 600);
+                                        return;
+                                    }
+                                }
                                 
                                 // Check if all paths are blocked after police movement
                                 if (this.gameActive && this.checkAllPathsBlocked()) {
@@ -2900,6 +2939,7 @@
                 // Check if police moved onto player's position
                 for (let police of this.policePos) {
                     if (police.x === this.playerPos.x && police.y === this.playerPos.y) {
+                        console.log('GAME OVER: Police caught player at position:', this.playerPos);
                         setTimeout(() => {
                             document.getElementById('gameStatus').textContent = 'Caught by police!';
                         }, 300);
@@ -3647,10 +3687,12 @@
                 zoomBtn.textContent = '1x';
                 zoomBtn.title = 'Return to Normal View';
                 
-                // Center on player when zooming in
-                if (game && game.playerPos) {
-                    centerCameraOnPlayer();
-                }
+                // Always center on player when zooming in
+                setTimeout(() => {
+                    if (game && game.playerPos) {
+                        centerCameraOnPlayer();
+                    }
+                }, 50);
             } else {
                 gameBoard.classList.remove('zoomed');
                 zoomBtn.classList.remove('active');
@@ -3687,9 +3729,17 @@
                 const offsetX = (boardCenterX - playerPixelX * 2) / 2;
                 const offsetY = (boardCenterY - playerPixelY * 2) / 2;
                 
-                // Apply transform to center on player
-                cityGrid.style.transformOrigin = 'center';
+                // Apply transform to center on player with smoother transition
+                cityGrid.style.transformOrigin = '0 0';
+                cityGrid.style.transition = 'transform 0.3s ease-out';
                 cityGrid.style.transform = `scale(2) translate(${offsetX}px, ${offsetY}px)`;
+                
+                // Remove transition after animation completes to avoid conflicts
+                setTimeout(() => {
+                    if (cityGrid) {
+                        cityGrid.style.transition = '';
+                    }
+                }, 300);
             }
         }
         
