@@ -651,7 +651,7 @@
 
         .police-light {
             position: absolute;
-            top: 2px;
+            top: -1px;
             width: 8px;
             height: 4px;
             border-radius: 2px;
@@ -2416,10 +2416,10 @@
                     
                     const directionArrows = ['⬆️', '➡️', '⬇️', '⬅️'];
                     
-                    // Arrow above, car below - centered alignment with car moved up slightly
+                    // Arrow above, car below - centered alignment
                     playerIcon.innerHTML = `
                         <div class="direction-arrow" style="text-align: center; width: 100%; display: block;">${directionArrows[this.playerDirection]}</div>
-                        <div style="text-align: center; width: 100%; display: block; margin-top: -3px;">🚗</div>
+                        <div style="text-align: center; width: 100%; display: block;">🚗</div>
                     `;
                     
                     playerCell.appendChild(playerIcon);
@@ -2440,7 +2440,7 @@
                             const directionArrows = ['⬆️', '➡️', '⬇️', '⬅️'];
                             playerIcon.innerHTML = `
                                 <div class="direction-arrow" style="text-align: center; width: 100%; display: block;">${directionArrows[this.playerDirection]}</div>
-                                <div style="text-align: center; width: 100%; display: block; margin-top: -3px;">🚗</div>
+                                <div style="text-align: center; width: 100%; display: block;">🚗</div>
                             `;
                             cell.appendChild(playerIcon);
                             console.log('Player icon added via alternative method');
