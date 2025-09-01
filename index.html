@@ -171,10 +171,9 @@
 
         .stat {
             background: rgba(255,255,255,0.1);
-            padding: 8px 20px;
+            padding: 8px 16px;
             border-radius: 15px;
             font-size: 14px;
-            min-width: 120px;
         }
 
         .controls {
@@ -194,15 +193,15 @@
         }
 
         .dice {
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             background: white;
             color: #333;
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             margin: 0 auto 10px;
             border: 2px solid #333;
@@ -625,7 +624,7 @@
 
         .direction-arrow {
             font-size: 6px;
-            margin-bottom: 0;
+            margin-bottom: 2px;
             text-shadow: 0 0 2px rgba(0,0,0,0.8);
             line-height: 1;
             display: block;
@@ -1149,10 +1148,9 @@
             }
             
             .stat {
-                padding: 3px 8px;
+                padding: 3px 6px;
                 font-size: 11px;
                 border-radius: 8px;
-                min-width: 100px;
             }
             
             .menu-btn {
@@ -1275,10 +1273,10 @@
             }
             
             .dice {
-                width: 80px;
-                height: 80px;
-                font-size: 36px;
-                border-radius: 14px;
+                width: 70px;
+                height: 70px;
+                font-size: 32px;
+                border-radius: 12px;
             }
             
             .btn {
@@ -1539,7 +1537,7 @@
                         <div class="cell-type-name">Grass</div>
                     </div>
                     <div class="cell-type-option" onclick="selectCellType('land-dark')">
-                        <div class="cell-type-icon">🏗️</div>
+                        <div class="cell-type-icon">🟫</div>
                         <div class="cell-type-name">Industrial</div>
                     </div>
                     <div class="cell-type-option" onclick="selectCellType('land-brown')">
@@ -1888,15 +1886,15 @@
                 const featureChance = Math.random();
                 
                 if (terrainType === 'land-dark') {
-                    // Industrial areas - prioritize crane emoji
-                    if (featureChance > 0.65) {
-                        cell.innerHTML = '🏗️';
-                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
-                    } else if (featureChance > 0.55) {
+                    // Industrial areas with crane emoji
+                    if (featureChance > 0.70) {
                         cell.innerHTML = '🏭';
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
-                    } else if (featureChance > 0.45) {
+                    } else if (featureChance > 0.60) {
                         cell.innerHTML = '🏢';
+                        cell.style.fontSize = `${this.cellSize * 0.55}px`;
+                    } else if (featureChance > 0.40) {
+                        cell.innerHTML = '🏗️';
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
                     }
                 } else if (terrainType === 'land-grass') {
@@ -1923,18 +1921,12 @@
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.7}px`;
                     }
-                } else if (terrainType === 'land-rocky') {
-                    // Rocky/mountain terrain - add mountain emoji
-                    if (featureChance > 0.6) {
-                        cell.innerHTML = '⛰️';
-                        cell.style.fontSize = `${this.cellSize * 0.7}px`;
-                    } else if (featureChance > 0.85) {
-                        cell.innerHTML = '🌳';
-                        cell.style.fontSize = `${this.cellSize * 0.7}px`;
-                    }
                 } else {
-                    // Other terrain types
-                    if (featureChance > 0.85) {
+                    // Other terrain types including land-rocky
+                    if (terrainType === 'land-rocky' && featureChance > 0.5) {
+                        cell.innerHTML = '⛰️';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    } else if (featureChance > 0.85) {
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.7}px`;
                     }
@@ -2022,9 +2014,8 @@
                         if (needsIntersection) {
                             this.terrainMap[y][x] = 'intersection';
                             
-                            // Add traffic lights to intersections with increased probability
-                            // Include perimeter intersections for more traffic lights
-                            if (Math.random() < 0.6) { // 60% chance for traffic lights at any intersection
+                            // Add traffic lights to internal intersections AND perimeter
+                            if (Math.random() < 0.75) { // 75% chance for traffic lights everywhere
                                 this.terrainMap[y][x] = 'intersection-light';
                             }
                         }
@@ -2033,10 +2024,10 @@
             }
             
             generateTerrainFeatures() {
-                // Generate 3-6 small lakes for reduced water features
-                const numLakes = Math.floor(Math.random() * 4) + 3;
+                // Generate 5-8 small lakes for balanced water features
+                const numLakes = Math.floor(Math.random() * 4) + 5;
                 for (let lake = 0; lake < numLakes; lake++) {
-                    const lakeSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells per lake (reduced from 2-5)
+                    const lakeSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells per lake
                     this.generateLake(lakeSize);
                 }
                 
@@ -3207,6 +3198,16 @@
                 // Stop background music
                 stopMusic();
                 
+                // Reset game state to prevent bugs
+                this.waitingForDirection = false;
+                this.movesLeft = 0;
+                this.currentDiceRoll = 0;
+                
+                // Hide any active UI elements
+                document.getElementById('directionControls').style.display = 'none';
+                document.querySelector('.dice-container').style.display = 'none';
+                document.getElementById('rollBtn').disabled = false;
+                
                 document.getElementById('gameUI').style.display = 'none';
                 document.getElementById('gameOver').style.display = 'block';
                 
@@ -3380,15 +3381,15 @@
                 const featureChance = Math.random();
                 
                 if (terrain === 'land-dark') {
-                    // Industrial areas - prioritize crane emoji
-                    if (featureChance > 0.65) {
-                        cell.innerHTML = '🏗️';
-                        cell.style.fontSize = `${this.cellSize * 0.55}px`;
-                    } else if (featureChance > 0.55) {
+                    // Industrial areas with crane emoji
+                    if (featureChance > 0.70) {
                         cell.innerHTML = '🏭';
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
-                    } else if (featureChance > 0.45) {
+                    } else if (featureChance > 0.60) {
                         cell.innerHTML = '🏢';
+                        cell.style.fontSize = `${this.cellSize * 0.55}px`;
+                    } else if (featureChance > 0.40) {
+                        cell.innerHTML = '🏗️';
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
                     }
                 } else if (terrain === 'land-grass') {
@@ -3417,7 +3418,7 @@
                     }
                 } else if (terrain === 'land-rocky') {
                     // Rocky terrain - add mountain emoji
-                    if (featureChance > 0.6) {
+                    if (featureChance > 0.5) {
                         cell.innerHTML = '⛰️';
                         cell.style.fontSize = `${this.cellSize * 0.6}px`;
                     } else if (featureChance > 0.85) {
@@ -3585,17 +3586,9 @@
             document.querySelector('.dice-container').style.display = 'none';
             document.getElementById('gameUI').style.display = 'flex';
             
-            // Ensure Roll button and zoom button are visible and reset state
-            const rollBtn = document.getElementById('rollBtn');
-            const zoomBtn = document.getElementById('zoomBtn');
-            rollBtn.style.display = 'flex';
-            rollBtn.disabled = false; // Ensure dice button is enabled after game over
-            zoomBtn.style.display = 'flex';
-            
-            // Clear any game-over state flags
-            if (window.gameOverState) {
-                window.gameOverState = false;
-            }
+            // Ensure Roll button and zoom button are visible
+            document.getElementById('rollBtn').style.display = 'flex';
+            document.getElementById('zoomBtn').style.display = 'flex';
             
             // Start background music - enhanced for first game entry
             if (backgroundMusic) {
