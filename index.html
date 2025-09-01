@@ -368,7 +368,13 @@
             justify-content: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
-            line-height: 1;
+        }
+        
+        .cell > * {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
         .land {
@@ -621,11 +627,12 @@
             gap: 0;
             line-height: 1;
             text-align: center;
+            transform: translate(-8%, -15%);
         }
 
         .direction-arrow {
             font-size: 6px;
-            margin-bottom: 0px;
+            margin-bottom: 2px;
             text-shadow: 0 0 2px rgba(0,0,0,0.8);
             line-height: 1;
             display: block;
