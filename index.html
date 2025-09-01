@@ -157,8 +157,8 @@
         /* Status integrated into top panel */
 
         .menu-btn {
-            padding: 6px 12px;
-            font-size: 16px;
+            padding: 8px 14px;
+            font-size: 14px;
             min-width: auto;
             border-radius: 8px;
             line-height: 1;
@@ -173,7 +173,7 @@
             background: rgba(255,255,255,0.1);
             padding: 8px 16px;
             border-radius: 15px;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .controls {
@@ -427,34 +427,6 @@
         .lake {
             background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
             position: relative;
-        }
-        
-        .shop {
-            background: linear-gradient(135deg, #8b4513 0%, #a0522d 50%, #cd853f 100%);
-            position: relative;
-        }
-        
-        .shop::before {
-            content: '';
-            position: absolute;
-            top: 20%;
-            left: 20%;
-            right: 20%;
-            bottom: 20%;
-            background: repeating-linear-gradient(
-                90deg,
-                rgba(255,255,255,0.3),
-                rgba(255,255,255,0.3) 2px,
-                transparent 2px,
-                transparent 6px
-            ),
-            repeating-linear-gradient(
-                0deg,
-                rgba(255,255,255,0.2),
-                rgba(255,255,255,0.2) 2px,
-                transparent 2px,
-                transparent 6px
-            );
         }
 
         .movement-highlight {
@@ -1150,17 +1122,17 @@
             
             .stat {
                 padding: 3px 6px;
-                font-size: 14px;
+                font-size: 12px;
                 border-radius: 8px;
             }
             
             .menu-btn {
-                padding: 4px 8px; /* Reduced from 6px 12px */
-                font-size: 13px; /* Reduced from 12px */
+                padding: 5px 10px; /* Slightly increased from 4px 8px */
+                font-size: 11px; /* Reduced by 2px from 13px */
                 min-width: auto;
                 border-radius: 6px; /* Reduced from 8px */
                 line-height: 1;
-                height: 28px; /* Fixed height for consistency */
+                height: 30px; /* Slightly increased height for larger button */
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -1557,10 +1529,6 @@
                         <div class="cell-type-icon">💧</div>
                         <div class="cell-type-name">Lake</div>
                     </div>
-                    <div class="cell-type-option" onclick="selectCellType('shop')">
-                        <div class="cell-type-icon">🏪</div>
-                        <div class="cell-type-name">Shop</div>
-                    </div>
                 </div>
                 <button class="cell-type-close" onclick="closeCellTypePopup()">Close</button>
             </div>
@@ -1847,10 +1815,7 @@
                             cell.classList.add(terrainType);
                             
                             // Add appropriate content based on terrain type
-                            if (terrainType === 'shop') {
-                                cell.innerHTML = '🏪';
-                                cell.style.fontSize = `${this.cellSize * 0.6}px`;
-                            } else if (terrainType !== 'land-brown' && terrainType !== 'land-desert' && terrainType !== 'lake') {
+                            if (terrainType !== 'lake') {
                                 // Add buildings and trees for appropriate terrain types
                                 this.addTerrainFeatures(cell, terrainType);
                             }
@@ -1885,6 +1850,38 @@
             
             addTerrainFeatures(cell, terrainType) {
                 const featureChance = Math.random();
+                
+                // Add emoji shops to land, land-brown, and land-dark terrain types
+                if ((terrainType === 'land' || terrainType === 'land-brown' || terrainType === 'land-dark') && 
+                    featureChance > 0.92) { // 8% chance for emoji shop on these terrain types
+                    const shopEmojis = ['🏬', '🏪'];
+                    const randomShop = shopEmojis[Math.floor(Math.random() * shopEmojis.length)];
+                    cell.innerHTML = randomShop;
+                    cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    return; // Exit early after placing shop
+                }
+                
+                // Add agricultural features to land-brown terrain
+                if (terrainType === 'land-brown') {
+                    // 60% chance for agricultural emojis when no shop is generated
+                    if (featureChance > 0.40) { // 60% chance
+                        const agriculturalEmojis = ['🌾', '🌻'];
+                        const randomAgricultural = agriculturalEmojis[Math.floor(Math.random() * agriculturalEmojis.length)];
+                        cell.innerHTML = randomAgricultural;
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    }
+                    return; // Exit early after handling land-brown
+                }
+                
+                // Add desert features to land-desert terrain
+                if (terrainType === 'land-desert') {
+                    // Desert terrain - add desert features
+                    if (featureChance > 0.70) {
+                        cell.innerHTML = '🌵'; // Cactus
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    }
+                    return; // Exit early after handling land-desert
+                }
                 
                 if (terrainType === 'land-dark') {
                     // Industrial areas with crane emoji
@@ -2032,12 +2029,6 @@
                     this.generateLake(lakeSize);
                 }
                 
-                // Generate 6-12 shops scattered around the city
-                const numShops = Math.floor(Math.random() * 7) + 6;
-                for (let shop = 0; shop < numShops; shop++) {
-                    this.generateShop();
-                }
-                
                 // Generate terrain blocks for urban variety with maximum diversity
                 let totalLandCells = 0;
                 const maxLandCells = 45; // Significantly increased from 28 for much more diversity
@@ -2122,7 +2113,7 @@
                     }
                 }
                 
-                console.log(`Enhanced terrain generation complete: ${totalLandCells}/${maxLandCells} terrain cells, ${numLakes} lakes, ${numShops} shops`);
+                console.log(`Enhanced terrain generation complete: ${totalLandCells}/${maxLandCells} terrain cells, ${numLakes} lakes with emoji shops on land terrain`);
             }
             
             generateEnhancedLandscape() {
@@ -2257,36 +2248,6 @@
                                 this.terrainMap[pos.y][pos.x] = 'lake';
                             });
                             return; // Lake successfully placed
-                        }
-                    }
-                }
-            }
-            
-            generateShop() {
-                const maxAttempts = 25;
-                
-                for (let attempt = 0; attempt < maxAttempts; attempt++) {
-                    // Choose shop position away from roads but accessible
-                    const shopX = Math.floor(Math.random() * (this.gridSize.width - 4)) + 2;
-                    const shopY = Math.floor(Math.random() * (this.gridSize.height - 4)) + 2;
-                    
-                    // Make sure shop is not on a road but adjacent to one for accessibility
-                    if (shopX % 3 !== 0 && shopY % 5 !== 0 && this.terrainMap[shopY][shopX] === 'land') {
-                        // Check if adjacent to a road for accessibility
-                        const adjacentToRoad = [
-                            {x: shopX - 1, y: shopY}, {x: shopX + 1, y: shopY},
-                            {x: shopX, y: shopY - 1}, {x: shopX, y: shopY + 1}
-                        ].some(pos => {
-                            if (pos.x >= 0 && pos.x < this.gridSize.width && 
-                                pos.y >= 0 && pos.y < this.gridSize.height) {
-                                return pos.x % 3 === 0 || pos.y % 5 === 0; // Road position
-                            }
-                            return false;
-                        });
-                        
-                        if (adjacentToRoad) {
-                            this.terrainMap[shopY][shopX] = 'shop';
-                            return; // Shop successfully placed
                         }
                     }
                 }
@@ -3368,20 +3329,43 @@
                     // Land terrain types
                     cell.classList.add(terrain);
                     
-                    // Add terrain features for non-lake terrains and shops
-                    if (terrain === 'shop') {
-                        cell.innerHTML = '🏪';
-                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
-                    } else if (terrain !== 'lake' && terrain !== 'land-brown' && terrain !== 'land-desert') {
-                        this.addTerrainFeatures(cell, terrain, x, y);
-                    }
+                    // Add terrain features for all terrain types now
+                    this.addTerrainFeatures(cell, terrain, x, y);
                 }
             }
             
             addTerrainFeatures(cell, terrain, x, y) {
                 const featureChance = Math.random();
                 
-                if (terrain === 'land-dark') {
+                if (terrain === 'land-brown') {
+                    // Add emoji shops to land-brown terrain with 8% chance
+                    if (featureChance > 0.92) { 
+                        const shopEmojis = ['🏬', '🏪'];
+                        const randomShop = shopEmojis[Math.floor(Math.random() * shopEmojis.length)];
+                        cell.innerHTML = randomShop;
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                        return; // Exit early after placing shop
+                    }
+                    
+                    // 60% chance for agricultural emojis when no shop is generated
+                    if (featureChance > 0.40) { // 60% chance
+                        const agriculturalEmojis = ['🌾', '🌻'];
+                        const randomAgricultural = agriculturalEmojis[Math.floor(Math.random() * agriculturalEmojis.length)];
+                        cell.innerHTML = randomAgricultural;
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    }
+                    return; // Exit early after handling land-brown
+                } else if (terrain === 'land-desert') {
+                    // Desert terrain - add desert features
+                    if (featureChance > 0.70) {
+                        cell.innerHTML = '🌵'; // Cactus
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    }
+                    return; // Exit early after handling land-desert
+                } else if (terrain === 'lake') {
+                    // Lake terrain - no features
+                    return; // Exit early for lakes
+                } else if (terrain === 'land-dark') {
                     // Industrial areas with crane emoji
                     if (featureChance > 0.70) {
                         cell.innerHTML = '🏭';
