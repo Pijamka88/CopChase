@@ -193,19 +193,19 @@
         }
 
         .dice {
-            width: 50px;
-            height: 50px;
+            width: 65px;
+            height: 65px;
             background: white;
             color: #333;
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 32px;
             font-weight: bold;
             margin: 0 auto 10px;
-            border: 2px solid #333;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            border: 3px solid #333;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
         .dice-roll-btn {
@@ -367,6 +367,7 @@
             align-items: center;
             justify-content: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
         }
 
         .land {
@@ -1272,10 +1273,10 @@
             }
             
             .dice {
-                width: 60px;
-                height: 60px;
-                font-size: 28px;
-                border-radius: 12px;
+                width: 70px;
+                height: 70px;
+                font-size: 32px;
+                border-radius: 14px;
             }
             
             .btn {
@@ -1424,7 +1425,7 @@
             <div class="top-panel">
                 <div class="top-panel-left">
                     <div class="stat">Moves: <span id="moveCount">0</span></div>
-                    <div class="stat">Status: <span id="gameStatus">Running</span></div>
+                    <div class="stat" style="min-width: 150px;">Status: <span id="gameStatus">Running</span></div>
                 </div>
                 <div class="controls">
                     <button class="btn menu-btn" onclick="returnToMenu()" style="font-size: 10px;">Menu</button>
@@ -1552,8 +1553,8 @@
                         <div class="cell-type-name">Rocky</div>
                     </div>
                     <div class="cell-type-option" onclick="selectCellType('lake')">
-                        <div class="cell-type-icon">💧</div>
-                        <div class="cell-type-name">Lake</div>
+                        <div class="cell-type-icon">🚰</div>
+                        <div class="cell-type-name">Tap/Water</div>
                     </div>
                     <div class="cell-type-option" onclick="selectCellType('shop')">
                         <div class="cell-type-icon">🏪</div>
@@ -1917,9 +1918,12 @@
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.7}px`;
                     }
-                } else {
-                    // Other terrain types
-                    if (featureChance > 0.85) {
+                } else if (terrainType === 'land-rocky') {
+                    // Rocky/mountain areas - generate more mountains
+                    if (featureChance > 0.6) {
+                        cell.innerHTML = '⛰️';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    } else if (featureChance > 0.8) {
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.7}px`;
                     }
@@ -1969,7 +1973,7 @@
                     }
                 }
                 
-                // Create main horizontal roads (every 5 cells)
+                // Create main horizontal roads (every 5 cells) AND additional horizontal road
                 for (let y = 5; y < this.gridSize.height - 1; y += 5) {
                     for (let x = 1; x < this.gridSize.width - 1; x++) {
                         // Skip if this position will be a vertical road
@@ -1979,7 +1983,23 @@
                     }
                 }
                 
-                // Create intersections at ALL road crossings
+                // Add additional horizontal road in the middle area
+                const midY = Math.floor(this.gridSize.height / 2) + 2;
+                if (midY % 5 !== 0 && midY > 2 && midY < this.gridSize.height - 3) {
+                    for (let x = 1; x < this.gridSize.width - 1; x++) {
+                        if (x % 3 !== 0) {
+                            this.terrainMap[midY][x] = 'road-horizontal';
+                        } else {
+                            // Create intersection at crossings with vertical roads
+                            this.terrainMap[midY][x] = 'intersection';
+                            if (Math.random() < 0.6) {
+                                this.terrainMap[midY][x] = 'intersection-light';
+                            }
+                        }
+                    }
+                }
+                
+                // Create intersections at ALL road crossings including perimeter
                 for (let y = 0; y < this.gridSize.height; y++) {
                     for (let x = 0; x < this.gridSize.width; x++) {
                         let needsIntersection = false;
@@ -1989,7 +2009,7 @@
                             needsIntersection = true;
                         }
                         
-                        // Check for intersections at perimeter crossings
+                        // Check for intersections at ALL perimeter crossings and corners
                         if ((x === 0 || x === this.gridSize.width - 1) && (y === 0 || y === this.gridSize.height - 1)) {
                             needsIntersection = true;
                         }
@@ -2007,11 +2027,9 @@
                         if (needsIntersection) {
                             this.terrainMap[y][x] = 'intersection';
                             
-                            // Add traffic lights to internal intersections only (not on perimeter)
-                            if (x > 0 && x < this.gridSize.width - 1 && y > 0 && y < this.gridSize.height - 1) {
-                                if (Math.random() < 0.75) { // Increased to 75% chance for more traffic lights
-                                    this.terrainMap[y][x] = 'intersection-light';
-                                }
+                            // Add traffic lights to ALL intersections including perimeter
+                            if (Math.random() < 0.6) { // 60% chance for traffic lights at all intersections
+                                this.terrainMap[y][x] = 'intersection-light';
                             }
                         }
                     }
@@ -2019,10 +2037,10 @@
             }
             
             generateTerrainFeatures() {
-                // Generate 8-12 small lakes for more water features
-                const numLakes = Math.floor(Math.random() * 5) + 8;
+                // Generate 4-6 small lakes for fewer water features
+                const numLakes = Math.floor(Math.random() * 3) + 4;
                 for (let lake = 0; lake < numLakes; lake++) {
-                    const lakeSize = Math.floor(Math.random() * 4) + 2; // 2-5 cells per lake
+                    const lakeSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells per lake
                     this.generateLake(lakeSize);
                 }
                 
@@ -3400,10 +3418,10 @@
                     }
                 } else if (terrain === 'land-rocky') {
                     // Rocky terrain - add mountain emoji
-                    if (featureChance > 0.7) {
+                    if (featureChance > 0.6) {
                         cell.innerHTML = '⛰️';
                         cell.style.fontSize = `${this.cellSize * 0.6}px`;
-                    } else if (featureChance > 0.85) {
+                    } else if (featureChance > 0.8) {
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.6}px`;
                     }
@@ -3548,11 +3566,18 @@
         function startGame() {
             console.log('Starting game with selected map:', selectedMap);
             
-            // Clear any existing game state
+            // Clear any existing game state and reset everything
             if (game) {
                 game.gameActive = false;
                 game = null;
             }
+            
+            // Reset all game controls and states
+            document.getElementById('directionControls').style.display = 'none';
+            document.querySelector('.dice-container').style.display = 'none';
+            const rollBtn = document.getElementById('rollBtn');
+            rollBtn.disabled = false;
+            rollBtn.style.display = 'flex';
             
             // Reset game status and move count
             document.getElementById('gameStatus').textContent = 'Running';
