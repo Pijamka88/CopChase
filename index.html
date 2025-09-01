@@ -171,9 +171,10 @@
 
         .stat {
             background: rgba(255,255,255,0.1);
-            padding: 8px 16px;
+            padding: 8px 20px;
             border-radius: 15px;
             font-size: 14px;
+            min-width: 120px;
         }
 
         .controls {
@@ -193,8 +194,8 @@
         }
 
         .dice {
-            width: 65px;
-            height: 65px;
+            width: 70px;
+            height: 70px;
             background: white;
             color: #333;
             border-radius: 12px;
@@ -204,8 +205,8 @@
             font-size: 32px;
             font-weight: bold;
             margin: 0 auto 10px;
-            border: 3px solid #333;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            border: 2px solid #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .dice-roll-btn {
@@ -1148,9 +1149,10 @@
             }
             
             .stat {
-                padding: 3px 6px;
+                padding: 3px 8px;
                 font-size: 11px;
                 border-radius: 8px;
+                min-width: 100px;
             }
             
             .menu-btn {
@@ -1273,9 +1275,9 @@
             }
             
             .dice {
-                width: 70px;
-                height: 70px;
-                font-size: 32px;
+                width: 80px;
+                height: 80px;
+                font-size: 36px;
                 border-radius: 14px;
             }
             
@@ -1425,7 +1427,7 @@
             <div class="top-panel">
                 <div class="top-panel-left">
                     <div class="stat">Moves: <span id="moveCount">0</span></div>
-                    <div class="stat" style="min-width: 150px;">Status: <span id="gameStatus">Running</span></div>
+                    <div class="stat">Status: <span id="gameStatus">Running</span></div>
                 </div>
                 <div class="controls">
                     <button class="btn menu-btn" onclick="returnToMenu()" style="font-size: 10px;">Menu</button>
@@ -1537,7 +1539,7 @@
                         <div class="cell-type-name">Grass</div>
                     </div>
                     <div class="cell-type-option" onclick="selectCellType('land-dark')">
-                        <div class="cell-type-icon">🟫</div>
+                        <div class="cell-type-icon">🏗️</div>
                         <div class="cell-type-name">Industrial</div>
                     </div>
                     <div class="cell-type-option" onclick="selectCellType('land-brown')">
@@ -1553,8 +1555,8 @@
                         <div class="cell-type-name">Rocky</div>
                     </div>
                     <div class="cell-type-option" onclick="selectCellType('lake')">
-                        <div class="cell-type-icon">🚰</div>
-                        <div class="cell-type-name">Tap/Water</div>
+                        <div class="cell-type-icon">💧</div>
+                        <div class="cell-type-name">Lake</div>
                     </div>
                     <div class="cell-type-option" onclick="selectCellType('shop')">
                         <div class="cell-type-icon">🏪</div>
@@ -1886,11 +1888,14 @@
                 const featureChance = Math.random();
                 
                 if (terrainType === 'land-dark') {
-                    // Industrial areas
-                    if (featureChance > 0.70) {
+                    // Industrial areas - prioritize crane emoji
+                    if (featureChance > 0.65) {
+                        cell.innerHTML = '🏗️';
+                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
+                    } else if (featureChance > 0.55) {
                         cell.innerHTML = '🏭';
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
-                    } else if (featureChance > 0.60) {
+                    } else if (featureChance > 0.45) {
                         cell.innerHTML = '🏢';
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
                     }
@@ -1919,11 +1924,17 @@
                         cell.style.fontSize = `${this.cellSize * 0.7}px`;
                     }
                 } else if (terrainType === 'land-rocky') {
-                    // Rocky/mountain areas - generate more mountains
+                    // Rocky/mountain terrain - add mountain emoji
                     if (featureChance > 0.6) {
                         cell.innerHTML = '⛰️';
-                        cell.style.fontSize = `${this.cellSize * 0.6}px`;
-                    } else if (featureChance > 0.8) {
+                        cell.style.fontSize = `${this.cellSize * 0.7}px`;
+                    } else if (featureChance > 0.85) {
+                        cell.innerHTML = '🌳';
+                        cell.style.fontSize = `${this.cellSize * 0.7}px`;
+                    }
+                } else {
+                    // Other terrain types
+                    if (featureChance > 0.85) {
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.7}px`;
                     }
@@ -1973,7 +1984,7 @@
                     }
                 }
                 
-                // Create main horizontal roads (every 5 cells) AND additional horizontal road
+                // Create main horizontal roads (every 5 cells)
                 for (let y = 5; y < this.gridSize.height - 1; y += 5) {
                     for (let x = 1; x < this.gridSize.width - 1; x++) {
                         // Skip if this position will be a vertical road
@@ -1983,23 +1994,7 @@
                     }
                 }
                 
-                // Add additional horizontal road in the middle area
-                const midY = Math.floor(this.gridSize.height / 2) + 2;
-                if (midY % 5 !== 0 && midY > 2 && midY < this.gridSize.height - 3) {
-                    for (let x = 1; x < this.gridSize.width - 1; x++) {
-                        if (x % 3 !== 0) {
-                            this.terrainMap[midY][x] = 'road-horizontal';
-                        } else {
-                            // Create intersection at crossings with vertical roads
-                            this.terrainMap[midY][x] = 'intersection';
-                            if (Math.random() < 0.6) {
-                                this.terrainMap[midY][x] = 'intersection-light';
-                            }
-                        }
-                    }
-                }
-                
-                // Create intersections at ALL road crossings including perimeter
+                // Create intersections at ALL road crossings
                 for (let y = 0; y < this.gridSize.height; y++) {
                     for (let x = 0; x < this.gridSize.width; x++) {
                         let needsIntersection = false;
@@ -2009,7 +2004,7 @@
                             needsIntersection = true;
                         }
                         
-                        // Check for intersections at ALL perimeter crossings and corners
+                        // Check for intersections at perimeter crossings
                         if ((x === 0 || x === this.gridSize.width - 1) && (y === 0 || y === this.gridSize.height - 1)) {
                             needsIntersection = true;
                         }
@@ -2027,8 +2022,9 @@
                         if (needsIntersection) {
                             this.terrainMap[y][x] = 'intersection';
                             
-                            // Add traffic lights to ALL intersections including perimeter
-                            if (Math.random() < 0.6) { // 60% chance for traffic lights at all intersections
+                            // Add traffic lights to intersections with increased probability
+                            // Include perimeter intersections for more traffic lights
+                            if (Math.random() < 0.6) { // 60% chance for traffic lights at any intersection
                                 this.terrainMap[y][x] = 'intersection-light';
                             }
                         }
@@ -2037,10 +2033,10 @@
             }
             
             generateTerrainFeatures() {
-                // Generate 4-6 small lakes for fewer water features
-                const numLakes = Math.floor(Math.random() * 3) + 4;
+                // Generate 3-6 small lakes for reduced water features
+                const numLakes = Math.floor(Math.random() * 4) + 3;
                 for (let lake = 0; lake < numLakes; lake++) {
-                    const lakeSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells per lake
+                    const lakeSize = Math.floor(Math.random() * 3) + 2; // 2-4 cells per lake (reduced from 2-5)
                     this.generateLake(lakeSize);
                 }
                 
@@ -3384,11 +3380,14 @@
                 const featureChance = Math.random();
                 
                 if (terrain === 'land-dark') {
-                    // Industrial areas
-                    if (featureChance > 0.70) {
+                    // Industrial areas - prioritize crane emoji
+                    if (featureChance > 0.65) {
+                        cell.innerHTML = '🏗️';
+                        cell.style.fontSize = `${this.cellSize * 0.55}px`;
+                    } else if (featureChance > 0.55) {
                         cell.innerHTML = '🏭';
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
-                    } else if (featureChance > 0.60) {
+                    } else if (featureChance > 0.45) {
                         cell.innerHTML = '🏢';
                         cell.style.fontSize = `${this.cellSize * 0.55}px`;
                     }
@@ -3421,7 +3420,7 @@
                     if (featureChance > 0.6) {
                         cell.innerHTML = '⛰️';
                         cell.style.fontSize = `${this.cellSize * 0.6}px`;
-                    } else if (featureChance > 0.8) {
+                    } else if (featureChance > 0.85) {
                         cell.innerHTML = '🌳';
                         cell.style.fontSize = `${this.cellSize * 0.6}px`;
                     }
@@ -3566,18 +3565,11 @@
         function startGame() {
             console.log('Starting game with selected map:', selectedMap);
             
-            // Clear any existing game state and reset everything
+            // Clear any existing game state
             if (game) {
                 game.gameActive = false;
                 game = null;
             }
-            
-            // Reset all game controls and states
-            document.getElementById('directionControls').style.display = 'none';
-            document.querySelector('.dice-container').style.display = 'none';
-            const rollBtn = document.getElementById('rollBtn');
-            rollBtn.disabled = false;
-            rollBtn.style.display = 'flex';
             
             // Reset game status and move count
             document.getElementById('gameStatus').textContent = 'Running';
@@ -3593,9 +3585,17 @@
             document.querySelector('.dice-container').style.display = 'none';
             document.getElementById('gameUI').style.display = 'flex';
             
-            // Ensure Roll button and zoom button are visible
-            document.getElementById('rollBtn').style.display = 'flex';
-            document.getElementById('zoomBtn').style.display = 'flex';
+            // Ensure Roll button and zoom button are visible and reset state
+            const rollBtn = document.getElementById('rollBtn');
+            const zoomBtn = document.getElementById('zoomBtn');
+            rollBtn.style.display = 'flex';
+            rollBtn.disabled = false; // Ensure dice button is enabled after game over
+            zoomBtn.style.display = 'flex';
+            
+            // Clear any game-over state flags
+            if (window.gameOverState) {
+                window.gameOverState = false;
+            }
             
             // Start background music - enhanced for first game entry
             if (backgroundMusic) {
