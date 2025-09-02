@@ -2636,7 +2636,7 @@
             }
 
             rollDice() {
-                if (!this.gameActive || this.waitingForDirection) return;
+                if (!this.gameActive || this.waitingForDirection || this.movesLeft > 0) return;
 
                 const dice = document.getElementById('dice');
                 const diceContainer = document.querySelector('.dice-container');
