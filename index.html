@@ -1108,7 +1108,7 @@
         .cloud {
             position: absolute;
             color: rgba(255, 255, 255, 0.4);
-            font-size: 8em;
+            font-size: 16em;
             animation-timing-function: linear;
             animation-iteration-count: infinite;
             filter: blur(1px);
@@ -1119,46 +1119,46 @@
         .cloud-1 {
             animation: moveCloud1 25s linear infinite;
             top: 10%;
-            font-size: 10em;
+            font-size: 20em;
         }
         
         .cloud-2 {
             animation: moveCloud2 35s linear infinite;
             top: 20%;
-            font-size: 12em;
+            font-size: 24em;
             opacity: 0.3;
         }
         
         .cloud-3 {
             animation: moveCloud3 20s linear infinite;
             top: 30%;
-            font-size: 9em;
+            font-size: 18em;
         }
         
         .cloud-4 {
             animation: moveCloud4 40s linear infinite;
             top: 40%;
-            font-size: 11em;
+            font-size: 22em;
             opacity: 0.25;
         }
         
         .cloud-5 {
             animation: moveCloud5 30s linear infinite;
             top: 50%;
-            font-size: 10.5em;
+            font-size: 21em;
         }
         
         .cloud-6 {
             animation: moveCloud6 22s linear infinite;
             top: 60%;
-            font-size: 13em;
+            font-size: 26em;
             opacity: 0.2;
         }
         
         .cloud-7 {
             animation: moveCloud7 28s linear infinite;
             top: 70%;
-            font-size: 9.5em;
+            font-size: 19em;
         }
         
         /* Cloud animations - right to left movement starting from city edges */
@@ -1242,17 +1242,17 @@
         /* Mobile optimizations for clouds */
         @media (max-width: 480px) {
             .cloud {
-                font-size: 6em;
+                font-size: 12em;
                 opacity: 0.8;
             }
             
-            .cloud-1 { font-size: 7em; }
-            .cloud-2 { font-size: 8.5em; opacity: 0.25; }
-            .cloud-3 { font-size: 6.5em; }
-            .cloud-4 { font-size: 7.5em; opacity: 0.2; }
-            .cloud-5 { font-size: 7em; }
-            .cloud-6 { font-size: 9em; opacity: 0.15; }
-            .cloud-7 { font-size: 6.8em; }
+            .cloud-1 { font-size: 14em; }
+            .cloud-2 { font-size: 17em; opacity: 0.25; }
+            .cloud-3 { font-size: 13em; }
+            .cloud-4 { font-size: 15em; opacity: 0.2; }
+            .cloud-5 { font-size: 14em; }
+            .cloud-6 { font-size: 18em; opacity: 0.15; }
+            .cloud-7 { font-size: 13.6em; }
         }
         @media (max-width: 480px) {
             .top-panel {
@@ -1729,6 +1729,7 @@
                 this.moveCount = 0;
                 this.gameActive = false;
                 this.waitingForDirection = false;
+                this.isPlayerMoving = false;
                 this.currentDiceRoll = 0;
                 this.movesLeft = 0;
                 this.playerDirection = 0; // 0=up, 1=right, 2=down, 3=left - start moving forward
@@ -2636,7 +2637,7 @@
             }
 
             rollDice() {
-                if (!this.gameActive || this.waitingForDirection || this.movesLeft > 0) return;
+                if (!this.gameActive || this.waitingForDirection || this.movesLeft > 0 || this.isPlayerMoving) return;
 
                 const dice = document.getElementById('dice');
                 const diceContainer = document.querySelector('.dice-container');
@@ -2682,7 +2683,10 @@
             }
 
             movePlayer() {
+                this.isPlayerMoving = true;
                 if (this.movesLeft <= 0) {
+                    // Player finished moving
+                    this.isPlayerMoving = false;
                     // Clear movement highlights with longer delay - but only when turn is completely finished
                     setTimeout(() => {
                         this.clearMovementHighlights();
@@ -2773,6 +2777,8 @@
                 if (this.movesLeft > 0) {
                     setTimeout(() => this.movePlayer(), 450);
                 } else {
+                    // Player finished moving
+                    this.isPlayerMoving = false;
                     // Clear movement highlights after completing moves with shorter delay
                     setTimeout(() => {
                         this.clearMovementHighlights();
@@ -3035,6 +3041,7 @@
                 }
                 
                 this.waitingForDirection = true;
+                this.isPlayerMoving = false;
                 document.getElementById('directionControls').style.display = 'block';
                 // Hide the Roll button when direction controls appear
                 document.getElementById('rollBtn').style.display = 'none';
@@ -3045,6 +3052,7 @@
                 // Show the Roll button again when direction controls are hidden
                 document.getElementById('rollBtn').style.display = 'flex';
                 this.waitingForDirection = false;
+                this.isPlayerMoving = true;
     
                 // Calculate new direction
                 let newDirection = this.playerDirection;
@@ -3092,6 +3100,8 @@
                 if (this.movesLeft > 0) {
                     setTimeout(() => this.movePlayer(), 450);
                 } else {
+                    // Player finished moving
+                    this.isPlayerMoving = false;
                     // Clear movement highlights with shorter delay
                     setTimeout(() => {
                         this.clearMovementHighlights();
@@ -3117,6 +3127,7 @@
                 document.getElementById('directionControls').style.display = 'none';
                 document.getElementById('rollBtn').style.display = 'flex';
                 this.waitingForDirection = false;
+                this.isPlayerMoving = false;
     
                 // End the player's turn immediately without moving
                 this.movesLeft = 0;
@@ -3336,6 +3347,7 @@
                 
                 // Reset game state to prevent bugs
                 this.waitingForDirection = false;
+                this.isPlayerMoving = false;
                 this.movesLeft = 0;
                 this.currentDiceRoll = 0;
                 
